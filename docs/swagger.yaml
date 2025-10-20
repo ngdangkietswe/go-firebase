@@ -1,0 +1,354 @@
+basePath: /api/v1
+definitions:
+  request.CreateUserRequest:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - password
+    type: object
+  request.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  request.RegisterDeviceRequest:
+    properties:
+      device_token:
+        type: string
+      identifier:
+        description: e.g., user ID or email
+        type: string
+      platform:
+        description: e.g., "ios", "android", "web"
+        type: string
+    required:
+    - device_token
+    - identifier
+    - platform
+    type: object
+  request.SendNotificationRequest:
+    properties:
+      body:
+        type: string
+      payload:
+        additionalProperties:
+          type: string
+        type: object
+      title:
+        type: string
+      user_id:
+        type: string
+    required:
+    - user_id
+    type: object
+  response.ApiResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:300
+info:
+  contact:
+    email: ngdangkietswe@yopmail.com
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for a Go Firebase application.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Go Firebase API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user and returns Firebase ID token.
+      parameters:
+      - description: Login Info
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: User Login
+      tags:
+      - Auth API
+  /auth/verify-token:
+    get:
+      consumes:
+      - application/json
+      description: Verifies the provided Firebase ID token.
+      parameters:
+      - description: Firebase ID Token
+        in: query
+        name: id_token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Verify Firebase ID Token
+      tags:
+      - Auth API
+  /device-tokens:
+    post:
+      consumes:
+      - application/json
+      description: Register a device token for push notifications
+      parameters:
+      - description: Device Info
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/request.RegisterDeviceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Register a device token
+      tags:
+      - Device Token API
+  /notifications:
+    post:
+      consumes:
+      - application/json
+      description: Send a push notification to a device
+      parameters:
+      - description: Notification Info
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/request.SendNotificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Send a notification
+      tags:
+      - Notification API
+  /notifications/{id}/read:
+    patch:
+      consumes:
+      - application/json
+      description: Mark a specific notification as read
+      parameters:
+      - description: Notification ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Mark a notification as read
+      tags:
+      - Notification API
+  /notifications/users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all notifications for a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Get notifications for a user
+      tags:
+      - Notification API
+  /notifications/users/{id}/read:
+    patch:
+      consumes:
+      - application/json
+      description: Mark all notifications as read for a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Mark all notifications as read for a user
+      tags:
+      - Notification API
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve user information
+      parameters:
+      - description: User Email or ID
+        in: query
+        name: identifier
+        required: true
+        type: string
+      - description: Comma-separated list of related entities to preload
+        in: query
+        name: preload
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Get user
+      tags:
+      - User API
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the provided information
+      parameters:
+      - description: User Info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Create a new user
+      tags:
+      - User API
+schemes:
+- http
+- https
+swagger: "2.0"
