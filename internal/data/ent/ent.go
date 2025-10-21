@@ -8,7 +8,9 @@ import (
 	"fmt"
 	"go-firebase/internal/data/ent/devicetoken"
 	"go-firebase/internal/data/ent/notification"
+	"go-firebase/internal/data/ent/notificationtopic"
 	"go-firebase/internal/data/ent/user"
+	"go-firebase/internal/data/ent/usernotificationtopic"
 	"reflect"
 	"sync"
 
@@ -75,9 +77,11 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			devicetoken.Table:  devicetoken.ValidColumn,
-			notification.Table: notification.ValidColumn,
-			user.Table:         user.ValidColumn,
+			devicetoken.Table:           devicetoken.ValidColumn,
+			notification.Table:          notification.ValidColumn,
+			notificationtopic.Table:     notificationtopic.ValidColumn,
+			user.Table:                  user.ValidColumn,
+			usernotificationtopic.Table: usernotificationtopic.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

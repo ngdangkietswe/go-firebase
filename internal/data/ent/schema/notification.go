@@ -22,7 +22,8 @@ type Notification struct {
 func (Notification) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New),
-		field.UUID("user_id", uuid.UUID{}),
+		field.UUID("user_id", uuid.UUID{}).Optional(),
+		field.UUID("notification_topic_id", uuid.UUID{}).Optional(),
 		field.String("title"),
 		field.String("body"),
 		field.JSON("data", map[string]string{}).Optional().Comment("Additional data payload"),
@@ -34,7 +35,8 @@ func (Notification) Fields() []ent.Field {
 // Edges of the Notification.
 func (Notification) Edges() []ent.Edge {
 	return []ent.Edge{
-		util.One2ManyInverseRequired("user", User.Type, "notifications", "user_id"),
+		util.One2ManyInverse("user", User.Type, "notifications", "user_id"),
+		util.One2ManyInverse("notification_topic", NotificationTopic.Type, "notifications", "notification_topic_id"),
 	}
 }
 

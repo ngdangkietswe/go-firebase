@@ -10,10 +10,11 @@ import (
 )
 
 type AppRoute struct {
-	authRoute         *AuthRoute
-	userRoute         *UserRoute
-	deviceTokenRoute  *DeviceTokenRoute
-	notificationRoute *NotificationRoute
+	authRoute              *AuthRoute
+	userRoute              *UserRoute
+	deviceTokenRoute       *DeviceTokenRoute
+	notificationRoute      *NotificationRoute
+	notificationTopicRoute *NotificationTopicRoute
 }
 
 func (r *AppRoute) Register(app *fiber.App) {
@@ -23,6 +24,7 @@ func (r *AppRoute) Register(app *fiber.App) {
 	r.userRoute.Register(api)
 	r.deviceTokenRoute.Register(api)
 	r.notificationRoute.Register(api)
+	r.notificationTopicRoute.Register(api)
 }
 
 func NewAppRoute(
@@ -30,11 +32,13 @@ func NewAppRoute(
 	userRoute *UserRoute,
 	deviceTokenRoute *DeviceTokenRoute,
 	notificationRoute *NotificationRoute,
+	notificationTopicRoute *NotificationTopicRoute,
 ) *AppRoute {
 	return &AppRoute{
-		authRoute:         authRoute,
-		userRoute:         userRoute,
-		deviceTokenRoute:  deviceTokenRoute,
-		notificationRoute: notificationRoute,
+		authRoute:              authRoute,
+		userRoute:              userRoute,
+		deviceTokenRoute:       deviceTokenRoute,
+		notificationRoute:      notificationRoute,
+		notificationTopicRoute: notificationTopicRoute,
 	}
 }

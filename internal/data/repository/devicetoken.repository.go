@@ -9,7 +9,7 @@ import (
 	"context"
 	"go-firebase/internal/data/ent"
 	"go-firebase/internal/data/ent/devicetoken"
-	"go-firebase/internal/request"
+	"go-firebase/pkg/request"
 
 	"github.com/google/uuid"
 )
@@ -36,11 +36,21 @@ func (r *deviceTokenRepo) FindByUserIDAndDeviceToken(ctx context.Context, userID
 }
 
 func (r *deviceTokenRepo) FindAllByUserID(ctx context.Context, userID uuid.UUID) ([]*ent.DeviceToken, error) {
-	return r.cli.DeviceToken.Query().Where(devicetoken.UserID(userID)).All(ctx)
+	return r.cli.DeviceToken.Query().
+		Where(
+			devicetoken.UserID(userID),
+			devicetoken.IsActive(true),
+		).
+		All(ctx)
 }
 
 func (r *deviceTokenRepo) FindAllByUserIDIn(ctx context.Context, userIDs []uuid.UUID) ([]*ent.DeviceToken, error) {
-	return r.cli.DeviceToken.Query().Where(devicetoken.UserIDIn(userIDs...)).All(ctx)
+	return r.cli.DeviceToken.Query().
+		Where(
+			devicetoken.UserIDIn(userIDs...),
+			devicetoken.IsActive(true),
+		).
+		All(ctx)
 }
 
 func NewDeviceTokenRepository(cli *ent.Client) DeviceTokenRepository {

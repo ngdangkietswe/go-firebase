@@ -12,5 +12,6 @@ var Module = fx.Provide(
 	NewUserRoute,
 	NewDeviceTokenRoute,
 	NewNotificationRoute,
+	NewNotificationTopicRoute,
 	NewAppRoute,
 )

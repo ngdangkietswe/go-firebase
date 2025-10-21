@@ -7,7 +7,7 @@ package mapper
 
 import (
 	"go-firebase/internal/data/ent"
-	"go-firebase/internal/model"
+	"go-firebase/pkg/model"
 
 	"github.com/samber/lo"
 )

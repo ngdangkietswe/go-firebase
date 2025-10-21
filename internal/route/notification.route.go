@@ -18,9 +18,9 @@ type NotificationRoute struct {
 func (r *NotificationRoute) Register(router fiber.Router) {
 	notificationRouter := router.Group("/notifications")
 	notificationRouter.Post("/", r.notificationCtrl.SendNotification)
-	notificationRouter.Get("/users/:id", r.notificationCtrl.GetNotifications)
-	notificationRouter.Patch("/:id/read", r.notificationCtrl.MarkNotificationAsRead)
-	notificationRouter.Patch("/users/:id/read", r.notificationCtrl.MarkAllNotificationsAsRead)
+	notificationRouter.Get("/me", r.notificationCtrl.GetNotifications)
+	notificationRouter.Patch("/:id/mark-read", r.notificationCtrl.MarkNotificationAsRead)
+	notificationRouter.Patch("/mark-all-read", r.notificationCtrl.MarkAllNotificationsAsRead)
 }
 
 func NewNotificationRoute(

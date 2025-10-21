@@ -572,6 +572,29 @@ func HasNotificationsWith(preds ...predicate.Notification) predicate.User {
 	})
 }
 
+// HasUserNotificationTopics applies the HasEdge predicate on the "user_notification_topics" edge.
+func HasUserNotificationTopics() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, UserNotificationTopicsTable, UserNotificationTopicsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUserNotificationTopicsWith applies the HasEdge predicate on the "user_notification_topics" edge with a given conditions (other predicates).
+func HasUserNotificationTopicsWith(preds ...predicate.UserNotificationTopic) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := newUserNotificationTopicsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.User) predicate.User {
 	return predicate.User(sql.AndPredicates(predicates...))

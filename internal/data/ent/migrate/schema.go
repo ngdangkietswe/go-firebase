@@ -44,7 +44,8 @@ var (
 		{Name: "data", Type: field.TypeJSON, Nullable: true},
 		{Name: "sent_at", Type: field.TypeTime},
 		{Name: "is_read", Type: field.TypeBool, Default: false},
-		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "notification_topic_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID, Nullable: true},
 	}
 	// NotificationTable holds the schema information for the "notification" table.
 	NotificationTable = &schema.Table{
@@ -53,12 +54,32 @@ var (
 		PrimaryKey: []*schema.Column{NotificationColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "notification_users_notifications",
+				Symbol:     "notification_notification_topic_notifications",
 				Columns:    []*schema.Column{NotificationColumns[8]},
+				RefColumns: []*schema.Column{NotificationTopicColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "notification_users_notifications",
+				Columns:    []*schema.Column{NotificationColumns[9]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.NoAction,
+				OnDelete:   schema.SetNull,
 			},
 		},
+	}
+	// NotificationTopicColumns holds the columns for the "notification_topic" table.
+	NotificationTopicColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "description", Type: field.TypeString, Nullable: true},
+	}
+	// NotificationTopicTable holds the schema information for the "notification_topic" table.
+	NotificationTopicTable = &schema.Table{
+		Name:       "notification_topic",
+		Columns:    NotificationTopicColumns,
+		PrimaryKey: []*schema.Column{NotificationTopicColumns[0]},
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
@@ -77,11 +98,40 @@ var (
 		Columns:    UsersColumns,
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
 	}
+	// UserNotificationTopicColumns holds the columns for the "user_notification_topic" table.
+	UserNotificationTopicColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "subscribed_at", Type: field.TypeTime},
+		{Name: "notification_topic_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+	}
+	// UserNotificationTopicTable holds the schema information for the "user_notification_topic" table.
+	UserNotificationTopicTable = &schema.Table{
+		Name:       "user_notification_topic",
+		Columns:    UserNotificationTopicColumns,
+		PrimaryKey: []*schema.Column{UserNotificationTopicColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "user_notification_topic_notification_topic_user_notification_topics",
+				Columns:    []*schema.Column{UserNotificationTopicColumns[2]},
+				RefColumns: []*schema.Column{NotificationTopicColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "user_notification_topic_users_user_notification_topics",
+				Columns:    []*schema.Column{UserNotificationTopicColumns[3]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		DeviceTokenTable,
 		NotificationTable,
+		NotificationTopicTable,
 		UsersTable,
+		UserNotificationTopicTable,
 	}
 )
 
@@ -90,11 +140,20 @@ func init() {
 	DeviceTokenTable.Annotation = &entsql.Annotation{
 		Table: "device_token",
 	}
-	NotificationTable.ForeignKeys[0].RefTable = UsersTable
+	NotificationTable.ForeignKeys[0].RefTable = NotificationTopicTable
+	NotificationTable.ForeignKeys[1].RefTable = UsersTable
 	NotificationTable.Annotation = &entsql.Annotation{
 		Table: "notification",
 	}
+	NotificationTopicTable.Annotation = &entsql.Annotation{
+		Table: "notification_topic",
+	}
 	UsersTable.Annotation = &entsql.Annotation{
 		Table: "users",
+	}
+	UserNotificationTopicTable.ForeignKeys[0].RefTable = NotificationTopicTable
+	UserNotificationTopicTable.ForeignKeys[1].RefTable = UsersTable
+	UserNotificationTopicTable.Annotation = &entsql.Annotation{
+		Table: "user_notification_topic",
 	}
 }

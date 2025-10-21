@@ -8,8 +8,8 @@ package controller
 import (
 	"errors"
 	"go-firebase/internal/handler"
-	"go-firebase/internal/request"
-	"go-firebase/internal/response"
+	"go-firebase/pkg/request"
+	"go-firebase/pkg/response"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"

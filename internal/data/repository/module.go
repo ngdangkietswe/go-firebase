@@ -16,4 +16,6 @@ var Module = fx.Provide(
 	NewUserRepository,
 	NewDeviceTokenRepository,
 	NewNotificationRepository,
+	NewNotificationTopicRepository,
+	NewUserNotificationTopicRepository,
 )

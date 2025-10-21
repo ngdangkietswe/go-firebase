@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go-firebase/internal/data/ent/notification"
+	"go-firebase/internal/data/ent/notificationtopic"
 	"go-firebase/internal/data/ent/user"
 	"strings"
 	"time"
@@ -26,6 +27,8 @@ type Notification struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
+	// NotificationTopicID holds the value of the "notification_topic_id" field.
+	NotificationTopicID uuid.UUID `json:"notification_topic_id,omitempty"`
 	// Title holds the value of the "title" field.
 	Title string `json:"title,omitempty"`
 	// Body holds the value of the "body" field.
@@ -46,9 +49,11 @@ type Notification struct {
 type NotificationEdges struct {
 	// User holds the value of the user edge.
 	User *User `json:"user,omitempty"`
+	// NotificationTopic holds the value of the notification_topic edge.
+	NotificationTopic *NotificationTopic `json:"notification_topic,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // UserOrErr returns the User value or an error if the edge
@@ -60,6 +65,17 @@ func (e NotificationEdges) UserOrErr() (*User, error) {
 		return nil, &NotFoundError{label: user.Label}
 	}
 	return nil, &NotLoadedError{edge: "user"}
+}
+
+// NotificationTopicOrErr returns the NotificationTopic value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e NotificationEdges) NotificationTopicOrErr() (*NotificationTopic, error) {
+	if e.NotificationTopic != nil {
+		return e.NotificationTopic, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: notificationtopic.Label}
+	}
+	return nil, &NotLoadedError{edge: "notification_topic"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -75,7 +91,7 @@ func (*Notification) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullString)
 		case notification.FieldCreatedAt, notification.FieldUpdatedAt, notification.FieldSentAt:
 			values[i] = new(sql.NullTime)
-		case notification.FieldID, notification.FieldUserID:
+		case notification.FieldID, notification.FieldUserID, notification.FieldNotificationTopicID:
 			values[i] = new(uuid.UUID)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -115,6 +131,12 @@ func (_m *Notification) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
 				_m.UserID = *value
+			}
+		case notification.FieldNotificationTopicID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field notification_topic_id", values[i])
+			} else if value != nil {
+				_m.NotificationTopicID = *value
 			}
 		case notification.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -166,6 +188,11 @@ func (_m *Notification) QueryUser() *UserQuery {
 	return NewNotificationClient(_m.config).QueryUser(_m)
 }
 
+// QueryNotificationTopic queries the "notification_topic" edge of the Notification entity.
+func (_m *Notification) QueryNotificationTopic() *NotificationTopicQuery {
+	return NewNotificationClient(_m.config).QueryNotificationTopic(_m)
+}
+
 // Update returns a builder for updating this Notification.
 // Note that you need to call Notification.Unwrap() before calling this method if this Notification
 // was returned from a transaction, and the transaction was committed or rolled back.
@@ -197,6 +224,9 @@ func (_m *Notification) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
+	builder.WriteString(", ")
+	builder.WriteString("notification_topic_id=")
+	builder.WriteString(fmt.Sprintf("%v", _m.NotificationTopicID))
 	builder.WriteString(", ")
 	builder.WriteString("title=")
 	builder.WriteString(_m.Title)

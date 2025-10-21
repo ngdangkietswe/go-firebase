@@ -18,7 +18,9 @@ type AuthRoute struct {
 func (r *AuthRoute) Register(router fiber.Router) {
 	authRouter := router.Group("/auth")
 	authRouter.Post("/login", r.authCtrl.Login)
+	authRouter.Post("refresh-token", r.authCtrl.RefreshToken)
 	authRouter.Get("/verify-token", r.authCtrl.VerifyToken)
+	authRouter.Get("/me", r.authCtrl.CurrentUser)
 }
 
 func NewAuthRoute(

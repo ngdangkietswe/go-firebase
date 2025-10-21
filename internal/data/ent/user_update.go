@@ -10,6 +10,7 @@ import (
 	"go-firebase/internal/data/ent/notification"
 	"go-firebase/internal/data/ent/predicate"
 	"go-firebase/internal/data/ent/user"
+	"go-firebase/internal/data/ent/usernotificationtopic"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -155,6 +156,21 @@ func (_u *UserUpdate) AddNotifications(v ...*Notification) *UserUpdate {
 	return _u.AddNotificationIDs(ids...)
 }
 
+// AddUserNotificationTopicIDs adds the "user_notification_topics" edge to the UserNotificationTopic entity by IDs.
+func (_u *UserUpdate) AddUserNotificationTopicIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.AddUserNotificationTopicIDs(ids...)
+	return _u
+}
+
+// AddUserNotificationTopics adds the "user_notification_topics" edges to the UserNotificationTopic entity.
+func (_u *UserUpdate) AddUserNotificationTopics(v ...*UserNotificationTopic) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddUserNotificationTopicIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdate) Mutation() *UserMutation {
 	return _u.mutation
@@ -200,6 +216,27 @@ func (_u *UserUpdate) RemoveNotifications(v ...*Notification) *UserUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveNotificationIDs(ids...)
+}
+
+// ClearUserNotificationTopics clears all "user_notification_topics" edges to the UserNotificationTopic entity.
+func (_u *UserUpdate) ClearUserNotificationTopics() *UserUpdate {
+	_u.mutation.ClearUserNotificationTopics()
+	return _u
+}
+
+// RemoveUserNotificationTopicIDs removes the "user_notification_topics" edge to UserNotificationTopic entities by IDs.
+func (_u *UserUpdate) RemoveUserNotificationTopicIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.RemoveUserNotificationTopicIDs(ids...)
+	return _u
+}
+
+// RemoveUserNotificationTopics removes "user_notification_topics" edges to UserNotificationTopic entities.
+func (_u *UserUpdate) RemoveUserNotificationTopics(v ...*UserNotificationTopic) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveUserNotificationTopicIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -364,6 +401,51 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if _u.mutation.UserNotificationTopicsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.UserNotificationTopicsTable,
+			Columns: []string{user.UserNotificationTopicsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usernotificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedUserNotificationTopicsIDs(); len(nodes) > 0 && !_u.mutation.UserNotificationTopicsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.UserNotificationTopicsTable,
+			Columns: []string{user.UserNotificationTopicsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usernotificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.UserNotificationTopicsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.UserNotificationTopicsTable,
+			Columns: []string{user.UserNotificationTopicsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usernotificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -508,6 +590,21 @@ func (_u *UserUpdateOne) AddNotifications(v ...*Notification) *UserUpdateOne {
 	return _u.AddNotificationIDs(ids...)
 }
 
+// AddUserNotificationTopicIDs adds the "user_notification_topics" edge to the UserNotificationTopic entity by IDs.
+func (_u *UserUpdateOne) AddUserNotificationTopicIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.AddUserNotificationTopicIDs(ids...)
+	return _u
+}
+
+// AddUserNotificationTopics adds the "user_notification_topics" edges to the UserNotificationTopic entity.
+func (_u *UserUpdateOne) AddUserNotificationTopics(v ...*UserNotificationTopic) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddUserNotificationTopicIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdateOne) Mutation() *UserMutation {
 	return _u.mutation
@@ -553,6 +650,27 @@ func (_u *UserUpdateOne) RemoveNotifications(v ...*Notification) *UserUpdateOne 
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveNotificationIDs(ids...)
+}
+
+// ClearUserNotificationTopics clears all "user_notification_topics" edges to the UserNotificationTopic entity.
+func (_u *UserUpdateOne) ClearUserNotificationTopics() *UserUpdateOne {
+	_u.mutation.ClearUserNotificationTopics()
+	return _u
+}
+
+// RemoveUserNotificationTopicIDs removes the "user_notification_topics" edge to UserNotificationTopic entities by IDs.
+func (_u *UserUpdateOne) RemoveUserNotificationTopicIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.RemoveUserNotificationTopicIDs(ids...)
+	return _u
+}
+
+// RemoveUserNotificationTopics removes "user_notification_topics" edges to UserNotificationTopic entities.
+func (_u *UserUpdateOne) RemoveUserNotificationTopics(v ...*UserNotificationTopic) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveUserNotificationTopicIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -740,6 +858,51 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(notification.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.UserNotificationTopicsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.UserNotificationTopicsTable,
+			Columns: []string{user.UserNotificationTopicsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usernotificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedUserNotificationTopicsIDs(); len(nodes) > 0 && !_u.mutation.UserNotificationTopicsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.UserNotificationTopicsTable,
+			Columns: []string{user.UserNotificationTopicsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usernotificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.UserNotificationTopicsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.UserNotificationTopicsTable,
+			Columns: []string{user.UserNotificationTopicsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usernotificationtopic.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

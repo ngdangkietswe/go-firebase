@@ -9,7 +9,7 @@ import (
 	"context"
 	"go-firebase/internal/data/ent"
 	"go-firebase/internal/data/ent/user"
-	"go-firebase/internal/request"
+	"go-firebase/pkg/request"
 
 	"github.com/google/uuid"
 )
@@ -55,6 +55,10 @@ func (r *userRepo) FindByEmailOrID(ctx context.Context, identifier string) (*ent
 	return r.cli.User.Query().
 		Where(user.ID(uuid.MustParse(identifier))).
 		Only(ctx)
+}
+
+func (r *userRepo) FindByFirebaseUID(ctx context.Context, firebaseUID string) (*ent.User, error) {
+	return r.cli.User.Query().Where(user.FirebaseUID(firebaseUID)).Only(ctx)
 }
 
 func (r *userRepo) ExistsByID(ctx context.Context, id uuid.UUID) (bool, error) {

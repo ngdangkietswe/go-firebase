@@ -7,12 +7,10 @@ package handler
 
 import (
 	"context"
-	"go-firebase/internal/model"
-	"go-firebase/internal/request"
-	"go-firebase/internal/response"
 	"go-firebase/internal/service"
-	apiutil "go-firebase/internal/util"
 	"go-firebase/pkg/constant"
+	"go-firebase/pkg/request"
+	"go-firebase/pkg/response"
 	"go-firebase/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -25,27 +23,27 @@ type NotificationHandler struct {
 }
 
 func (h *NotificationHandler) SendNotification(c *fiber.Ctx, request *request.SendNotificationRequest) (*response.SendNotificationResponse, error) {
-	newCtx, cancel := context.WithTimeout(apiutil.FiberCtxToContext(c), constant.CtxTimeOut)
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()
 	return util.SafeFunc(newCtx, request, h.notificationSvc.SendNotification)
 }
 
-func (h *NotificationHandler) GetNotifications(c *fiber.Ctx, userID string) ([]*model.Notification, error) {
-	newCtx, cancel := context.WithTimeout(apiutil.FiberCtxToContext(c), constant.CtxTimeOut)
+func (h *NotificationHandler) GetNotifications(c *fiber.Ctx, request *request.ListNotificationRequest) (*response.ListResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()
-	return util.SafeFunc(newCtx, userID, h.notificationSvc.GetNotifications)
+	return util.SafeFunc(newCtx, request, h.notificationSvc.GetNotifications)
 }
 
 func (h *NotificationHandler) MarkNotificationAsRead(c *fiber.Ctx, notificationID string) (*response.EmptyResponse, error) {
-	newCtx, cancel := context.WithTimeout(apiutil.FiberCtxToContext(c), constant.CtxTimeOut)
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()
 	return util.SafeFunc(newCtx, notificationID, h.notificationSvc.MarkNotificationAsRead)
 }
 
-func (h *NotificationHandler) MarkAllNotificationsAsRead(c *fiber.Ctx, userID string) (*response.EmptyResponse, error) {
-	newCtx, cancel := context.WithTimeout(apiutil.FiberCtxToContext(c), constant.CtxTimeOut)
+func (h *NotificationHandler) MarkAllNotificationsAsRead(c *fiber.Ctx) (*response.EmptyResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()
-	return util.SafeFunc(newCtx, userID, h.notificationSvc.MarkAllNotificationsAsRead)
+	return util.SafeFuncNoReq(newCtx, h.notificationSvc.MarkAllNotificationsAsRead)
 }
 
 func NewNotificationHandler(

@@ -9,4 +9,5 @@ import "go.uber.org/fx"
 
 var Module = fx.Provide(
 	NewUserHelper,
+	NewNotificationTopicHelper,
 )

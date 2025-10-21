@@ -12,9 +12,9 @@ import (
 	"go-firebase/internal/data/repository"
 	"go-firebase/internal/firebase"
 	"go-firebase/internal/mapper"
-	"go-firebase/internal/model"
-	"go-firebase/internal/request"
-	"go-firebase/internal/response"
+	"go-firebase/pkg/request"
+	"go-firebase/pkg/response"
+	"go-firebase/pkg/util"
 
 	"github.com/google/uuid"
 	"github.com/ngdangkietswe/swe-go-common-shared/logger"
@@ -23,16 +23,26 @@ import (
 )
 
 type notificationSvc struct {
-	cli                *ent.Client
-	logger             *logger.Logger
-	fcmCli             firebase.FCMClient
-	notificationRepo   repository.NotificationRepository
-	deviceTokenRepo    repository.DeviceTokenRepository
-	userRepo           repository.UserRepository
-	notificationMapper mapper.NotificationMapper
+	cli                   *ent.Client
+	logger                *logger.Logger
+	fcmCli                firebase.FCMClient
+	notificationRepo      repository.NotificationRepository
+	notificationTopicRepo repository.NotificationTopicRepository
+	deviceTokenRepo       repository.DeviceTokenRepository
+	userRepo              repository.UserRepository
+	notificationMapper    mapper.NotificationMapper
 }
 
 func (s *notificationSvc) SendNotification(ctx context.Context, request *request.SendNotificationRequest) (*response.SendNotificationResponse, error) {
+	if request.UserID != "" {
+		return s.sendNotificationToUser(ctx, request)
+	} else if request.TopicID != "" || request.TopicName != "" {
+		return s.sendNotificationToTopic(ctx, request)
+	}
+	return nil, errors.New("either user_id or topic_id/topic_name must be provided")
+}
+
+func (s *notificationSvc) sendNotificationToUser(ctx context.Context, request *request.SendNotificationRequest) (*response.SendNotificationResponse, error) {
 	user, err := s.userRepo.FindByID(ctx, uuid.MustParse(request.UserID))
 	if err != nil {
 		s.logger.Error("Failed to find user by ID", zap.String("user_id", request.UserID), zap.String("error", err.Error()))
@@ -53,48 +63,78 @@ func (s *notificationSvc) SendNotification(ctx context.Context, request *request
 	notification, err := repository.WithTxResult(ctx, s.cli, s.logger, func(tx *ent.Tx) (*ent.Notification, error) {
 		return s.notificationRepo.Save(ctx, tx, request)
 	})
-
 	if err != nil {
 		s.logger.Error("Failed to save notification", zap.String("user_id", request.UserID), zap.String("error", err.Error()))
 		return nil, err
 	}
 
-	go func(deviceTokens []*ent.DeviceToken) {
+	go func(deviceTokens []*ent.DeviceToken, title, body string, payload map[string]string) {
 		tokens := lo.Map(deviceTokens, func(item *ent.DeviceToken, _ int) string {
 			return item.Token
 		})
-
-		firebaseErr := s.fcmCli.SendToTokens(tokens, request.Title, request.Body, request.Payload)
-		if firebaseErr != nil {
-			s.logger.Error("Failed to send notification via Firebase", zap.String("user_id", request.UserID), zap.String("error", firebaseErr.Error()))
+		if firebaseErr := s.fcmCli.SendToTokens(tokens, title, body, payload); firebaseErr != nil {
+			s.logger.Error("Failed to send notification to user", zap.String("user_id", request.UserID), zap.String("error", firebaseErr.Error()))
 		}
-	}(deviceTokens)
+	}(deviceTokens, request.Title, request.Body, request.Payload)
 
 	return &response.SendNotificationResponse{
-		UserID:         user.ID.String(),
 		NotificationID: notification.ID.String(),
+		UserID:         user.ID.String(),
 	}, nil
 }
 
-func (s *notificationSvc) GetNotifications(ctx context.Context, userID string) ([]*model.Notification, error) {
-	exists, err := s.userRepo.ExistsByID(ctx, uuid.MustParse(userID))
+func (s *notificationSvc) sendNotificationToTopic(ctx context.Context, request *request.SendNotificationRequest) (*response.SendNotificationResponse, error) {
+	var topic *ent.NotificationTopic
+	var err error
+
+	if request.TopicID != "" {
+		topic, err = s.notificationTopicRepo.FindByID(ctx, uuid.MustParse(request.TopicID))
+		if err != nil {
+			s.logger.Error("Failed to find notification topic by ID", zap.String("topic_id", request.TopicID), zap.String("error", err.Error()))
+			return nil, err
+		}
+	} else {
+		topic, err = s.notificationTopicRepo.FindByName(ctx, request.TopicName)
+		if err != nil {
+			s.logger.Error("Failed to find notification topic by name", zap.String("topic_name", request.TopicName), zap.String("error", err.Error()))
+			return nil, err
+		}
+		request.TopicID = topic.ID.String()
+	}
+
+	notification, err := repository.WithTxResult(ctx, s.cli, s.logger, func(tx *ent.Tx) (*ent.Notification, error) {
+		return s.notificationRepo.Save(ctx, tx, request)
+	})
 	if err != nil {
-		s.logger.Error("Failed to check user existence by ID", zap.String("user_id", userID), zap.String("error", err.Error()))
+		s.logger.Error("Failed to save notification", zap.String("topic_id", request.TopicID), zap.String("error", err.Error()))
 		return nil, err
 	}
 
-	if !exists {
-		s.logger.Info("User not found by ID", zap.String("user_id", userID))
-		return nil, errors.New("user not found")
-	}
+	go func(topicName, title, body string, payload map[string]string) {
+		if firebaseErr := s.fcmCli.SendToTopic(topicName, title, body, payload); firebaseErr != nil {
+			s.logger.Error("Failed to send notification to topic", zap.String("topic_id", request.TopicID), zap.String("error", firebaseErr.Error()))
+		}
+	}(topic.Name, request.Title, request.Body, request.Payload)
 
-	notifications, err := s.notificationRepo.FindAllByUserID(ctx, uuid.MustParse(userID))
+	return &response.SendNotificationResponse{
+		NotificationID: notification.ID.String(),
+		TopicID:        topic.ID.String(),
+	}, nil
+}
+
+func (s *notificationSvc) GetNotifications(ctx context.Context, request *request.ListNotificationRequest) (*response.ListResponse, error) {
+	util.NormalizePaginationRequest(request.Paginate)
+
+	items, totalItems, err := s.notificationRepo.FindAll(ctx, request)
 	if err != nil {
-		s.logger.Error("Failed to find notifications by user ID", zap.String("user_id", userID), zap.String("error", err.Error()))
+		s.logger.Error("Failed to get notifications", zap.String("error", err.Error()))
 		return nil, err
 	}
 
-	return s.notificationMapper.AsList(notifications), nil
+	return &response.ListResponse{
+		Items: s.notificationMapper.AsList(items),
+		Meta:  util.AsPageMeta(request.Paginate, totalItems),
+	}, nil
 }
 
 func (s *notificationSvc) MarkNotificationAsRead(ctx context.Context, notificationID string) (*response.EmptyResponse, error) {
@@ -119,22 +159,11 @@ func (s *notificationSvc) MarkNotificationAsRead(ctx context.Context, notificati
 	return &response.EmptyResponse{}, nil
 }
 
-func (s *notificationSvc) MarkAllNotificationsAsRead(ctx context.Context, userID string) (*response.EmptyResponse, error) {
-	exists, err := s.userRepo.ExistsByID(ctx, uuid.MustParse(userID))
-	if err != nil {
-		s.logger.Error("Failed to check user existence by ID", zap.String("user_id", userID), zap.String("error", err.Error()))
-		return nil, err
-	}
-
-	if !exists {
-		s.logger.Info("User not found by ID", zap.String("user_id", userID))
-		return nil, errors.New("user not found")
-	}
-
-	if err = repository.WithTx(ctx, s.cli, s.logger, func(tx *ent.Tx) error {
-		return s.notificationRepo.MarkAllAsReadByUserID(ctx, tx, uuid.MustParse(userID))
+func (s *notificationSvc) MarkAllNotificationsAsRead(ctx context.Context) (*response.EmptyResponse, error) {
+	if err := repository.WithTx(ctx, s.cli, s.logger, func(tx *ent.Tx) error {
+		return s.notificationRepo.MarkAllAsRead(ctx, tx)
 	}); err != nil {
-		s.logger.Error("Failed to mark all notifications as read", zap.String("user_id", userID), zap.String("error", err.Error()))
+		s.logger.Error("Failed to mark all notifications as read", zap.Error(err))
 		return nil, err
 	}
 
@@ -146,17 +175,19 @@ func NewNotificationService(
 	logger *logger.Logger,
 	fcmCli firebase.FCMClient,
 	notificationRepo repository.NotificationRepository,
+	notificationTopicRepo repository.NotificationTopicRepository,
 	deviceTokenRepo repository.DeviceTokenRepository,
 	userRepo repository.UserRepository,
 	notificationMapper mapper.NotificationMapper,
 ) NotificationService {
 	return &notificationSvc{
-		cli:                cli,
-		logger:             logger,
-		fcmCli:             fcmCli,
-		notificationRepo:   notificationRepo,
-		deviceTokenRepo:    deviceTokenRepo,
-		userRepo:           userRepo,
-		notificationMapper: notificationMapper,
+		cli:                   cli,
+		logger:                logger,
+		fcmCli:                fcmCli,
+		notificationRepo:      notificationRepo,
+		notificationTopicRepo: notificationTopicRepo,
+		deviceTokenRepo:       deviceTokenRepo,
+		userRepo:              userRepo,
+		notificationMapper:    notificationMapper,
 	}
 }

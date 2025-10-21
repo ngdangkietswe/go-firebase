@@ -9,8 +9,8 @@ import (
 	"context"
 	"go-firebase/internal/data/ent"
 	"go-firebase/internal/data/repository"
-	"go-firebase/internal/request"
-	"go-firebase/internal/response"
+	"go-firebase/pkg/request"
+	"go-firebase/pkg/response"
 
 	"github.com/ngdangkietswe/swe-go-common-shared/logger"
 	"go.uber.org/zap"

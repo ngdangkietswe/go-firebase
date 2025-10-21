@@ -58,6 +58,48 @@ func (c *fcmClient) SendToTokens(tokens []string, title string, body string, dat
 	return nil
 }
 
+func (c *fcmClient) SendToTopic(topic string, title string, body string, data map[string]string) error {
+	msg := &messaging.Message{
+		Notification: &messaging.Notification{
+			Title: title,
+			Body:  body,
+		},
+		Data:  data,
+		Topic: topic,
+	}
+
+	_, err := c.messagingCli.Send(context.Background(), msg)
+	if err != nil {
+		c.logger.Error("Failed to send firebase notification to topic", zap.String("error", err.Error()))
+		return err
+	}
+
+	c.logger.Info("Successfully sent firebase notification to topic", zap.String("topic", topic))
+	return nil
+}
+
+func (c *fcmClient) SubscribeToTopic(tokens []string, topic string) error {
+	res, err := c.messagingCli.SubscribeToTopic(context.Background(), tokens, topic)
+	if err != nil {
+		c.logger.Error("Failed to subscribe tokens to topic", zap.String("error", err.Error()))
+		return err
+	}
+
+	c.logger.Info("Successfully subscribed tokens to topic", zap.String("topic", topic), zap.Int("successCount", res.SuccessCount), zap.Int("failureCount", res.FailureCount))
+	return nil
+}
+
+func (c *fcmClient) UnsubscribeFromTopic(tokens []string, topic string) error {
+	res, err := c.messagingCli.UnsubscribeFromTopic(context.Background(), tokens, topic)
+	if err != nil {
+		c.logger.Error("Failed to unsubscribe tokens from topic", zap.String("error", err.Error()))
+		return err
+	}
+
+	c.logger.Info("Successfully unsubscribed tokens from topic", zap.String("topic", topic), zap.Int("successCount", res.SuccessCount), zap.Int("failureCount", res.FailureCount))
+	return nil
+}
+
 func NewFCMClient(
 	logger *logger.Logger,
 	firebaseApp *FirebaseApp,

@@ -16,8 +16,12 @@ type Tx struct {
 	DeviceToken *DeviceTokenClient
 	// Notification is the client for interacting with the Notification builders.
 	Notification *NotificationClient
+	// NotificationTopic is the client for interacting with the NotificationTopic builders.
+	NotificationTopic *NotificationTopicClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// UserNotificationTopic is the client for interacting with the UserNotificationTopic builders.
+	UserNotificationTopic *UserNotificationTopicClient
 
 	// lazily loaded.
 	client     *Client
@@ -151,7 +155,9 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.DeviceToken = NewDeviceTokenClient(tx.config)
 	tx.Notification = NewNotificationClient(tx.config)
+	tx.NotificationTopic = NewNotificationTopicClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.UserNotificationTopic = NewUserNotificationTopicClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

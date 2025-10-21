@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"go-firebase/internal/data/ent/notification"
+	"go-firebase/internal/data/ent/notificationtopic"
 	"go-firebase/internal/data/ent/user"
 	"time"
 
@@ -56,6 +57,28 @@ func (_c *NotificationCreate) SetNillableUpdatedAt(v *time.Time) *NotificationCr
 // SetUserID sets the "user_id" field.
 func (_c *NotificationCreate) SetUserID(v uuid.UUID) *NotificationCreate {
 	_c.mutation.SetUserID(v)
+	return _c
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (_c *NotificationCreate) SetNillableUserID(v *uuid.UUID) *NotificationCreate {
+	if v != nil {
+		_c.SetUserID(*v)
+	}
+	return _c
+}
+
+// SetNotificationTopicID sets the "notification_topic_id" field.
+func (_c *NotificationCreate) SetNotificationTopicID(v uuid.UUID) *NotificationCreate {
+	_c.mutation.SetNotificationTopicID(v)
+	return _c
+}
+
+// SetNillableNotificationTopicID sets the "notification_topic_id" field if the given value is not nil.
+func (_c *NotificationCreate) SetNillableNotificationTopicID(v *uuid.UUID) *NotificationCreate {
+	if v != nil {
+		_c.SetNotificationTopicID(*v)
+	}
 	return _c
 }
 
@@ -124,6 +147,11 @@ func (_c *NotificationCreate) SetUser(v *User) *NotificationCreate {
 	return _c.SetUserID(v.ID)
 }
 
+// SetNotificationTopic sets the "notification_topic" edge to the NotificationTopic entity.
+func (_c *NotificationCreate) SetNotificationTopic(v *NotificationTopic) *NotificationCreate {
+	return _c.SetNotificationTopicID(v.ID)
+}
+
 // Mutation returns the NotificationMutation object of the builder.
 func (_c *NotificationCreate) Mutation() *NotificationMutation {
 	return _c.mutation
@@ -189,9 +217,6 @@ func (_c *NotificationCreate) check() error {
 	if _, ok := _c.mutation.UpdatedAt(); !ok {
 		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Notification.updated_at"`)}
 	}
-	if _, ok := _c.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Notification.user_id"`)}
-	}
 	if _, ok := _c.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Notification.title"`)}
 	}
@@ -203,9 +228,6 @@ func (_c *NotificationCreate) check() error {
 	}
 	if _, ok := _c.mutation.IsRead(); !ok {
 		return &ValidationError{Name: "is_read", err: errors.New(`ent: missing required field "Notification.is_read"`)}
-	}
-	if len(_c.mutation.UserIDs()) == 0 {
-		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Notification.user"`)}
 	}
 	return nil
 }
@@ -288,6 +310,23 @@ func (_c *NotificationCreate) createSpec() (*Notification, *sqlgraph.CreateSpec)
 		_node.UserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
+	if nodes := _c.mutation.NotificationTopicIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   notification.NotificationTopicTable,
+			Columns: []string{notification.NotificationTopicColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(notificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.NotificationTopicID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return _node, _spec
 }
 
@@ -361,6 +400,30 @@ func (u *NotificationUpsert) SetUserID(v uuid.UUID) *NotificationUpsert {
 // UpdateUserID sets the "user_id" field to the value that was provided on create.
 func (u *NotificationUpsert) UpdateUserID() *NotificationUpsert {
 	u.SetExcluded(notification.FieldUserID)
+	return u
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *NotificationUpsert) ClearUserID() *NotificationUpsert {
+	u.SetNull(notification.FieldUserID)
+	return u
+}
+
+// SetNotificationTopicID sets the "notification_topic_id" field.
+func (u *NotificationUpsert) SetNotificationTopicID(v uuid.UUID) *NotificationUpsert {
+	u.Set(notification.FieldNotificationTopicID, v)
+	return u
+}
+
+// UpdateNotificationTopicID sets the "notification_topic_id" field to the value that was provided on create.
+func (u *NotificationUpsert) UpdateNotificationTopicID() *NotificationUpsert {
+	u.SetExcluded(notification.FieldNotificationTopicID)
+	return u
+}
+
+// ClearNotificationTopicID clears the value of the "notification_topic_id" field.
+func (u *NotificationUpsert) ClearNotificationTopicID() *NotificationUpsert {
+	u.SetNull(notification.FieldNotificationTopicID)
 	return u
 }
 
@@ -506,6 +569,34 @@ func (u *NotificationUpsertOne) SetUserID(v uuid.UUID) *NotificationUpsertOne {
 func (u *NotificationUpsertOne) UpdateUserID() *NotificationUpsertOne {
 	return u.Update(func(s *NotificationUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *NotificationUpsertOne) ClearUserID() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearUserID()
+	})
+}
+
+// SetNotificationTopicID sets the "notification_topic_id" field.
+func (u *NotificationUpsertOne) SetNotificationTopicID(v uuid.UUID) *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetNotificationTopicID(v)
+	})
+}
+
+// UpdateNotificationTopicID sets the "notification_topic_id" field to the value that was provided on create.
+func (u *NotificationUpsertOne) UpdateNotificationTopicID() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateNotificationTopicID()
+	})
+}
+
+// ClearNotificationTopicID clears the value of the "notification_topic_id" field.
+func (u *NotificationUpsertOne) ClearNotificationTopicID() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearNotificationTopicID()
 	})
 }
 
@@ -829,6 +920,34 @@ func (u *NotificationUpsertBulk) SetUserID(v uuid.UUID) *NotificationUpsertBulk 
 func (u *NotificationUpsertBulk) UpdateUserID() *NotificationUpsertBulk {
 	return u.Update(func(s *NotificationUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *NotificationUpsertBulk) ClearUserID() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearUserID()
+	})
+}
+
+// SetNotificationTopicID sets the "notification_topic_id" field.
+func (u *NotificationUpsertBulk) SetNotificationTopicID(v uuid.UUID) *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetNotificationTopicID(v)
+	})
+}
+
+// UpdateNotificationTopicID sets the "notification_topic_id" field to the value that was provided on create.
+func (u *NotificationUpsertBulk) UpdateNotificationTopicID() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateNotificationTopicID()
+	})
+}
+
+// ClearNotificationTopicID clears the value of the "notification_topic_id" field.
+func (u *NotificationUpsertBulk) ClearNotificationTopicID() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearNotificationTopicID()
 	})
 }
 

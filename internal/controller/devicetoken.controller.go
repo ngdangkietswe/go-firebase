@@ -7,8 +7,8 @@ package controller
 
 import (
 	"go-firebase/internal/handler"
-	"go-firebase/internal/request"
-	"go-firebase/internal/response"
+	"go-firebase/pkg/request"
+	"go-firebase/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

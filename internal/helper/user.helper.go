@@ -10,8 +10,9 @@ import (
 	"go-firebase/internal/data/ent"
 	"go-firebase/internal/data/repository"
 	"go-firebase/internal/mapper"
-	"go-firebase/internal/model"
-	"go-firebase/internal/util"
+	"go-firebase/pkg/constant"
+	"go-firebase/pkg/model"
+	"go-firebase/pkg/util"
 	"sync"
 
 	"github.com/google/uuid"
@@ -26,12 +27,10 @@ type userHelper struct {
 	deviceTokenMapper mapper.DeviceTokenMapper
 }
 
-const PreloadDeviceTokens = "device_tokens"
-
 func (h *userHelper) Preload(ctx context.Context, users []*model.User, preload []string) {
 	var wg sync.WaitGroup
 
-	if lo.Contains(preload, PreloadDeviceTokens) {
+	if lo.Contains(preload, constant.PreloadDeviceTokens) {
 		wg.Add(1)
 		go h.preloadDeviceTokens(ctx, users, &wg)
 	}

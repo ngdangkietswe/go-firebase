@@ -9,6 +9,7 @@ import (
 	"go-firebase/internal/data/ent/devicetoken"
 	"go-firebase/internal/data/ent/notification"
 	"go-firebase/internal/data/ent/user"
+	"go-firebase/internal/data/ent/usernotificationtopic"
 	"time"
 
 	"entgo.io/ent/dialect"
@@ -150,6 +151,21 @@ func (_c *UserCreate) AddNotifications(v ...*Notification) *UserCreate {
 		ids[i] = v[i].ID
 	}
 	return _c.AddNotificationIDs(ids...)
+}
+
+// AddUserNotificationTopicIDs adds the "user_notification_topics" edge to the UserNotificationTopic entity by IDs.
+func (_c *UserCreate) AddUserNotificationTopicIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddUserNotificationTopicIDs(ids...)
+	return _c
+}
+
+// AddUserNotificationTopics adds the "user_notification_topics" edges to the UserNotificationTopic entity.
+func (_c *UserCreate) AddUserNotificationTopics(v ...*UserNotificationTopic) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddUserNotificationTopicIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -304,6 +320,22 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(notification.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.UserNotificationTopicsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.UserNotificationTopicsTable,
+			Columns: []string{user.UserNotificationTopicsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usernotificationtopic.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

@@ -7,12 +7,11 @@ package handler
 
 import (
 	"context"
-	"go-firebase/internal/model"
-	"go-firebase/internal/request"
-	"go-firebase/internal/response"
 	"go-firebase/internal/service"
-	apiutil "go-firebase/internal/util"
 	"go-firebase/pkg/constant"
+	"go-firebase/pkg/model"
+	"go-firebase/pkg/request"
+	"go-firebase/pkg/response"
 	"go-firebase/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -25,13 +24,13 @@ type UserHandler struct {
 }
 
 func (h *UserHandler) CreateUser(c *fiber.Ctx, request *request.CreateUserRequest) (*response.CreateUserResponse, error) {
-	newCtx, cancel := context.WithTimeout(apiutil.FiberCtxToContext(c), constant.CtxTimeOut)
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()
 	return util.SafeFunc(newCtx, request, h.userSvc.CreateUser)
 }
 
 func (h *UserHandler) GetUser(c *fiber.Ctx, request *request.GetUserRequest) (*model.User, error) {
-	newCtx, cancel := context.WithTimeout(apiutil.FiberCtxToContext(c), constant.CtxTimeOut)
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()
 	return util.SafeFunc(newCtx, request, h.userSvc.GetUser)
 }

@@ -71,6 +71,11 @@ func UserID(v uuid.UUID) predicate.Notification {
 	return predicate.Notification(sql.FieldEQ(FieldUserID, v))
 }
 
+// NotificationTopicID applies equality check predicate on the "notification_topic_id" field. It's identical to NotificationTopicIDEQ.
+func NotificationTopicID(v uuid.UUID) predicate.Notification {
+	return predicate.Notification(sql.FieldEQ(FieldNotificationTopicID, v))
+}
+
 // Title applies equality check predicate on the "title" field. It's identical to TitleEQ.
 func Title(v string) predicate.Notification {
 	return predicate.Notification(sql.FieldEQ(FieldTitle, v))
@@ -189,6 +194,46 @@ func UserIDIn(vs ...uuid.UUID) predicate.Notification {
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
 func UserIDNotIn(vs ...uuid.UUID) predicate.Notification {
 	return predicate.Notification(sql.FieldNotIn(FieldUserID, vs...))
+}
+
+// UserIDIsNil applies the IsNil predicate on the "user_id" field.
+func UserIDIsNil() predicate.Notification {
+	return predicate.Notification(sql.FieldIsNull(FieldUserID))
+}
+
+// UserIDNotNil applies the NotNil predicate on the "user_id" field.
+func UserIDNotNil() predicate.Notification {
+	return predicate.Notification(sql.FieldNotNull(FieldUserID))
+}
+
+// NotificationTopicIDEQ applies the EQ predicate on the "notification_topic_id" field.
+func NotificationTopicIDEQ(v uuid.UUID) predicate.Notification {
+	return predicate.Notification(sql.FieldEQ(FieldNotificationTopicID, v))
+}
+
+// NotificationTopicIDNEQ applies the NEQ predicate on the "notification_topic_id" field.
+func NotificationTopicIDNEQ(v uuid.UUID) predicate.Notification {
+	return predicate.Notification(sql.FieldNEQ(FieldNotificationTopicID, v))
+}
+
+// NotificationTopicIDIn applies the In predicate on the "notification_topic_id" field.
+func NotificationTopicIDIn(vs ...uuid.UUID) predicate.Notification {
+	return predicate.Notification(sql.FieldIn(FieldNotificationTopicID, vs...))
+}
+
+// NotificationTopicIDNotIn applies the NotIn predicate on the "notification_topic_id" field.
+func NotificationTopicIDNotIn(vs ...uuid.UUID) predicate.Notification {
+	return predicate.Notification(sql.FieldNotIn(FieldNotificationTopicID, vs...))
+}
+
+// NotificationTopicIDIsNil applies the IsNil predicate on the "notification_topic_id" field.
+func NotificationTopicIDIsNil() predicate.Notification {
+	return predicate.Notification(sql.FieldIsNull(FieldNotificationTopicID))
+}
+
+// NotificationTopicIDNotNil applies the NotNil predicate on the "notification_topic_id" field.
+func NotificationTopicIDNotNil() predicate.Notification {
+	return predicate.Notification(sql.FieldNotNull(FieldNotificationTopicID))
 }
 
 // TitleEQ applies the EQ predicate on the "title" field.
@@ -396,6 +441,29 @@ func HasUser() predicate.Notification {
 func HasUserWith(preds ...predicate.User) predicate.Notification {
 	return predicate.Notification(func(s *sql.Selector) {
 		step := newUserStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasNotificationTopic applies the HasEdge predicate on the "notification_topic" edge.
+func HasNotificationTopic() predicate.Notification {
+	return predicate.Notification(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, NotificationTopicTable, NotificationTopicColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasNotificationTopicWith applies the HasEdge predicate on the "notification_topic" edge with a given conditions (other predicates).
+func HasNotificationTopicWith(preds ...predicate.NotificationTopic) predicate.Notification {
+	return predicate.Notification(func(s *sql.Selector) {
+		step := newNotificationTopicStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

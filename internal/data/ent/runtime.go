@@ -5,8 +5,10 @@ package ent
 import (
 	"go-firebase/internal/data/ent/devicetoken"
 	"go-firebase/internal/data/ent/notification"
+	"go-firebase/internal/data/ent/notificationtopic"
 	"go-firebase/internal/data/ent/schema"
 	"go-firebase/internal/data/ent/user"
+	"go-firebase/internal/data/ent/usernotificationtopic"
 	"time"
 
 	"github.com/google/uuid"
@@ -63,17 +65,36 @@ func init() {
 	// notification.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	notification.UpdateDefaultUpdatedAt = notificationDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// notificationDescSentAt is the schema descriptor for sent_at field.
-	notificationDescSentAt := notificationFields[5].Descriptor()
+	notificationDescSentAt := notificationFields[6].Descriptor()
 	// notification.DefaultSentAt holds the default value on creation for the sent_at field.
 	notification.DefaultSentAt = notificationDescSentAt.Default.(func() time.Time)
 	// notificationDescIsRead is the schema descriptor for is_read field.
-	notificationDescIsRead := notificationFields[6].Descriptor()
+	notificationDescIsRead := notificationFields[7].Descriptor()
 	// notification.DefaultIsRead holds the default value on creation for the is_read field.
 	notification.DefaultIsRead = notificationDescIsRead.Default.(bool)
 	// notificationDescID is the schema descriptor for id field.
 	notificationDescID := notificationFields[0].Descriptor()
 	// notification.DefaultID holds the default value on creation for the id field.
 	notification.DefaultID = notificationDescID.Default.(func() uuid.UUID)
+	notificationtopicMixin := schema.NotificationTopic{}.Mixin()
+	notificationtopicMixinFields0 := notificationtopicMixin[0].Fields()
+	_ = notificationtopicMixinFields0
+	notificationtopicFields := schema.NotificationTopic{}.Fields()
+	_ = notificationtopicFields
+	// notificationtopicDescCreatedAt is the schema descriptor for created_at field.
+	notificationtopicDescCreatedAt := notificationtopicMixinFields0[0].Descriptor()
+	// notificationtopic.DefaultCreatedAt holds the default value on creation for the created_at field.
+	notificationtopic.DefaultCreatedAt = notificationtopicDescCreatedAt.Default.(func() time.Time)
+	// notificationtopicDescUpdatedAt is the schema descriptor for updated_at field.
+	notificationtopicDescUpdatedAt := notificationtopicMixinFields0[1].Descriptor()
+	// notificationtopic.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	notificationtopic.DefaultUpdatedAt = notificationtopicDescUpdatedAt.Default.(func() time.Time)
+	// notificationtopic.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	notificationtopic.UpdateDefaultUpdatedAt = notificationtopicDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// notificationtopicDescID is the schema descriptor for id field.
+	notificationtopicDescID := notificationtopicFields[0].Descriptor()
+	// notificationtopic.DefaultID holds the default value on creation for the id field.
+	notificationtopic.DefaultID = notificationtopicDescID.Default.(func() uuid.UUID)
 	userMixin := schema.User{}.Mixin()
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
@@ -93,4 +114,14 @@ func init() {
 	userDescID := userFields[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.
 	user.DefaultID = userDescID.Default.(func() uuid.UUID)
+	usernotificationtopicFields := schema.UserNotificationTopic{}.Fields()
+	_ = usernotificationtopicFields
+	// usernotificationtopicDescSubscribedAt is the schema descriptor for subscribed_at field.
+	usernotificationtopicDescSubscribedAt := usernotificationtopicFields[3].Descriptor()
+	// usernotificationtopic.DefaultSubscribedAt holds the default value on creation for the subscribed_at field.
+	usernotificationtopic.DefaultSubscribedAt = usernotificationtopicDescSubscribedAt.Default.(func() time.Time)
+	// usernotificationtopicDescID is the schema descriptor for id field.
+	usernotificationtopicDescID := usernotificationtopicFields[0].Descriptor()
+	// usernotificationtopic.DefaultID holds the default value on creation for the id field.
+	usernotificationtopic.DefaultID = usernotificationtopicDescID.Default.(func() uuid.UUID)
 }

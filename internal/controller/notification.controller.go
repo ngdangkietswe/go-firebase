@@ -7,10 +7,12 @@ package controller
 
 import (
 	"go-firebase/internal/handler"
-	"go-firebase/internal/request"
-	"go-firebase/internal/response"
+	"go-firebase/pkg/request"
+	"go-firebase/pkg/response"
+	"go-firebase/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/samber/lo"
 )
 
 type NotificationCtrl struct {
@@ -49,15 +51,25 @@ func (c *NotificationCtrl) SendNotification(ctx *fiber.Ctx) error {
 // @Tags         Notification API
 // @Accept       json
 // @Produce      json
-// @Param        user_id  path      string  true  "User ID"
-// @Success      200      {object}  response.ApiResponse
-// @Failure      400      {object}  response.ApiResponse
-// @Failure      500      {object}  response.ApiResponse
-// @Router       /notifications/users/{id} [get]
+// @Param        is_read  	   query     string  false  "Filter by read status"
+// @Param        page          query     int     false  "Page number"
+// @Param        page_size     query     int     false  "Number of items per page"
+// @Param        sort          query     string  false  "Field to sort by"
+// @Param        order         query     string  false  "Sort order (asc or desc)"
+// @Success      200              {object}  response.ApiResponse
+// @Failure      400              {object}  response.ApiResponse
+// @Failure      500              {object}  response.ApiResponse
+// @Router       /notifications/me [get]
 func (c *NotificationCtrl) GetNotifications(ctx *fiber.Ctx) error {
-	userID := ctx.Params("id")
+	req := &request.ListNotificationRequest{
+		Paginate: util.AsPaginateRequest(ctx),
+	}
 
-	res, err := c.notificationHandler.GetNotifications(ctx, userID)
+	if isReadStr := ctx.Query("is_read"); isReadStr != "" {
+		req.IsRead = lo.ToPtr(util.ToBool(isReadStr))
+	}
+
+	res, err := c.notificationHandler.GetNotifications(ctx, req)
 	if err != nil {
 		return response.ApiErrorResponse(ctx, fiber.StatusInternalServerError, err)
 	}
@@ -75,7 +87,7 @@ func (c *NotificationCtrl) GetNotifications(ctx *fiber.Ctx) error {
 // @Success      200              {object}  response.ApiResponse
 // @Failure      400              {object}  response.ApiResponse
 // @Failure      500              {object}  response.ApiResponse
-// @Router       /notifications/{id}/read [patch]
+// @Router       /notifications/{id}/mark-read [patch]
 func (c *NotificationCtrl) MarkNotificationAsRead(ctx *fiber.Ctx) error {
 	notificationID := ctx.Params("id")
 
@@ -88,20 +100,17 @@ func (c *NotificationCtrl) MarkNotificationAsRead(ctx *fiber.Ctx) error {
 }
 
 // MarkAllNotificationsAsRead godoc
-// @Summary      Mark all notifications as read for a user
-// @Description  Mark all notifications as read for a specific user
+// @Summary      Mark all notifications as read
+// @Description  Mark all notifications as read for the current user
 // @Tags         Notification API
 // @Accept       json
 // @Produce      json
-// @Param        id  	  path      string  true  "User ID"
 // @Success      200      {object}  response.ApiResponse
 // @Failure      400      {object}  response.ApiResponse
 // @Failure      500      {object}  response.ApiResponse
-// @Router       /notifications/users/{id}/read [patch]
+// @Router       /notifications/mark-all-read [patch]
 func (c *NotificationCtrl) MarkAllNotificationsAsRead(ctx *fiber.Ctx) error {
-	userID := ctx.Params("id")
-
-	res, err := c.notificationHandler.MarkAllNotificationsAsRead(ctx, userID)
+	res, err := c.notificationHandler.MarkAllNotificationsAsRead(ctx)
 	if err != nil {
 		return response.ApiErrorResponse(ctx, fiber.StatusInternalServerError, err)
 	}

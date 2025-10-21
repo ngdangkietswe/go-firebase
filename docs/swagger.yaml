@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  request.CreateNotificationTopicRequest:
+    properties:
+      topic_name:
+        type: string
+    required:
+    - topic_name
+    type: object
   request.CreateUserRequest:
     properties:
       email:
@@ -27,6 +34,13 @@ definitions:
     required:
     - email
     - password
+    type: object
+  request.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
     type: object
   request.RegisterDeviceRequest:
     properties:
@@ -57,6 +71,16 @@ definitions:
         type: string
     required:
     - user_id
+    type: object
+  request.SubscribeNotificationTopicRequest:
+    properties:
+      topic_ids:
+        items:
+          type: string
+        minItems: 1
+        type: array
+    required:
+    - topic_ids
     type: object
   response.ApiResponse:
     properties:
@@ -108,6 +132,55 @@ paths:
           schema:
             $ref: '#/definitions/response.ApiResponse'
       summary: User Login
+      tags:
+      - Auth API
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves information about the currently authenticated user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Get Current User
+      tags:
+      - Auth API
+  /auth/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: Refreshes the Firebase ID token using the provided refresh token.
+      parameters:
+      - description: Refresh Token Info
+        in: body
+        name: refresh
+        required: true
+        schema:
+          $ref: '#/definitions/request.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Refresh Firebase ID Token
       tags:
       - Auth API
   /auth/verify-token:
@@ -169,6 +242,66 @@ paths:
       summary: Register a device token
       tags:
       - Device Token API
+  /notification-topics:
+    post:
+      consumes:
+      - application/json
+      description: Create a new notification topic
+      parameters:
+      - description: Notification Topic Info
+        in: body
+        name: topic
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateNotificationTopicRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Create a notification topic
+      tags:
+      - Notification Topic API
+  /notification-topics/subscribe:
+    post:
+      consumes:
+      - application/json
+      description: Subscribe a device to a notification topic
+      parameters:
+      - description: Subscription Info
+        in: body
+        name: subscription
+        required: true
+        schema:
+          $ref: '#/definitions/request.SubscribeNotificationTopicRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Subscribe to a notification topic
+      tags:
+      - Notification Topic API
   /notifications:
     post:
       consumes:
@@ -199,7 +332,7 @@ paths:
       summary: Send a notification
       tags:
       - Notification API
-  /notifications/{id}/read:
+  /notifications/{id}/mark-read:
     patch:
       consumes:
       - application/json
@@ -228,16 +361,54 @@ paths:
       summary: Mark a notification as read
       tags:
       - Notification API
-  /notifications/users/{id}:
+  /notifications/mark-all-read:
+    patch:
+      consumes:
+      - application/json
+      description: Mark all notifications as read for the current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Mark all notifications as read
+      tags:
+      - Notification API
+  /notifications/me:
     get:
       consumes:
       - application/json
       description: Retrieve all notifications for a specific user
       parameters:
-      - description: User ID
-        in: path
-        name: user_id
-        required: true
+      - description: Filter by read status
+        in: query
+        name: is_read
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: page_size
+        type: integer
+      - description: Field to sort by
+        in: query
+        name: sort
+        type: string
+      - description: Sort order (asc or desc)
+        in: query
+        name: order
         type: string
       produces:
       - application/json
@@ -255,35 +426,6 @@ paths:
           schema:
             $ref: '#/definitions/response.ApiResponse'
       summary: Get notifications for a user
-      tags:
-      - Notification API
-  /notifications/users/{id}/read:
-    patch:
-      consumes:
-      - application/json
-      description: Mark all notifications as read for a specific user
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.ApiResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ApiResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ApiResponse'
-      summary: Mark all notifications as read for a user
       tags:
       - Notification API
   /users:

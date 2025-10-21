@@ -33,6 +33,8 @@ const (
 	EdgeDeviceTokens = "device_tokens"
 	// EdgeNotifications holds the string denoting the notifications edge name in mutations.
 	EdgeNotifications = "notifications"
+	// EdgeUserNotificationTopics holds the string denoting the user_notification_topics edge name in mutations.
+	EdgeUserNotificationTopics = "user_notification_topics"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// DeviceTokensTable is the table that holds the device_tokens relation/edge.
@@ -49,6 +51,13 @@ const (
 	NotificationsInverseTable = "notification"
 	// NotificationsColumn is the table column denoting the notifications relation/edge.
 	NotificationsColumn = "user_id"
+	// UserNotificationTopicsTable is the table that holds the user_notification_topics relation/edge.
+	UserNotificationTopicsTable = "user_notification_topic"
+	// UserNotificationTopicsInverseTable is the table name for the UserNotificationTopic entity.
+	// It exists in this package in order to avoid circular dependency with the "usernotificationtopic" package.
+	UserNotificationTopicsInverseTable = "user_notification_topic"
+	// UserNotificationTopicsColumn is the table column denoting the user_notification_topics relation/edge.
+	UserNotificationTopicsColumn = "user_id"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -154,6 +163,20 @@ func ByNotifications(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newNotificationsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByUserNotificationTopicsCount orders the results by user_notification_topics count.
+func ByUserNotificationTopicsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newUserNotificationTopicsStep(), opts...)
+	}
+}
+
+// ByUserNotificationTopics orders the results by user_notification_topics terms.
+func ByUserNotificationTopics(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUserNotificationTopicsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newDeviceTokensStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -166,5 +189,12 @@ func newNotificationsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(NotificationsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, NotificationsTable, NotificationsColumn),
+	)
+}
+func newUserNotificationTopicsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UserNotificationTopicsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, UserNotificationTopicsTable, UserNotificationTopicsColumn),
 	)
 }

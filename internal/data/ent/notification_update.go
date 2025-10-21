@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"go-firebase/internal/data/ent/notification"
+	"go-firebase/internal/data/ent/notificationtopic"
 	"go-firebase/internal/data/ent/predicate"
 	"go-firebase/internal/data/ent/user"
 	"time"
@@ -47,6 +48,32 @@ func (_u *NotificationUpdate) SetNillableUserID(v *uuid.UUID) *NotificationUpdat
 	if v != nil {
 		_u.SetUserID(*v)
 	}
+	return _u
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (_u *NotificationUpdate) ClearUserID() *NotificationUpdate {
+	_u.mutation.ClearUserID()
+	return _u
+}
+
+// SetNotificationTopicID sets the "notification_topic_id" field.
+func (_u *NotificationUpdate) SetNotificationTopicID(v uuid.UUID) *NotificationUpdate {
+	_u.mutation.SetNotificationTopicID(v)
+	return _u
+}
+
+// SetNillableNotificationTopicID sets the "notification_topic_id" field if the given value is not nil.
+func (_u *NotificationUpdate) SetNillableNotificationTopicID(v *uuid.UUID) *NotificationUpdate {
+	if v != nil {
+		_u.SetNotificationTopicID(*v)
+	}
+	return _u
+}
+
+// ClearNotificationTopicID clears the value of the "notification_topic_id" field.
+func (_u *NotificationUpdate) ClearNotificationTopicID() *NotificationUpdate {
+	_u.mutation.ClearNotificationTopicID()
 	return _u
 }
 
@@ -123,6 +150,11 @@ func (_u *NotificationUpdate) SetUser(v *User) *NotificationUpdate {
 	return _u.SetUserID(v.ID)
 }
 
+// SetNotificationTopic sets the "notification_topic" edge to the NotificationTopic entity.
+func (_u *NotificationUpdate) SetNotificationTopic(v *NotificationTopic) *NotificationUpdate {
+	return _u.SetNotificationTopicID(v.ID)
+}
+
 // Mutation returns the NotificationMutation object of the builder.
 func (_u *NotificationUpdate) Mutation() *NotificationMutation {
 	return _u.mutation
@@ -131,6 +163,12 @@ func (_u *NotificationUpdate) Mutation() *NotificationMutation {
 // ClearUser clears the "user" edge to the User entity.
 func (_u *NotificationUpdate) ClearUser() *NotificationUpdate {
 	_u.mutation.ClearUser()
+	return _u
+}
+
+// ClearNotificationTopic clears the "notification_topic" edge to the NotificationTopic entity.
+func (_u *NotificationUpdate) ClearNotificationTopic() *NotificationUpdate {
+	_u.mutation.ClearNotificationTopic()
 	return _u
 }
 
@@ -170,18 +208,7 @@ func (_u *NotificationUpdate) defaults() {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (_u *NotificationUpdate) check() error {
-	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
-		return errors.New(`ent: clearing a required unique edge "Notification.user"`)
-	}
-	return nil
-}
-
 func (_u *NotificationUpdate) sqlSave(ctx context.Context) (_node int, err error) {
-	if err := _u.check(); err != nil {
-		return _node, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(notification.Table, notification.Columns, sqlgraph.NewFieldSpec(notification.FieldID, field.TypeUUID))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -240,6 +267,35 @@ func (_u *NotificationUpdate) sqlSave(ctx context.Context) (_node int, err error
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if _u.mutation.NotificationTopicCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   notification.NotificationTopicTable,
+			Columns: []string{notification.NotificationTopicColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(notificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.NotificationTopicIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   notification.NotificationTopicTable,
+			Columns: []string{notification.NotificationTopicColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(notificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{notification.Label}
@@ -277,6 +333,32 @@ func (_u *NotificationUpdateOne) SetNillableUserID(v *uuid.UUID) *NotificationUp
 	if v != nil {
 		_u.SetUserID(*v)
 	}
+	return _u
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (_u *NotificationUpdateOne) ClearUserID() *NotificationUpdateOne {
+	_u.mutation.ClearUserID()
+	return _u
+}
+
+// SetNotificationTopicID sets the "notification_topic_id" field.
+func (_u *NotificationUpdateOne) SetNotificationTopicID(v uuid.UUID) *NotificationUpdateOne {
+	_u.mutation.SetNotificationTopicID(v)
+	return _u
+}
+
+// SetNillableNotificationTopicID sets the "notification_topic_id" field if the given value is not nil.
+func (_u *NotificationUpdateOne) SetNillableNotificationTopicID(v *uuid.UUID) *NotificationUpdateOne {
+	if v != nil {
+		_u.SetNotificationTopicID(*v)
+	}
+	return _u
+}
+
+// ClearNotificationTopicID clears the value of the "notification_topic_id" field.
+func (_u *NotificationUpdateOne) ClearNotificationTopicID() *NotificationUpdateOne {
+	_u.mutation.ClearNotificationTopicID()
 	return _u
 }
 
@@ -353,6 +435,11 @@ func (_u *NotificationUpdateOne) SetUser(v *User) *NotificationUpdateOne {
 	return _u.SetUserID(v.ID)
 }
 
+// SetNotificationTopic sets the "notification_topic" edge to the NotificationTopic entity.
+func (_u *NotificationUpdateOne) SetNotificationTopic(v *NotificationTopic) *NotificationUpdateOne {
+	return _u.SetNotificationTopicID(v.ID)
+}
+
 // Mutation returns the NotificationMutation object of the builder.
 func (_u *NotificationUpdateOne) Mutation() *NotificationMutation {
 	return _u.mutation
@@ -361,6 +448,12 @@ func (_u *NotificationUpdateOne) Mutation() *NotificationMutation {
 // ClearUser clears the "user" edge to the User entity.
 func (_u *NotificationUpdateOne) ClearUser() *NotificationUpdateOne {
 	_u.mutation.ClearUser()
+	return _u
+}
+
+// ClearNotificationTopic clears the "notification_topic" edge to the NotificationTopic entity.
+func (_u *NotificationUpdateOne) ClearNotificationTopic() *NotificationUpdateOne {
+	_u.mutation.ClearNotificationTopic()
 	return _u
 }
 
@@ -413,18 +506,7 @@ func (_u *NotificationUpdateOne) defaults() {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (_u *NotificationUpdateOne) check() error {
-	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
-		return errors.New(`ent: clearing a required unique edge "Notification.user"`)
-	}
-	return nil
-}
-
 func (_u *NotificationUpdateOne) sqlSave(ctx context.Context) (_node *Notification, err error) {
-	if err := _u.check(); err != nil {
-		return _node, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(notification.Table, notification.Columns, sqlgraph.NewFieldSpec(notification.FieldID, field.TypeUUID))
 	id, ok := _u.mutation.ID()
 	if !ok {
@@ -493,6 +575,35 @@ func (_u *NotificationUpdateOne) sqlSave(ctx context.Context) (_node *Notificati
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.NotificationTopicCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   notification.NotificationTopicTable,
+			Columns: []string{notification.NotificationTopicColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(notificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.NotificationTopicIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   notification.NotificationTopicTable,
+			Columns: []string{notification.NotificationTopicColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(notificationtopic.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

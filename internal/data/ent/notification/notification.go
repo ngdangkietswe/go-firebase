@@ -21,6 +21,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
+	// FieldNotificationTopicID holds the string denoting the notification_topic_id field in the database.
+	FieldNotificationTopicID = "notification_topic_id"
 	// FieldTitle holds the string denoting the title field in the database.
 	FieldTitle = "title"
 	// FieldBody holds the string denoting the body field in the database.
@@ -33,6 +35,8 @@ const (
 	FieldIsRead = "is_read"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
+	// EdgeNotificationTopic holds the string denoting the notification_topic edge name in mutations.
+	EdgeNotificationTopic = "notification_topic"
 	// Table holds the table name of the notification in the database.
 	Table = "notification"
 	// UserTable is the table that holds the user relation/edge.
@@ -42,6 +46,13 @@ const (
 	UserInverseTable = "users"
 	// UserColumn is the table column denoting the user relation/edge.
 	UserColumn = "user_id"
+	// NotificationTopicTable is the table that holds the notification_topic relation/edge.
+	NotificationTopicTable = "notification"
+	// NotificationTopicInverseTable is the table name for the NotificationTopic entity.
+	// It exists in this package in order to avoid circular dependency with the "notificationtopic" package.
+	NotificationTopicInverseTable = "notification_topic"
+	// NotificationTopicColumn is the table column denoting the notification_topic relation/edge.
+	NotificationTopicColumn = "notification_topic_id"
 )
 
 // Columns holds all SQL columns for notification fields.
@@ -50,6 +61,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldUserID,
+	FieldNotificationTopicID,
 	FieldTitle,
 	FieldBody,
 	FieldData,
@@ -105,6 +117,11 @@ func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUserID, opts...).ToFunc()
 }
 
+// ByNotificationTopicID orders the results by the notification_topic_id field.
+func ByNotificationTopicID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNotificationTopicID, opts...).ToFunc()
+}
+
 // ByTitle orders the results by the title field.
 func ByTitle(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTitle, opts...).ToFunc()
@@ -131,10 +148,24 @@ func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
 	}
 }
+
+// ByNotificationTopicField orders the results by notification_topic field.
+func ByNotificationTopicField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newNotificationTopicStep(), sql.OrderByField(field, opts...))
+	}
+}
 func newUserStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(UserInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+	)
+}
+func newNotificationTopicStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(NotificationTopicInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, NotificationTopicTable, NotificationTopicColumn),
 	)
 }

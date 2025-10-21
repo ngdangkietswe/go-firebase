@@ -44,9 +44,11 @@ type UserEdges struct {
 	DeviceTokens []*DeviceToken `json:"device_tokens,omitempty"`
 	// Notifications holds the value of the notifications edge.
 	Notifications []*Notification `json:"notifications,omitempty"`
+	// UserNotificationTopics holds the value of the user_notification_topics edge.
+	UserNotificationTopics []*UserNotificationTopic `json:"user_notification_topics,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // DeviceTokensOrErr returns the DeviceTokens value or an error if the edge
@@ -65,6 +67,15 @@ func (e UserEdges) NotificationsOrErr() ([]*Notification, error) {
 		return e.Notifications, nil
 	}
 	return nil, &NotLoadedError{edge: "notifications"}
+}
+
+// UserNotificationTopicsOrErr returns the UserNotificationTopics value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) UserNotificationTopicsOrErr() ([]*UserNotificationTopic, error) {
+	if e.loadedTypes[2] {
+		return e.UserNotificationTopics, nil
+	}
+	return nil, &NotLoadedError{edge: "user_notification_topics"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -162,6 +173,11 @@ func (_m *User) QueryDeviceTokens() *DeviceTokenQuery {
 // QueryNotifications queries the "notifications" edge of the User entity.
 func (_m *User) QueryNotifications() *NotificationQuery {
 	return NewUserClient(_m.config).QueryNotifications(_m)
+}
+
+// QueryUserNotificationTopics queries the "user_notification_topics" edge of the User entity.
+func (_m *User) QueryUserNotificationTopics() *UserNotificationTopicQuery {
+	return NewUserClient(_m.config).QueryUserNotificationTopics(_m)
 }
 
 // Update returns a builder for updating this User.

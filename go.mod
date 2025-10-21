@@ -12,6 +12,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/ngdangkietswe/swe-go-common-shared v0.0.0-20250531043739-eb8bbf8956bb
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/samber/lo v1.47.0
 	github.com/swaggo/swag v1.16.4
 	go.uber.org/fx v1.24.0

@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"go-firebase/internal/data/ent/notification"
+	"go-firebase/internal/data/ent/notificationtopic"
 	"go-firebase/internal/data/ent/predicate"
 	"go-firebase/internal/data/ent/user"
 	"math"
@@ -21,12 +22,13 @@ import (
 // NotificationQuery is the builder for querying Notification entities.
 type NotificationQuery struct {
 	config
-	ctx        *QueryContext
-	order      []notification.OrderOption
-	inters     []Interceptor
-	predicates []predicate.Notification
-	withUser   *UserQuery
-	modifiers  []func(*sql.Selector)
+	ctx                   *QueryContext
+	order                 []notification.OrderOption
+	inters                []Interceptor
+	predicates            []predicate.Notification
+	withUser              *UserQuery
+	withNotificationTopic *NotificationTopicQuery
+	modifiers             []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -78,6 +80,28 @@ func (_q *NotificationQuery) QueryUser() *UserQuery {
 			sqlgraph.From(notification.Table, notification.FieldID, selector),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, notification.UserTable, notification.UserColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryNotificationTopic chains the current query on the "notification_topic" edge.
+func (_q *NotificationQuery) QueryNotificationTopic() *NotificationTopicQuery {
+	query := (&NotificationTopicClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(notification.Table, notification.FieldID, selector),
+			sqlgraph.To(notificationtopic.Table, notificationtopic.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, notification.NotificationTopicTable, notification.NotificationTopicColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -272,12 +296,13 @@ func (_q *NotificationQuery) Clone() *NotificationQuery {
 		return nil
 	}
 	return &NotificationQuery{
-		config:     _q.config,
-		ctx:        _q.ctx.Clone(),
-		order:      append([]notification.OrderOption{}, _q.order...),
-		inters:     append([]Interceptor{}, _q.inters...),
-		predicates: append([]predicate.Notification{}, _q.predicates...),
-		withUser:   _q.withUser.Clone(),
+		config:                _q.config,
+		ctx:                   _q.ctx.Clone(),
+		order:                 append([]notification.OrderOption{}, _q.order...),
+		inters:                append([]Interceptor{}, _q.inters...),
+		predicates:            append([]predicate.Notification{}, _q.predicates...),
+		withUser:              _q.withUser.Clone(),
+		withNotificationTopic: _q.withNotificationTopic.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
@@ -292,6 +317,17 @@ func (_q *NotificationQuery) WithUser(opts ...func(*UserQuery)) *NotificationQue
 		opt(query)
 	}
 	_q.withUser = query
+	return _q
+}
+
+// WithNotificationTopic tells the query-builder to eager-load the nodes that are connected to
+// the "notification_topic" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *NotificationQuery) WithNotificationTopic(opts ...func(*NotificationTopicQuery)) *NotificationQuery {
+	query := (&NotificationTopicClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withNotificationTopic = query
 	return _q
 }
 
@@ -373,8 +409,9 @@ func (_q *NotificationQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 	var (
 		nodes       = []*Notification{}
 		_spec       = _q.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			_q.withUser != nil,
+			_q.withNotificationTopic != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -404,6 +441,12 @@ func (_q *NotificationQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 			return nil, err
 		}
 	}
+	if query := _q.withNotificationTopic; query != nil {
+		if err := _q.loadNotificationTopic(ctx, query, nodes, nil,
+			func(n *Notification, e *NotificationTopic) { n.Edges.NotificationTopic = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
@@ -429,6 +472,35 @@ func (_q *NotificationQuery) loadUser(ctx context.Context, query *UserQuery, nod
 		nodes, ok := nodeids[n.ID]
 		if !ok {
 			return fmt.Errorf(`unexpected foreign-key "user_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (_q *NotificationQuery) loadNotificationTopic(ctx context.Context, query *NotificationTopicQuery, nodes []*Notification, init func(*Notification), assign func(*Notification, *NotificationTopic)) error {
+	ids := make([]uuid.UUID, 0, len(nodes))
+	nodeids := make(map[uuid.UUID][]*Notification)
+	for i := range nodes {
+		fk := nodes[i].NotificationTopicID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(notificationtopic.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "notification_topic_id" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -467,6 +539,9 @@ func (_q *NotificationQuery) querySpec() *sqlgraph.QuerySpec {
 		}
 		if _q.withUser != nil {
 			_spec.Node.AddColumnOnce(notification.FieldUserID)
+		}
+		if _q.withNotificationTopic != nil {
+			_spec.Node.AddColumnOnce(notification.FieldNotificationTopicID)
 		}
 	}
 	if ps := _q.predicates; len(ps) > 0 {

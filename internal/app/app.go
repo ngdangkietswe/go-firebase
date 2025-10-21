@@ -7,10 +7,12 @@ package app
 
 import (
 	"go-firebase/internal/controller"
+	"go-firebase/internal/cron"
 	"go-firebase/internal/data/repository"
 	"go-firebase/internal/firebase"
 	"go-firebase/internal/handler"
 	"go-firebase/internal/helper"
+	"go-firebase/internal/job"
 	"go-firebase/internal/mapper"
 	"go-firebase/internal/middleware"
 	"go-firebase/internal/route"
@@ -28,6 +30,8 @@ func Start() {
 	fxApp := fx.New(
 		logger.Module,
 		firebase.Module,
+		cron.Module,
+		job.Module,
 		repository.Module,
 		mapper.Module,
 		helper.Module,

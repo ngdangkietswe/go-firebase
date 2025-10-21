@@ -8,8 +8,8 @@ package controller
 import (
 	"errors"
 	"go-firebase/internal/handler"
-	"go-firebase/internal/request"
-	"go-firebase/internal/response"
+	"go-firebase/pkg/request"
+	"go-firebase/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -68,6 +68,50 @@ func (c *AuthCtrl) VerifyToken(ctx *fiber.Ctx) error {
 	res, err := c.authHandler.VerifyToken(ctx, &req)
 	if err != nil {
 		return response.ApiErrorResponse(ctx, fiber.StatusUnauthorized, err)
+	}
+
+	return response.ApiSuccessResponse(ctx, res)
+}
+
+// RefreshToken godoc
+// @Summary      Refresh Firebase ID Token
+// @Description  Refreshes the Firebase ID token using the provided refresh token.
+// @Tags         Auth API
+// @Accept       json
+// @Produce      json
+// @Param        refresh  body      request.RefreshTokenRequest  true  "Refresh Token Info"
+// @Success      200      {object}  response.ApiResponse
+// @Failure      400      {object}  response.ApiResponse
+// @Failure      401      {object}  response.ApiResponse
+// @Router       /auth/refresh-token [post]
+func (c *AuthCtrl) RefreshToken(ctx *fiber.Ctx) error {
+	var req request.RefreshTokenRequest
+
+	if err := ctx.BodyParser(&req); err != nil {
+		return response.ApiErrorResponse(ctx, fiber.StatusBadRequest, err)
+	}
+
+	res, err := c.authHandler.RefreshToken(ctx, &req)
+	if err != nil {
+		return response.ApiErrorResponse(ctx, fiber.StatusUnauthorized, err)
+	}
+
+	return response.ApiSuccessResponse(ctx, res)
+}
+
+// CurrentUser godoc
+// @Summary      Get Current User
+// @Description  Retrieves information about the currently authenticated user.
+// @Tags         Auth API
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  response.ApiResponse
+// @Failure      500  {object}  response.ApiResponse
+// @Router       /auth/me [get]
+func (c *AuthCtrl) CurrentUser(ctx *fiber.Ctx) error {
+	res, err := c.authHandler.CurrentUser(ctx)
+	if err != nil {
+		return response.ApiErrorResponse(ctx, fiber.StatusInternalServerError, err)
 	}
 
 	return response.ApiSuccessResponse(ctx, res)

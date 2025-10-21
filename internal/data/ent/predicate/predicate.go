@@ -12,5 +12,11 @@ type DeviceToken func(*sql.Selector)
 // Notification is the predicate function for notification builders.
 type Notification func(*sql.Selector)
 
+// NotificationTopic is the predicate function for notificationtopic builders.
+type NotificationTopic func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
+
+// UserNotificationTopic is the predicate function for usernotificationtopic builders.
+type UserNotificationTopic func(*sql.Selector)

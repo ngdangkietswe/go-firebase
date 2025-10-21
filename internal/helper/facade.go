@@ -7,11 +7,18 @@ package helper
 
 import (
 	"context"
-	"go-firebase/internal/model"
+	"go-firebase/pkg/model"
+
+	"github.com/google/uuid"
 )
 
 type (
 	UserHelper interface {
 		Preload(ctx context.Context, users []*model.User, preload []string)
+	}
+
+	NotificationTopicHelper interface {
+		FirebaseSubscribeToTopic(ctx context.Context, userID uuid.UUID, topicIDs []uuid.UUID) error
+		FirebaseUnsubscribeFromTopic(ctx context.Context, userID uuid.UUID, topicIDs []uuid.UUID) error
 	}
 )

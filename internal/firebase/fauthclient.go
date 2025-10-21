@@ -10,8 +10,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"go-firebase/internal/request"
 	"go-firebase/pkg/constant"
+	"go-firebase/pkg/request"
 	"net/http"
 	"time"
 
@@ -24,46 +24,44 @@ import (
 type fAuthCli struct {
 	logger  *logger.Logger
 	authCli *auth.Client
+	apiKey  string
 }
 
-const FAuthURL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="
+const (
+	FSignInWithPasswordURL    = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="
+	FSignInWithCustomTokenURL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key="
+	FRefreshTokenURL          = "https://securetoken.googleapis.com/v1/token?key="
+)
 
-func (c *fAuthCli) Login(request *request.LoginRequest) (map[string]interface{}, error) {
-	apiKey := config.GetString("FIREBASE_API_KEY", "")
-
+func (c *fAuthCli) LoginWithPassword(request *request.LoginRequest) (map[string]interface{}, error) {
 	reqBody := map[string]interface{}{
 		"email":             request.Email,
 		"password":          request.Password,
 		"returnSecureToken": true,
 	}
 
-	reqBodyByte, err := json.Marshal(reqBody)
+	loginResp, err := postFirebase(FSignInWithPasswordURL+c.apiKey, reqBody)
 	if err != nil {
-		c.logger.Error("Failed to marshal login request body", zap.Error(err))
+		c.logger.Error("Failed to login with firebase email and password", zap.Error(err))
 		return nil, err
 	}
 
-	httpCli := http.Client{Timeout: time.Second * 10}
+	return loginResp, nil
+}
 
-	resp, err := httpCli.Post(FAuthURL+apiKey, "application/json", bytes.NewBuffer(reqBodyByte))
+func (c *fAuthCli) LoginWithCustomToken(customToken string) (map[string]interface{}, error) {
+	reqBody := map[string]interface{}{
+		"token":             customToken,
+		"returnSecureToken": true,
+	}
+
+	loginResp, err := postFirebase(FSignInWithCustomTokenURL+c.apiKey, reqBody)
 	if err != nil {
-		c.logger.Error("Failed to send login request to firebase", zap.Error(err))
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		c.logger.Error("Firebase login request failed", zap.Int("statusCode", resp.StatusCode))
-		return nil, errors.New("firebase login request failed")
-	}
-
-	var respData map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&respData); err != nil {
-		c.logger.Error("Failed to decode firebase login response", zap.Error(err))
+		c.logger.Error("Failed to login with firebase custom token", zap.Error(err))
 		return nil, err
 	}
 
-	return respData, nil
+	return loginResp, nil
 }
 
 func (c *fAuthCli) Signup(request *request.CreateUserRequest) (string, error) {
@@ -97,13 +95,56 @@ func (c *fAuthCli) toFirebaseUserParams(request *request.CreateUserRequest) *aut
 	return params
 }
 
-func (c *fAuthCli) VerifyIDToken(idToken string) (string, error) {
+func (c *fAuthCli) VerifyIDToken(idToken string) (map[string]interface{}, error) {
 	fToken, err := c.authCli.VerifyIDToken(context.Background(), idToken)
 	if err != nil {
 		c.logger.Error("Failed to verify firebase ID token", zap.Error(err))
-		return "", err
+		return nil, err
 	}
-	return fToken.UID, nil
+	return fToken.Claims, nil
+}
+
+func (c *fAuthCli) RefreshToken(request *request.RefreshTokenRequest) (map[string]interface{}, error) {
+	reqBody := map[string]interface{}{
+		"grant_type":    "refresh_token",
+		"refresh_token": request.RefreshToken,
+	}
+
+	refreshResp, err := postFirebase(FRefreshTokenURL+c.apiKey, reqBody)
+	if err != nil {
+		c.logger.Error("Failed to refresh firebase token", zap.Error(err))
+		return nil, err
+	}
+
+	return refreshResp, nil
+}
+
+func (c *fAuthCli) CustomToken(claims map[string]interface{}) (string, error) {
+	return c.authCli.CustomTokenWithClaims(context.Background(), claims["firebase_uid"].(string), claims)
+}
+
+func postFirebase(url string, body map[string]interface{}) (map[string]interface{}, error) {
+	bodyBytes, _ := json.Marshal(body)
+
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Post(url, "application/json", bytes.NewBuffer(bodyBytes))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		var errResp map[string]interface{}
+		_ = json.NewDecoder(resp.Body).Decode(&errResp)
+		return nil, errors.New("firebase request failed")
+	}
+
+	var respData map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&respData); err != nil {
+		return nil, err
+	}
+
+	return respData, nil
 }
 
 func NewFAuthClient(
@@ -113,5 +154,6 @@ func NewFAuthClient(
 	return &fAuthCli{
 		logger:  logger,
 		authCli: firebaseApp.authCli,
+		apiKey:  config.GetString("FIREBASE_API_KEY", ""),
 	}
 }

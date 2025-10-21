@@ -13,7 +13,9 @@ import (
 
 	"go-firebase/internal/data/ent/devicetoken"
 	"go-firebase/internal/data/ent/notification"
+	"go-firebase/internal/data/ent/notificationtopic"
 	"go-firebase/internal/data/ent/user"
+	"go-firebase/internal/data/ent/usernotificationtopic"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -31,8 +33,12 @@ type Client struct {
 	DeviceToken *DeviceTokenClient
 	// Notification is the client for interacting with the Notification builders.
 	Notification *NotificationClient
+	// NotificationTopic is the client for interacting with the NotificationTopic builders.
+	NotificationTopic *NotificationTopicClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// UserNotificationTopic is the client for interacting with the UserNotificationTopic builders.
+	UserNotificationTopic *UserNotificationTopicClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -46,7 +52,9 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.DeviceToken = NewDeviceTokenClient(c.config)
 	c.Notification = NewNotificationClient(c.config)
+	c.NotificationTopic = NewNotificationTopicClient(c.config)
 	c.User = NewUserClient(c.config)
+	c.UserNotificationTopic = NewUserNotificationTopicClient(c.config)
 }
 
 type (
@@ -137,11 +145,13 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		DeviceToken:  NewDeviceTokenClient(cfg),
-		Notification: NewNotificationClient(cfg),
-		User:         NewUserClient(cfg),
+		ctx:                   ctx,
+		config:                cfg,
+		DeviceToken:           NewDeviceTokenClient(cfg),
+		Notification:          NewNotificationClient(cfg),
+		NotificationTopic:     NewNotificationTopicClient(cfg),
+		User:                  NewUserClient(cfg),
+		UserNotificationTopic: NewUserNotificationTopicClient(cfg),
 	}, nil
 }
 
@@ -159,11 +169,13 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		DeviceToken:  NewDeviceTokenClient(cfg),
-		Notification: NewNotificationClient(cfg),
-		User:         NewUserClient(cfg),
+		ctx:                   ctx,
+		config:                cfg,
+		DeviceToken:           NewDeviceTokenClient(cfg),
+		Notification:          NewNotificationClient(cfg),
+		NotificationTopic:     NewNotificationTopicClient(cfg),
+		User:                  NewUserClient(cfg),
+		UserNotificationTopic: NewUserNotificationTopicClient(cfg),
 	}, nil
 }
 
@@ -194,7 +206,9 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.DeviceToken.Use(hooks...)
 	c.Notification.Use(hooks...)
+	c.NotificationTopic.Use(hooks...)
 	c.User.Use(hooks...)
+	c.UserNotificationTopic.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
@@ -202,7 +216,9 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	c.DeviceToken.Intercept(interceptors...)
 	c.Notification.Intercept(interceptors...)
+	c.NotificationTopic.Intercept(interceptors...)
 	c.User.Intercept(interceptors...)
+	c.UserNotificationTopic.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -212,8 +228,12 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.DeviceToken.mutate(ctx, m)
 	case *NotificationMutation:
 		return c.Notification.mutate(ctx, m)
+	case *NotificationTopicMutation:
+		return c.NotificationTopic.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
+	case *UserNotificationTopicMutation:
+		return c.UserNotificationTopic.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -492,6 +512,22 @@ func (c *NotificationClient) QueryUser(_m *Notification) *UserQuery {
 	return query
 }
 
+// QueryNotificationTopic queries the notification_topic edge of a Notification.
+func (c *NotificationClient) QueryNotificationTopic(_m *Notification) *NotificationTopicQuery {
+	query := (&NotificationTopicClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(notification.Table, notification.FieldID, id),
+			sqlgraph.To(notificationtopic.Table, notificationtopic.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, notification.NotificationTopicTable, notification.NotificationTopicColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *NotificationClient) Hooks() []Hook {
 	return c.hooks.Notification
@@ -514,6 +550,171 @@ func (c *NotificationClient) mutate(ctx context.Context, m *NotificationMutation
 		return (&NotificationDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Notification mutation op: %q", m.Op())
+	}
+}
+
+// NotificationTopicClient is a client for the NotificationTopic schema.
+type NotificationTopicClient struct {
+	config
+}
+
+// NewNotificationTopicClient returns a client for the NotificationTopic from the given config.
+func NewNotificationTopicClient(c config) *NotificationTopicClient {
+	return &NotificationTopicClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `notificationtopic.Hooks(f(g(h())))`.
+func (c *NotificationTopicClient) Use(hooks ...Hook) {
+	c.hooks.NotificationTopic = append(c.hooks.NotificationTopic, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `notificationtopic.Intercept(f(g(h())))`.
+func (c *NotificationTopicClient) Intercept(interceptors ...Interceptor) {
+	c.inters.NotificationTopic = append(c.inters.NotificationTopic, interceptors...)
+}
+
+// Create returns a builder for creating a NotificationTopic entity.
+func (c *NotificationTopicClient) Create() *NotificationTopicCreate {
+	mutation := newNotificationTopicMutation(c.config, OpCreate)
+	return &NotificationTopicCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of NotificationTopic entities.
+func (c *NotificationTopicClient) CreateBulk(builders ...*NotificationTopicCreate) *NotificationTopicCreateBulk {
+	return &NotificationTopicCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *NotificationTopicClient) MapCreateBulk(slice any, setFunc func(*NotificationTopicCreate, int)) *NotificationTopicCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &NotificationTopicCreateBulk{err: fmt.Errorf("calling to NotificationTopicClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*NotificationTopicCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &NotificationTopicCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for NotificationTopic.
+func (c *NotificationTopicClient) Update() *NotificationTopicUpdate {
+	mutation := newNotificationTopicMutation(c.config, OpUpdate)
+	return &NotificationTopicUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *NotificationTopicClient) UpdateOne(_m *NotificationTopic) *NotificationTopicUpdateOne {
+	mutation := newNotificationTopicMutation(c.config, OpUpdateOne, withNotificationTopic(_m))
+	return &NotificationTopicUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *NotificationTopicClient) UpdateOneID(id uuid.UUID) *NotificationTopicUpdateOne {
+	mutation := newNotificationTopicMutation(c.config, OpUpdateOne, withNotificationTopicID(id))
+	return &NotificationTopicUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for NotificationTopic.
+func (c *NotificationTopicClient) Delete() *NotificationTopicDelete {
+	mutation := newNotificationTopicMutation(c.config, OpDelete)
+	return &NotificationTopicDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *NotificationTopicClient) DeleteOne(_m *NotificationTopic) *NotificationTopicDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *NotificationTopicClient) DeleteOneID(id uuid.UUID) *NotificationTopicDeleteOne {
+	builder := c.Delete().Where(notificationtopic.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &NotificationTopicDeleteOne{builder}
+}
+
+// Query returns a query builder for NotificationTopic.
+func (c *NotificationTopicClient) Query() *NotificationTopicQuery {
+	return &NotificationTopicQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeNotificationTopic},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a NotificationTopic entity by its id.
+func (c *NotificationTopicClient) Get(ctx context.Context, id uuid.UUID) (*NotificationTopic, error) {
+	return c.Query().Where(notificationtopic.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *NotificationTopicClient) GetX(ctx context.Context, id uuid.UUID) *NotificationTopic {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryUserNotificationTopics queries the user_notification_topics edge of a NotificationTopic.
+func (c *NotificationTopicClient) QueryUserNotificationTopics(_m *NotificationTopic) *UserNotificationTopicQuery {
+	query := (&UserNotificationTopicClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(notificationtopic.Table, notificationtopic.FieldID, id),
+			sqlgraph.To(usernotificationtopic.Table, usernotificationtopic.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, notificationtopic.UserNotificationTopicsTable, notificationtopic.UserNotificationTopicsColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryNotifications queries the notifications edge of a NotificationTopic.
+func (c *NotificationTopicClient) QueryNotifications(_m *NotificationTopic) *NotificationQuery {
+	query := (&NotificationClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(notificationtopic.Table, notificationtopic.FieldID, id),
+			sqlgraph.To(notification.Table, notification.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, notificationtopic.NotificationsTable, notificationtopic.NotificationsColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *NotificationTopicClient) Hooks() []Hook {
+	return c.hooks.NotificationTopic
+}
+
+// Interceptors returns the client interceptors.
+func (c *NotificationTopicClient) Interceptors() []Interceptor {
+	return c.inters.NotificationTopic
+}
+
+func (c *NotificationTopicClient) mutate(ctx context.Context, m *NotificationTopicMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&NotificationTopicCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&NotificationTopicUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&NotificationTopicUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&NotificationTopicDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown NotificationTopic mutation op: %q", m.Op())
 	}
 }
 
@@ -657,6 +858,22 @@ func (c *UserClient) QueryNotifications(_m *User) *NotificationQuery {
 	return query
 }
 
+// QueryUserNotificationTopics queries the user_notification_topics edge of a User.
+func (c *UserClient) QueryUserNotificationTopics(_m *User) *UserNotificationTopicQuery {
+	query := (&UserNotificationTopicClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(usernotificationtopic.Table, usernotificationtopic.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.UserNotificationTopicsTable, user.UserNotificationTopicsColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *UserClient) Hooks() []Hook {
 	return c.hooks.User
@@ -682,12 +899,179 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 	}
 }
 
+// UserNotificationTopicClient is a client for the UserNotificationTopic schema.
+type UserNotificationTopicClient struct {
+	config
+}
+
+// NewUserNotificationTopicClient returns a client for the UserNotificationTopic from the given config.
+func NewUserNotificationTopicClient(c config) *UserNotificationTopicClient {
+	return &UserNotificationTopicClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `usernotificationtopic.Hooks(f(g(h())))`.
+func (c *UserNotificationTopicClient) Use(hooks ...Hook) {
+	c.hooks.UserNotificationTopic = append(c.hooks.UserNotificationTopic, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `usernotificationtopic.Intercept(f(g(h())))`.
+func (c *UserNotificationTopicClient) Intercept(interceptors ...Interceptor) {
+	c.inters.UserNotificationTopic = append(c.inters.UserNotificationTopic, interceptors...)
+}
+
+// Create returns a builder for creating a UserNotificationTopic entity.
+func (c *UserNotificationTopicClient) Create() *UserNotificationTopicCreate {
+	mutation := newUserNotificationTopicMutation(c.config, OpCreate)
+	return &UserNotificationTopicCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of UserNotificationTopic entities.
+func (c *UserNotificationTopicClient) CreateBulk(builders ...*UserNotificationTopicCreate) *UserNotificationTopicCreateBulk {
+	return &UserNotificationTopicCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *UserNotificationTopicClient) MapCreateBulk(slice any, setFunc func(*UserNotificationTopicCreate, int)) *UserNotificationTopicCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &UserNotificationTopicCreateBulk{err: fmt.Errorf("calling to UserNotificationTopicClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*UserNotificationTopicCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &UserNotificationTopicCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for UserNotificationTopic.
+func (c *UserNotificationTopicClient) Update() *UserNotificationTopicUpdate {
+	mutation := newUserNotificationTopicMutation(c.config, OpUpdate)
+	return &UserNotificationTopicUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *UserNotificationTopicClient) UpdateOne(_m *UserNotificationTopic) *UserNotificationTopicUpdateOne {
+	mutation := newUserNotificationTopicMutation(c.config, OpUpdateOne, withUserNotificationTopic(_m))
+	return &UserNotificationTopicUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *UserNotificationTopicClient) UpdateOneID(id uuid.UUID) *UserNotificationTopicUpdateOne {
+	mutation := newUserNotificationTopicMutation(c.config, OpUpdateOne, withUserNotificationTopicID(id))
+	return &UserNotificationTopicUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for UserNotificationTopic.
+func (c *UserNotificationTopicClient) Delete() *UserNotificationTopicDelete {
+	mutation := newUserNotificationTopicMutation(c.config, OpDelete)
+	return &UserNotificationTopicDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *UserNotificationTopicClient) DeleteOne(_m *UserNotificationTopic) *UserNotificationTopicDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *UserNotificationTopicClient) DeleteOneID(id uuid.UUID) *UserNotificationTopicDeleteOne {
+	builder := c.Delete().Where(usernotificationtopic.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &UserNotificationTopicDeleteOne{builder}
+}
+
+// Query returns a query builder for UserNotificationTopic.
+func (c *UserNotificationTopicClient) Query() *UserNotificationTopicQuery {
+	return &UserNotificationTopicQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeUserNotificationTopic},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a UserNotificationTopic entity by its id.
+func (c *UserNotificationTopicClient) Get(ctx context.Context, id uuid.UUID) (*UserNotificationTopic, error) {
+	return c.Query().Where(usernotificationtopic.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *UserNotificationTopicClient) GetX(ctx context.Context, id uuid.UUID) *UserNotificationTopic {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryUser queries the user edge of a UserNotificationTopic.
+func (c *UserNotificationTopicClient) QueryUser(_m *UserNotificationTopic) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(usernotificationtopic.Table, usernotificationtopic.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, usernotificationtopic.UserTable, usernotificationtopic.UserColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryNotificationTopic queries the notification_topic edge of a UserNotificationTopic.
+func (c *UserNotificationTopicClient) QueryNotificationTopic(_m *UserNotificationTopic) *NotificationTopicQuery {
+	query := (&NotificationTopicClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(usernotificationtopic.Table, usernotificationtopic.FieldID, id),
+			sqlgraph.To(notificationtopic.Table, notificationtopic.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, usernotificationtopic.NotificationTopicTable, usernotificationtopic.NotificationTopicColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *UserNotificationTopicClient) Hooks() []Hook {
+	return c.hooks.UserNotificationTopic
+}
+
+// Interceptors returns the client interceptors.
+func (c *UserNotificationTopicClient) Interceptors() []Interceptor {
+	return c.inters.UserNotificationTopic
+}
+
+func (c *UserNotificationTopicClient) mutate(ctx context.Context, m *UserNotificationTopicMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&UserNotificationTopicCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&UserNotificationTopicUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&UserNotificationTopicUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&UserNotificationTopicDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown UserNotificationTopic mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		DeviceToken, Notification, User []ent.Hook
+		DeviceToken, Notification, NotificationTopic, User,
+		UserNotificationTopic []ent.Hook
 	}
 	inters struct {
-		DeviceToken, Notification, User []ent.Interceptor
+		DeviceToken, Notification, NotificationTopic, User,
+		UserNotificationTopic []ent.Interceptor
 	}
 )

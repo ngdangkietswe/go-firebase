@@ -7,8 +7,8 @@ package middleware
 
 import (
 	"go-firebase/internal/firebase"
-	"go-firebase/internal/response"
 	"go-firebase/pkg/constant"
+	"go-firebase/pkg/response"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,6 +21,7 @@ type AuthMiddleware struct {
 var SkipEndpoint = []string{
 	"/api/v1/auth/login",
 	"/api/v1/auth/verify-token",
+	"/api/v1/auth/refresh-token",
 	"/swagger",
 }
 
@@ -68,7 +69,7 @@ func (m *AuthMiddleware) AsMiddleware() fiber.Handler {
 		}
 
 		idToken := strings.TrimPrefix(authHeader, constant.AuthHeaderPrefixBearer)
-		tokenUID, err := m.fAuthCli.VerifyIDToken(idToken)
+		claims, err := m.fAuthCli.VerifyIDToken(idToken)
 		if err != nil {
 			return response.ApiErrorResponse(
 				ctx,
@@ -77,7 +78,8 @@ func (m *AuthMiddleware) AsMiddleware() fiber.Handler {
 			)
 		}
 
-		ctx.Locals(constant.CtxFirebaseUIDKey, tokenUID)
+		ctx.Locals(constant.CtxFirebaseUIDKey, claims["firebase_uid"])
+		ctx.Locals(constant.CtxSysUIDKey, claims["system_uid"])
 
 		return ctx.Next()
 	}

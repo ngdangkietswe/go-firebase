@@ -32,6 +32,18 @@ func (f NotificationFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.NotificationMutation", m)
 }
 
+// The NotificationTopicFunc type is an adapter to allow the use of ordinary
+// function as NotificationTopic mutator.
+type NotificationTopicFunc func(context.Context, *ent.NotificationTopicMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f NotificationTopicFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.NotificationTopicMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.NotificationTopicMutation", m)
+}
+
 // The UserFunc type is an adapter to allow the use of ordinary
 // function as User mutator.
 type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)
@@ -42,6 +54,18 @@ func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
+}
+
+// The UserNotificationTopicFunc type is an adapter to allow the use of ordinary
+// function as UserNotificationTopic mutator.
+type UserNotificationTopicFunc func(context.Context, *ent.UserNotificationTopicMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f UserNotificationTopicFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.UserNotificationTopicMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserNotificationTopicMutation", m)
 }
 
 // Condition is a hook condition function.

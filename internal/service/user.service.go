@@ -12,9 +12,9 @@ import (
 	"go-firebase/internal/firebase"
 	"go-firebase/internal/helper"
 	"go-firebase/internal/mapper"
-	"go-firebase/internal/model"
-	"go-firebase/internal/request"
-	"go-firebase/internal/response"
+	"go-firebase/pkg/model"
+	"go-firebase/pkg/request"
+	"go-firebase/pkg/response"
 
 	"github.com/ngdangkietswe/swe-go-common-shared/logger"
 	"go.uber.org/zap"
