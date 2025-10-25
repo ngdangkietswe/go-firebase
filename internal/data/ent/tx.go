@@ -18,10 +18,20 @@ type Tx struct {
 	Notification *NotificationClient
 	// NotificationTopic is the client for interacting with the NotificationTopic builders.
 	NotificationTopic *NotificationTopicClient
+	// Permission is the client for interacting with the Permission builders.
+	Permission *PermissionClient
+	// Role is the client for interacting with the Role builders.
+	Role *RoleClient
+	// RolePermission is the client for interacting with the RolePermission builders.
+	RolePermission *RolePermissionClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// UserNotificationTopic is the client for interacting with the UserNotificationTopic builders.
 	UserNotificationTopic *UserNotificationTopicClient
+	// UserPermission is the client for interacting with the UserPermission builders.
+	UserPermission *UserPermissionClient
+	// UserRole is the client for interacting with the UserRole builders.
+	UserRole *UserRoleClient
 
 	// lazily loaded.
 	client     *Client
@@ -156,8 +166,13 @@ func (tx *Tx) init() {
 	tx.DeviceToken = NewDeviceTokenClient(tx.config)
 	tx.Notification = NewNotificationClient(tx.config)
 	tx.NotificationTopic = NewNotificationTopicClient(tx.config)
+	tx.Permission = NewPermissionClient(tx.config)
+	tx.Role = NewRoleClient(tx.config)
+	tx.RolePermission = NewRolePermissionClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.UserNotificationTopic = NewUserNotificationTopicClient(tx.config)
+	tx.UserPermission = NewUserPermissionClient(tx.config)
+	tx.UserRole = NewUserRoleClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

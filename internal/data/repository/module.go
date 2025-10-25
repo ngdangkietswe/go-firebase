@@ -18,4 +18,6 @@ var Module = fx.Provide(
 	NewNotificationRepository,
 	NewNotificationTopicRepository,
 	NewUserNotificationTopicRepository,
+	NewRoleRepository,
+	NewPermissionRepository,
 )

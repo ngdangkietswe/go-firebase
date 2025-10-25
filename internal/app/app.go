@@ -6,6 +6,7 @@
 package app
 
 import (
+	"go-firebase/internal/cache"
 	"go-firebase/internal/controller"
 	"go-firebase/internal/cron"
 	"go-firebase/internal/data/repository"
@@ -32,6 +33,7 @@ func Start() {
 		firebase.Module,
 		cron.Module,
 		job.Module,
+		cache.Module,
 		repository.Module,
 		mapper.Module,
 		helper.Module,

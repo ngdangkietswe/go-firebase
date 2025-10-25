@@ -53,4 +53,13 @@ type (
 		DeleteByUserIDAndTopicID(ctx context.Context, tx *ent.Tx, userID uuid.UUID, topicID uuid.UUID) error
 		DeleteByUserIDAndTopicIDIn(ctx context.Context, tx *ent.Tx, userID uuid.UUID, topicIDs []uuid.UUID) error
 	}
+
+	RoleRepository interface {
+		FindAllByUserID(ctx context.Context, userID uuid.UUID) ([]*ent.Role, error)
+	}
+
+	PermissionRepository interface {
+		FindAllByUserID(ctx context.Context, userID uuid.UUID) ([]*ent.Permission, error)
+		FindAllByRoleIDIn(ctx context.Context, roleIDs []uuid.UUID) ([]*ent.Permission, error)
+	}
 )

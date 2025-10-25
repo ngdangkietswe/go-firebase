@@ -46,9 +46,13 @@ type UserEdges struct {
 	Notifications []*Notification `json:"notifications,omitempty"`
 	// UserNotificationTopics holds the value of the user_notification_topics edge.
 	UserNotificationTopics []*UserNotificationTopic `json:"user_notification_topics,omitempty"`
+	// UserRoles holds the value of the user_roles edge.
+	UserRoles []*UserRole `json:"user_roles,omitempty"`
+	// UserPermissions holds the value of the user_permissions edge.
+	UserPermissions []*UserPermission `json:"user_permissions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [5]bool
 }
 
 // DeviceTokensOrErr returns the DeviceTokens value or an error if the edge
@@ -76,6 +80,24 @@ func (e UserEdges) UserNotificationTopicsOrErr() ([]*UserNotificationTopic, erro
 		return e.UserNotificationTopics, nil
 	}
 	return nil, &NotLoadedError{edge: "user_notification_topics"}
+}
+
+// UserRolesOrErr returns the UserRoles value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) UserRolesOrErr() ([]*UserRole, error) {
+	if e.loadedTypes[3] {
+		return e.UserRoles, nil
+	}
+	return nil, &NotLoadedError{edge: "user_roles"}
+}
+
+// UserPermissionsOrErr returns the UserPermissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) UserPermissionsOrErr() ([]*UserPermission, error) {
+	if e.loadedTypes[4] {
+		return e.UserPermissions, nil
+	}
+	return nil, &NotLoadedError{edge: "user_permissions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -178,6 +200,16 @@ func (_m *User) QueryNotifications() *NotificationQuery {
 // QueryUserNotificationTopics queries the "user_notification_topics" edge of the User entity.
 func (_m *User) QueryUserNotificationTopics() *UserNotificationTopicQuery {
 	return NewUserClient(_m.config).QueryUserNotificationTopics(_m)
+}
+
+// QueryUserRoles queries the "user_roles" edge of the User entity.
+func (_m *User) QueryUserRoles() *UserRoleQuery {
+	return NewUserClient(_m.config).QueryUserRoles(_m)
+}
+
+// QueryUserPermissions queries the "user_permissions" edge of the User entity.
+func (_m *User) QueryUserPermissions() *UserPermissionQuery {
+	return NewUserClient(_m.config).QueryUserPermissions(_m)
 }
 
 // Update returns a builder for updating this User.

@@ -17,6 +17,10 @@ type (
 		Preload(ctx context.Context, users []*model.User, preload []string)
 	}
 
+	AuthHelper interface {
+		BuildPrincipal(claims map[string]interface{}) (*model.Principal, error)
+	}
+
 	NotificationTopicHelper interface {
 		FirebaseSubscribeToTopic(ctx context.Context, userID uuid.UUID, topicIDs []uuid.UUID) error
 		FirebaseUnsubscribeFromTopic(ctx context.Context, userID uuid.UUID, topicIDs []uuid.UUID) error

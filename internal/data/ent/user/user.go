@@ -35,6 +35,10 @@ const (
 	EdgeNotifications = "notifications"
 	// EdgeUserNotificationTopics holds the string denoting the user_notification_topics edge name in mutations.
 	EdgeUserNotificationTopics = "user_notification_topics"
+	// EdgeUserRoles holds the string denoting the user_roles edge name in mutations.
+	EdgeUserRoles = "user_roles"
+	// EdgeUserPermissions holds the string denoting the user_permissions edge name in mutations.
+	EdgeUserPermissions = "user_permissions"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// DeviceTokensTable is the table that holds the device_tokens relation/edge.
@@ -58,6 +62,20 @@ const (
 	UserNotificationTopicsInverseTable = "user_notification_topic"
 	// UserNotificationTopicsColumn is the table column denoting the user_notification_topics relation/edge.
 	UserNotificationTopicsColumn = "user_id"
+	// UserRolesTable is the table that holds the user_roles relation/edge.
+	UserRolesTable = "user_roles"
+	// UserRolesInverseTable is the table name for the UserRole entity.
+	// It exists in this package in order to avoid circular dependency with the "userrole" package.
+	UserRolesInverseTable = "user_roles"
+	// UserRolesColumn is the table column denoting the user_roles relation/edge.
+	UserRolesColumn = "user_id"
+	// UserPermissionsTable is the table that holds the user_permissions relation/edge.
+	UserPermissionsTable = "user_permissions"
+	// UserPermissionsInverseTable is the table name for the UserPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "userpermission" package.
+	UserPermissionsInverseTable = "user_permissions"
+	// UserPermissionsColumn is the table column denoting the user_permissions relation/edge.
+	UserPermissionsColumn = "user_id"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -177,6 +195,34 @@ func ByUserNotificationTopics(term sql.OrderTerm, terms ...sql.OrderTerm) OrderO
 		sqlgraph.OrderByNeighborTerms(s, newUserNotificationTopicsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByUserRolesCount orders the results by user_roles count.
+func ByUserRolesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newUserRolesStep(), opts...)
+	}
+}
+
+// ByUserRoles orders the results by user_roles terms.
+func ByUserRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUserRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByUserPermissionsCount orders the results by user_permissions count.
+func ByUserPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newUserPermissionsStep(), opts...)
+	}
+}
+
+// ByUserPermissions orders the results by user_permissions terms.
+func ByUserPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUserPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newDeviceTokensStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -196,5 +242,19 @@ func newUserNotificationTopicsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(UserNotificationTopicsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, UserNotificationTopicsTable, UserNotificationTopicsColumn),
+	)
+}
+func newUserRolesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UserRolesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, UserRolesTable, UserRolesColumn),
+	)
+}
+func newUserPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UserPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, UserPermissionsTable, UserPermissionsColumn),
 	)
 }

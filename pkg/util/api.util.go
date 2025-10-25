@@ -17,6 +17,7 @@ import (
 var FiberKeys = []string{
 	constant.CtxFirebaseUIDKey,
 	constant.CtxSysUIDKey,
+	constant.CtxPrincipalKey,
 }
 
 func FiberCtxToContext(ctx *fiber.Ctx) context.Context {

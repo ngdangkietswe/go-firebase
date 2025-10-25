@@ -17,6 +17,7 @@ import (
 	"go-firebase/pkg/request"
 	"go-firebase/pkg/response"
 
+	"github.com/google/uuid"
 	"github.com/ngdangkietswe/swe-go-common-shared/logger"
 	"go.uber.org/zap"
 )
@@ -104,9 +105,9 @@ func (s *authSvc) RefreshToken(ctx context.Context, request *request.RefreshToke
 }
 
 func (s *authSvc) CurrentUser(ctx context.Context) (*model.User, error) {
-	firebaseUID := ctx.Value(constant.CtxFirebaseUIDKey).(string)
+	principal := ctx.Value(constant.CtxPrincipalKey).(*model.Principal)
 
-	user, err := s.userRepo.FindByFirebaseUID(ctx, firebaseUID)
+	user, err := s.userRepo.FindByID(ctx, uuid.MustParse(principal.SystemUID))
 	if err != nil {
 		s.logger.Error("Failed to get current user", zap.Error(err))
 		return nil, err

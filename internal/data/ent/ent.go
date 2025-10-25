@@ -9,8 +9,13 @@ import (
 	"go-firebase/internal/data/ent/devicetoken"
 	"go-firebase/internal/data/ent/notification"
 	"go-firebase/internal/data/ent/notificationtopic"
+	"go-firebase/internal/data/ent/permission"
+	"go-firebase/internal/data/ent/role"
+	"go-firebase/internal/data/ent/rolepermission"
 	"go-firebase/internal/data/ent/user"
 	"go-firebase/internal/data/ent/usernotificationtopic"
+	"go-firebase/internal/data/ent/userpermission"
+	"go-firebase/internal/data/ent/userrole"
 	"reflect"
 	"sync"
 
@@ -80,8 +85,13 @@ func checkColumn(t, c string) error {
 			devicetoken.Table:           devicetoken.ValidColumn,
 			notification.Table:          notification.ValidColumn,
 			notificationtopic.Table:     notificationtopic.ValidColumn,
+			permission.Table:            permission.ValidColumn,
+			role.Table:                  role.ValidColumn,
+			rolepermission.Table:        rolepermission.ValidColumn,
 			user.Table:                  user.ValidColumn,
 			usernotificationtopic.Table: usernotificationtopic.ValidColumn,
+			userpermission.Table:        userpermission.ValidColumn,
+			userrole.Table:              userrole.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

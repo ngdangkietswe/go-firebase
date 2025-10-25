@@ -35,6 +35,8 @@ func (User) Edges() []ent.Edge {
 		util.One2Many("device_tokens", DeviceToken.Type),
 		util.One2Many("notifications", Notification.Type),
 		util.One2Many("user_notification_topics", UserNotificationTopic.Type),
+		util.One2Many("user_roles", UserRole.Type),
+		util.One2Many("user_permissions", UserPermission.Type),
 	}
 }
 

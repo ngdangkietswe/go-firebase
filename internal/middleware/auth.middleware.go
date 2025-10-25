@@ -7,6 +7,7 @@ package middleware
 
 import (
 	"go-firebase/internal/firebase"
+	"go-firebase/internal/helper"
 	"go-firebase/pkg/constant"
 	"go-firebase/pkg/response"
 	"strings"
@@ -15,7 +16,8 @@ import (
 )
 
 type AuthMiddleware struct {
-	fAuthCli firebase.FAuthClient
+	fAuthCli   firebase.FAuthClient
+	authHelper helper.AuthHelper
 }
 
 var SkipEndpoint = []string{
@@ -81,12 +83,27 @@ func (m *AuthMiddleware) AsMiddleware() fiber.Handler {
 		ctx.Locals(constant.CtxFirebaseUIDKey, claims["firebase_uid"])
 		ctx.Locals(constant.CtxSysUIDKey, claims["system_uid"])
 
+		principal, err := m.authHelper.BuildPrincipal(claims)
+		if err != nil {
+			return response.ApiErrorResponse(
+				ctx,
+				fiber.StatusUnauthorized,
+				err,
+			)
+		}
+
+		ctx.Locals(constant.CtxPrincipalKey, principal)
+
 		return ctx.Next()
 	}
 }
 
-func NewAuthMiddleware(fAuthCli firebase.FAuthClient) Middleware {
+func NewAuthMiddleware(
+	fAuthCli firebase.FAuthClient,
+	authHelper helper.AuthHelper,
+) Middleware {
 	return &AuthMiddleware{
-		fAuthCli: fAuthCli,
+		fAuthCli:   fAuthCli,
+		authHelper: authHelper,
 	}
 }

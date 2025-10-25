@@ -10,6 +10,8 @@ import (
 	"go-firebase/internal/data/ent/notification"
 	"go-firebase/internal/data/ent/user"
 	"go-firebase/internal/data/ent/usernotificationtopic"
+	"go-firebase/internal/data/ent/userpermission"
+	"go-firebase/internal/data/ent/userrole"
 	"time"
 
 	"entgo.io/ent/dialect"
@@ -166,6 +168,36 @@ func (_c *UserCreate) AddUserNotificationTopics(v ...*UserNotificationTopic) *Us
 		ids[i] = v[i].ID
 	}
 	return _c.AddUserNotificationTopicIDs(ids...)
+}
+
+// AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
+func (_c *UserCreate) AddUserRoleIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddUserRoleIDs(ids...)
+	return _c
+}
+
+// AddUserRoles adds the "user_roles" edges to the UserRole entity.
+func (_c *UserCreate) AddUserRoles(v ...*UserRole) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddUserRoleIDs(ids...)
+}
+
+// AddUserPermissionIDs adds the "user_permissions" edge to the UserPermission entity by IDs.
+func (_c *UserCreate) AddUserPermissionIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddUserPermissionIDs(ids...)
+	return _c
+}
+
+// AddUserPermissions adds the "user_permissions" edges to the UserPermission entity.
+func (_c *UserCreate) AddUserPermissions(v ...*UserPermission) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddUserPermissionIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -336,6 +368,38 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(usernotificationtopic.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.UserRolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.UserRolesTable,
+			Columns: []string{user.UserRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.UserPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.UserPermissionsTable,
+			Columns: []string{user.UserPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userpermission.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

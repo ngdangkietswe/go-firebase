@@ -11,6 +11,8 @@ import (
 	"go-firebase/internal/data/ent/predicate"
 	"go-firebase/internal/data/ent/user"
 	"go-firebase/internal/data/ent/usernotificationtopic"
+	"go-firebase/internal/data/ent/userpermission"
+	"go-firebase/internal/data/ent/userrole"
 	"math"
 
 	"entgo.io/ent"
@@ -31,6 +33,8 @@ type UserQuery struct {
 	withDeviceTokens           *DeviceTokenQuery
 	withNotifications          *NotificationQuery
 	withUserNotificationTopics *UserNotificationTopicQuery
+	withUserRoles              *UserRoleQuery
+	withUserPermissions        *UserPermissionQuery
 	modifiers                  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -127,6 +131,50 @@ func (_q *UserQuery) QueryUserNotificationTopics() *UserNotificationTopicQuery {
 			sqlgraph.From(user.Table, user.FieldID, selector),
 			sqlgraph.To(usernotificationtopic.Table, usernotificationtopic.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.UserNotificationTopicsTable, user.UserNotificationTopicsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryUserRoles chains the current query on the "user_roles" edge.
+func (_q *UserQuery) QueryUserRoles() *UserRoleQuery {
+	query := (&UserRoleClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(userrole.Table, userrole.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.UserRolesTable, user.UserRolesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryUserPermissions chains the current query on the "user_permissions" edge.
+func (_q *UserQuery) QueryUserPermissions() *UserPermissionQuery {
+	query := (&UserPermissionClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(userpermission.Table, userpermission.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.UserPermissionsTable, user.UserPermissionsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -329,6 +377,8 @@ func (_q *UserQuery) Clone() *UserQuery {
 		withDeviceTokens:           _q.withDeviceTokens.Clone(),
 		withNotifications:          _q.withNotifications.Clone(),
 		withUserNotificationTopics: _q.withUserNotificationTopics.Clone(),
+		withUserRoles:              _q.withUserRoles.Clone(),
+		withUserPermissions:        _q.withUserPermissions.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
@@ -365,6 +415,28 @@ func (_q *UserQuery) WithUserNotificationTopics(opts ...func(*UserNotificationTo
 		opt(query)
 	}
 	_q.withUserNotificationTopics = query
+	return _q
+}
+
+// WithUserRoles tells the query-builder to eager-load the nodes that are connected to
+// the "user_roles" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithUserRoles(opts ...func(*UserRoleQuery)) *UserQuery {
+	query := (&UserRoleClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withUserRoles = query
+	return _q
+}
+
+// WithUserPermissions tells the query-builder to eager-load the nodes that are connected to
+// the "user_permissions" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithUserPermissions(opts ...func(*UserPermissionQuery)) *UserQuery {
+	query := (&UserPermissionClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withUserPermissions = query
 	return _q
 }
 
@@ -446,10 +518,12 @@ func (_q *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	var (
 		nodes       = []*User{}
 		_spec       = _q.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [5]bool{
 			_q.withDeviceTokens != nil,
 			_q.withNotifications != nil,
 			_q.withUserNotificationTopics != nil,
+			_q.withUserRoles != nil,
+			_q.withUserPermissions != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -493,6 +567,20 @@ func (_q *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 			func(n *User, e *UserNotificationTopic) {
 				n.Edges.UserNotificationTopics = append(n.Edges.UserNotificationTopics, e)
 			}); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withUserRoles; query != nil {
+		if err := _q.loadUserRoles(ctx, query, nodes,
+			func(n *User) { n.Edges.UserRoles = []*UserRole{} },
+			func(n *User, e *UserRole) { n.Edges.UserRoles = append(n.Edges.UserRoles, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withUserPermissions; query != nil {
+		if err := _q.loadUserPermissions(ctx, query, nodes,
+			func(n *User) { n.Edges.UserPermissions = []*UserPermission{} },
+			func(n *User, e *UserPermission) { n.Edges.UserPermissions = append(n.Edges.UserPermissions, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -574,6 +662,66 @@ func (_q *UserQuery) loadUserNotificationTopics(ctx context.Context, query *User
 	}
 	query.Where(predicate.UserNotificationTopic(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(user.UserNotificationTopicsColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.UserID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadUserRoles(ctx context.Context, query *UserRoleQuery, nodes []*User, init func(*User), assign func(*User, *UserRole)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(userrole.FieldUserID)
+	}
+	query.Where(predicate.UserRole(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.UserRolesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.UserID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadUserPermissions(ctx context.Context, query *UserPermissionQuery, nodes []*User, init func(*User), assign func(*User, *UserPermission)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(userpermission.FieldUserID)
+	}
+	query.Where(predicate.UserPermission(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.UserPermissionsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
