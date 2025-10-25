@@ -22,6 +22,12 @@ type NotificationTopicHandler struct {
 	notificationTopicSvc service.NotificationTopicService
 }
 
+func (h *NotificationTopicHandler) GetNotificationTopics(c *fiber.Ctx, request *request.ListNotificationTopicRequest) (*response.ListResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
+	defer cancel()
+	return util.SafeFunc(newCtx, request, h.notificationTopicSvc.GetNotificationTopics)
+}
+
 func (h *NotificationTopicHandler) CreateNotificationTopic(c *fiber.Ctx, request *request.CreateNotificationTopicRequest) (*response.IdResponse, error) {
 	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()
@@ -32,6 +38,12 @@ func (h *NotificationTopicHandler) SubscribeToNotificationTopic(c *fiber.Ctx, re
 	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()
 	return util.SafeFunc(newCtx, request, h.notificationTopicSvc.SubscribeNotificationTopic)
+}
+
+func (h *NotificationTopicHandler) UnsubscribeFromNotificationTopic(c *fiber.Ctx, request *request.SubscribeNotificationTopicRequest) (*response.EmptyResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
+	defer cancel()
+	return util.SafeFunc(newCtx, request, h.notificationTopicSvc.UnsubscribeNotificationTopic)
 }
 
 func NewNotificationTopicHandler(

@@ -11,6 +11,7 @@ import (
 	"go-firebase/internal/data/repository"
 	"go-firebase/internal/firebase"
 	"go-firebase/internal/helper"
+	"go-firebase/internal/mapper"
 	"go-firebase/pkg/constant"
 	"go-firebase/pkg/request"
 	"go-firebase/pkg/response"
@@ -30,6 +31,22 @@ type notificationTopicSvc struct {
 	userNotificationTopicRepo repository.UserNotificationTopicRepository
 	deviceTokenRepo           repository.DeviceTokenRepository
 	notificationTopicHelper   helper.NotificationTopicHelper
+	notificationTopicMapper   mapper.NotificationTopicMapper
+}
+
+func (s *notificationTopicSvc) GetNotificationTopics(ctx context.Context, request *request.ListNotificationTopicRequest) (*response.ListResponse, error) {
+	util.NormalizePaginationRequest(request.Paginate)
+
+	items, totalItems, err := s.notificationTopicRepo.FindAll(ctx, request)
+	if err != nil {
+		s.logger.Error("Failed to get notification topics", zap.Error(err))
+		return nil, err
+	}
+
+	return &response.ListResponse{
+		Items: s.notificationTopicMapper.AsList(items),
+		Meta:  util.AsPageMeta(request.Paginate, totalItems),
+	}, nil
 }
 
 func (s *notificationTopicSvc) CreateNotificationTopic(ctx context.Context, request *request.CreateNotificationTopicRequest) (*response.IdResponse, error) {
@@ -99,6 +116,7 @@ func NewNotificationTopicService(
 	userNotificationTopicRepo repository.UserNotificationTopicRepository,
 	deviceTokenRepo repository.DeviceTokenRepository,
 	notificationTopicHelper helper.NotificationTopicHelper,
+	notificationTopicMapper mapper.NotificationTopicMapper,
 ) NotificationTopicService {
 	return &notificationTopicSvc{
 		cli:                       cli,
@@ -108,5 +126,6 @@ func NewNotificationTopicService(
 		userNotificationTopicRepo: userNotificationTopicRepo,
 		deviceTokenRepo:           deviceTokenRepo,
 		notificationTopicHelper:   notificationTopicHelper,
+		notificationTopicMapper:   notificationTopicMapper,
 	}
 }

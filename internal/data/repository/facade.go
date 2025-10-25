@@ -40,6 +40,7 @@ type (
 
 	NotificationTopicRepository interface {
 		Save(ctx context.Context, tx *ent.Tx, topicName string) (*ent.NotificationTopic, error)
+		FindAll(ctx context.Context, request *request.ListNotificationTopicRequest) ([]*ent.NotificationTopic, int, error)
 		FindByID(ctx context.Context, topicID uuid.UUID) (*ent.NotificationTopic, error)
 		FindByName(ctx context.Context, topicName string) (*ent.NotificationTopic, error)
 		FindAllByIDIn(ctx context.Context, topicIDs []uuid.UUID) ([]*ent.NotificationTopic, error)

@@ -37,6 +37,7 @@ type (
 	}
 
 	NotificationTopicService interface {
+		GetNotificationTopics(ctx context.Context, request *request.ListNotificationTopicRequest) (*response.ListResponse, error)
 		CreateNotificationTopic(ctx context.Context, request *request.CreateNotificationTopicRequest) (*response.IdResponse, error)
 		SubscribeNotificationTopic(ctx context.Context, request *request.SubscribeNotificationTopicRequest) (*response.EmptyResponse, error)
 		UnsubscribeNotificationTopic(ctx context.Context, request *request.SubscribeNotificationTopicRequest) (*response.EmptyResponse, error)

@@ -17,8 +17,10 @@ type NotificationTopicRoute struct {
 
 func (r *NotificationTopicRoute) Register(router fiber.Router) {
 	notificationTopicRouter := router.Group("/notification-topics")
+	notificationTopicRouter.Get("/", r.notificationTopicCtrl.GetNotificationTopics)
 	notificationTopicRouter.Post("/", r.notificationTopicCtrl.CreateNotificationTopic)
 	notificationTopicRouter.Post("/subscribe", r.notificationTopicCtrl.SubscribeToNotificationTopic)
+	notificationTopicRouter.Post("/unsubscribe", r.notificationTopicCtrl.UnsubscribeFromNotificationTopic)
 }
 
 func NewNotificationTopicRoute(

@@ -237,6 +237,71 @@ const docTemplate = `{
             }
         },
         "/notification-topics": {
+            "get": {
+                "description": "Retrieve a list of notification topics",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notification Topic API"
+                ],
+                "summary": "Get notification topics",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by field",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order (asc or desc)",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new notification topic",
                 "consumes": [
@@ -295,6 +360,52 @@ const docTemplate = `{
                     "Notification Topic API"
                 ],
                 "summary": "Subscribe to a notification topic",
+                "parameters": [
+                    {
+                        "description": "Subscription Info",
+                        "name": "subscription",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.SubscribeNotificationTopicRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/notification-topics/unsubscribe": {
+            "post": {
+                "description": "Unsubscribe a device from a notification topic",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notification Topic API"
+                ],
+                "summary": "Unsubscribe from a notification topic",
                 "parameters": [
                     {
                         "description": "Subscription Info",
@@ -701,9 +812,6 @@ const docTemplate = `{
         },
         "request.SendNotificationRequest": {
             "type": "object",
-            "required": [
-                "user_id"
-            ],
             "properties": {
                 "body": {
                     "type": "string"
@@ -715,6 +823,12 @@ const docTemplate = `{
                     }
                 },
                 "title": {
+                    "type": "string"
+                },
+                "topic_id": {
+                    "type": "string"
+                },
+                "topic_name": {
                     "type": "string"
                 },
                 "user_id": {

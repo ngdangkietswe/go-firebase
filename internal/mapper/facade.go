@@ -21,6 +21,11 @@ type (
 		AsList(notifications []*ent.Notification) []*model.Notification
 	}
 
+	NotificationTopicMapper interface {
+		AsMono(topic *ent.NotificationTopic) *model.NotificationTopic
+		AsList(topics []*ent.NotificationTopic) []*model.NotificationTopic
+	}
+
 	DeviceTokenMapper interface {
 		AsMono(deviceToken *ent.DeviceToken) *model.Device
 		AsList(deviceTokens []*ent.DeviceToken) []*model.Device

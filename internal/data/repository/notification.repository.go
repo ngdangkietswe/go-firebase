@@ -38,9 +38,9 @@ func (r *notificationRepo) Save(ctx context.Context, tx *ent.Tx, request *reques
 }
 
 func (r *notificationRepo) FindAll(ctx context.Context, request *request.ListNotificationRequest) ([]*ent.Notification, int, error) {
-	firebaseUID := ctx.Value(constant.CtxFirebaseUIDKey).(string)
+	userID := ctx.Value(constant.CtxSysUIDKey).(string)
 
-	query := r.cli.Notification.Query().Where(notification.HasUserWith(user.FirebaseUID(firebaseUID)))
+	query := r.cli.Notification.Query().Where(notification.UserID(uuid.MustParse(userID)))
 
 	if request.IsRead != nil {
 		query = query.Where(notification.IsRead(*request.IsRead))
