@@ -507,12 +507,27 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieve user information
+      description: Retrieve a list of users with pagination and optional search
       parameters:
-      - description: User Email or ID
+      - description: Page number
         in: query
-        name: identifier
-        required: true
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: page_size
+        type: integer
+      - description: Sort by field
+        in: query
+        name: sort
+        type: string
+      - description: Order (asc or desc)
+        in: query
+        name: order
+        type: string
+      - description: Search term
+        in: query
+        name: search
         type: string
       - description: Comma-separated list of related entities to preload
         in: query
@@ -533,7 +548,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ApiResponse'
-      summary: Get user
+      summary: Get users list
       tags:
       - User API
     post:
@@ -563,6 +578,39 @@ paths:
           schema:
             $ref: '#/definitions/response.ApiResponse'
       summary: Create a new user
+      tags:
+      - User API
+  /users/{identifier}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve user information
+      parameters:
+      - description: User Identifier (ID or Email)
+        in: path
+        name: identifier
+        required: true
+        type: string
+      - description: Comma-separated list of related entities to preload
+        in: query
+        name: preload
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Get user
       tags:
       - User API
 schemes:

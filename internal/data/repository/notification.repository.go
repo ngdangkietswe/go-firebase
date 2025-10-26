@@ -10,7 +10,6 @@ import (
 	"go-firebase/internal/data/ent"
 	"go-firebase/internal/data/ent/notification"
 	"go-firebase/internal/data/ent/user"
-	"go-firebase/pkg/constant"
 	"go-firebase/pkg/request"
 	"go-firebase/pkg/util"
 
@@ -38,7 +37,7 @@ func (r *notificationRepo) Save(ctx context.Context, tx *ent.Tx, request *reques
 }
 
 func (r *notificationRepo) FindAll(ctx context.Context, request *request.ListNotificationRequest) ([]*ent.Notification, int, error) {
-	userID := ctx.Value(constant.CtxSysUIDKey).(string)
+	userID := util.GetPrincipal(ctx).SystemUID
 
 	query := r.cli.Notification.Query().Where(notification.UserID(uuid.MustParse(userID)))
 
@@ -64,19 +63,19 @@ func (r *notificationRepo) MarkAsRead(ctx context.Context, tx *ent.Tx, notificat
 }
 
 func (r *notificationRepo) MarkAllAsRead(ctx context.Context, tx *ent.Tx) error {
-	firebaseUID := ctx.Value(constant.CtxFirebaseUIDKey).(string)
+	userID := util.GetPrincipal(ctx).SystemUID
 	return tx.Notification.Update().
-		Where(notification.HasUserWith(user.FirebaseUID(firebaseUID))).
+		Where(notification.HasUserWith(user.ID(uuid.MustParse(userID)))).
 		SetIsRead(true).
 		Exec(ctx)
 }
 
 func (r *notificationRepo) ExistsByID(ctx context.Context, notificationID uuid.UUID) (bool, error) {
-	firebaseUID := ctx.Value(constant.CtxFirebaseUIDKey).(string)
+	userID := util.GetPrincipal(ctx).SystemUID
 	return r.cli.Notification.Query().
 		Where(
 			notification.ID(notificationID),
-			notification.HasUserWith(user.FirebaseUID(firebaseUID)),
+			notification.HasUserWith(user.ID(uuid.MustParse(userID))),
 		).
 		Exist(ctx)
 }

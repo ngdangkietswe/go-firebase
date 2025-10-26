@@ -12,7 +12,6 @@ import (
 	"go-firebase/internal/firebase"
 	"go-firebase/internal/helper"
 	"go-firebase/internal/mapper"
-	"go-firebase/pkg/constant"
 	"go-firebase/pkg/request"
 	"go-firebase/pkg/response"
 	"go-firebase/pkg/util"
@@ -63,7 +62,7 @@ func (s *notificationTopicSvc) CreateNotificationTopic(ctx context.Context, requ
 }
 
 func (s *notificationTopicSvc) SubscribeNotificationTopic(ctx context.Context, request *request.SubscribeNotificationTopicRequest) (*response.EmptyResponse, error) {
-	userID := uuid.MustParse(ctx.Value(constant.CtxSysUIDKey).(string))
+	userID := uuid.MustParse(util.GetPrincipal(ctx).SystemUID)
 	topicIDs := lo.Map(request.TopicIDs, func(id string, _ int) uuid.UUID {
 		return uuid.MustParse(id)
 	})
@@ -86,7 +85,7 @@ func (s *notificationTopicSvc) SubscribeNotificationTopic(ctx context.Context, r
 }
 
 func (s *notificationTopicSvc) UnsubscribeNotificationTopic(ctx context.Context, request *request.SubscribeNotificationTopicRequest) (*response.EmptyResponse, error) {
-	userID := uuid.MustParse(ctx.Value(constant.CtxSysUIDKey).(string))
+	userID := uuid.MustParse(util.GetPrincipal(ctx).SystemUID)
 	topicIDs := lo.Map(request.TopicIDs, func(id string, _ int) uuid.UUID {
 		return uuid.MustParse(id)
 	})

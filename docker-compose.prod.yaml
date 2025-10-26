@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # App
+  app:
+    image: 01092002/go-firebase:latest
+    container_name: go-firebase
+    ports:
+      - "3000:3000"
+    environment:
+      - APP_NAME=golang-firebase
+      - APP_ENV=prod
+      - APP_PORT=3000
+      - DB_HOST=<YOUR_PROD_DB_HOST>
+      - DB_PORT=5432
+      - DB_USER=<YOUR_PROD_DB_USER>
+      - DB_PASSWORD=<YOUR_PROD_DB_PASSWORD>
+      - DB_NAME=GolangFirebase
+      - DB_SSL_MODE=disable
+      - DB_SEARCH_PATH=golangfirebase
+      - ENT_DEBUG=false
+      - REDIS_HOST=<YOUR_PROD_REDIS_HOST>
+      - REDIS_PORT=<YOUR_PROD_REDIS_PORT>
+      - FIREBASE_CREDENTIALS_BASE64=<YOUR_PROD_FIREBASE_CREDENTIALS_BASE64>
+      - FIREBASE_API_KEY=<YOUR_PROD_FIREBASE_API_KEY>
+      - NEWS_API_KEY=<YOUR_PROD_NEWS_API_KEY>

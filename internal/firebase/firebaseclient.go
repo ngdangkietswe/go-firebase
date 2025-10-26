@@ -7,12 +7,16 @@ package firebase
 
 import (
 	"context"
+	"encoding/base64"
 
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
 	"firebase.google.com/go/v4/messaging"
 	"github.com/ngdangkietswe/swe-go-common-shared/config"
+	"go.uber.org/zap"
 	"google.golang.org/api/option"
+
+	"github.com/ngdangkietswe/swe-go-common-shared/logger"
 )
 
 type FirebaseApp struct {
@@ -20,13 +24,19 @@ type FirebaseApp struct {
 	messagingCli *messaging.Client
 }
 
-func NewFirebaseClient() *FirebaseApp {
-	cred := config.GetString("FIREBASE_CREDENTIALS_PATH", "")
-	if cred == "" {
+func NewFirebaseClient(logger *logger.Logger) *FirebaseApp {
+	credEncoded := config.GetString("FIREBASE_CREDENTIALS_BASE64", "")
+	if credEncoded == "" {
 		return nil
 	}
 
-	opt := option.WithCredentialsFile(cred)
+	credDecoded, err := base64.StdEncoding.DecodeString(credEncoded)
+	if err != nil {
+		logger.Warn("Failed to decode Firebase credentials from base64", zap.Error(err))
+		return nil
+	}
+
+	opt := option.WithCredentialsJSON(credDecoded)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		return nil

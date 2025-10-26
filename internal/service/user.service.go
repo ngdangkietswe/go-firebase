@@ -15,6 +15,7 @@ import (
 	"go-firebase/pkg/model"
 	"go-firebase/pkg/request"
 	"go-firebase/pkg/response"
+	"go-firebase/pkg/util"
 
 	"github.com/ngdangkietswe/swe-go-common-shared/logger"
 	"go.uber.org/zap"
@@ -47,6 +48,25 @@ func (s *userSvc) CreateUser(ctx context.Context, request *request.CreateUserReq
 	return &response.CreateUserResponse{
 		UserID:      user.ID.String(),
 		FirebaseUID: firebaseUID,
+	}, nil
+}
+
+func (s *userSvc) GetUsers(ctx context.Context, request *request.ListUserRequest) (*response.ListResponse, error) {
+	util.NormalizePaginationRequest(request.Paginate)
+
+	items, totalItems, err := s.userRepo.FindAll(ctx, request)
+	if err != nil {
+		s.logger.Error("Failed to get users", zap.Error(err))
+		return nil, err
+	}
+
+	mUsers := s.userMapper.AsList(items)
+
+	s.userHelper.Preload(ctx, mUsers, request.Preload)
+
+	return &response.ListResponse{
+		Items: mUsers,
+		Meta:  util.AsPageMeta(request.Paginate, totalItems),
 	}, nil
 }
 

@@ -29,6 +29,12 @@ func (h *UserHandler) CreateUser(c *fiber.Ctx, request *request.CreateUserReques
 	return util.SafeFunc(newCtx, request, h.userSvc.CreateUser)
 }
 
+func (h *UserHandler) GetUsers(c *fiber.Ctx, request *request.ListUserRequest) (*response.ListResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
+	defer cancel()
+	return util.SafeFunc(newCtx, request, h.userSvc.GetUsers)
+}
+
 func (h *UserHandler) GetUser(c *fiber.Ctx, request *request.GetUserRequest) (*model.User, error) {
 	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()

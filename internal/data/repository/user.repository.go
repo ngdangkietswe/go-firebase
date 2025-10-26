@@ -10,6 +10,7 @@ import (
 	"go-firebase/internal/data/ent"
 	"go-firebase/internal/data/ent/user"
 	"go-firebase/pkg/request"
+	"go-firebase/pkg/util"
 
 	"github.com/google/uuid"
 )
@@ -36,6 +37,30 @@ func (r *userRepo) Save(ctx context.Context, tx *ent.Tx, request *request.Create
 	}
 
 	return builder.Save(ctx)
+}
+
+func (r *userRepo) FindAll(ctx context.Context, request *request.ListUserRequest) ([]*ent.User, int, error) {
+	query := r.cli.User.Query()
+
+	if request.Search != "" {
+		query = query.Where(user.Or(
+			user.EmailContainsFold(request.Search),
+			user.FirstNameContainsFold(request.Search),
+			user.LastNameContainsFold(request.Search),
+		))
+	}
+
+	totalItems, err := query.Clone().Count(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	items, err := query.Clone().Order(util.ToSortOrder(request.Paginate)).
+		Offset(request.Paginate.Page * request.Paginate.PageSize).
+		Limit(request.Paginate.PageSize).
+		All(ctx)
+
+	return items, totalItems, err
 }
 
 func (r *userRepo) FindByEmail(ctx context.Context, email string) (*ent.User, error) {

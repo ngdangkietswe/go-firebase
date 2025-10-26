@@ -10,6 +10,7 @@ import (
 	"go-firebase/internal/helper"
 	"go-firebase/pkg/constant"
 	"go-firebase/pkg/response"
+	"go-firebase/pkg/util"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -28,7 +29,7 @@ var SkipEndpoint = []string{
 }
 
 var SkipEndpointAndMethod = map[string]string{
-	fiber.MethodPost: "/api/v1/users",
+	//fiber.MethodPost: "/api/v1/users",
 }
 
 func (m *AuthMiddleware) Skip(ctx *fiber.Ctx) bool {
@@ -38,11 +39,11 @@ func (m *AuthMiddleware) Skip(ctx *fiber.Ctx) bool {
 		}
 	}
 
-	for method, endpoint := range SkipEndpointAndMethod {
-		if ctx.Method() == method && strings.Contains(ctx.Path(), endpoint) {
-			return true
-		}
-	}
+	//for method, endpoint := range SkipEndpointAndMethod {
+	//	if ctx.Method() == method && strings.Contains(ctx.Path(), endpoint) {
+	//		return true
+	//	}
+	//}
 
 	return false
 }
@@ -53,24 +54,15 @@ func (m *AuthMiddleware) AsMiddleware() fiber.Handler {
 			return ctx.Next()
 		}
 
-		authHeader := ctx.Get(fiber.HeaderAuthorization)
-		if authHeader == "" {
+		idToken, err := util.GetIDToken(ctx)
+		if err != nil {
 			return response.ApiErrorResponse(
 				ctx,
 				fiber.StatusUnauthorized,
-				fiber.ErrUnauthorized,
+				err,
 			)
 		}
 
-		if !strings.HasPrefix(authHeader, constant.AuthHeaderPrefixBearer) {
-			return response.ApiErrorResponse(
-				ctx,
-				fiber.StatusUnauthorized,
-				fiber.ErrUnauthorized,
-			)
-		}
-
-		idToken := strings.TrimPrefix(authHeader, constant.AuthHeaderPrefixBearer)
 		claims, err := m.fAuthCli.VerifyIDToken(idToken)
 		if err != nil {
 			return response.ApiErrorResponse(
@@ -80,19 +72,15 @@ func (m *AuthMiddleware) AsMiddleware() fiber.Handler {
 			)
 		}
 
-		ctx.Locals(constant.CtxFirebaseUIDKey, claims["firebase_uid"])
-		ctx.Locals(constant.CtxSysUIDKey, claims["system_uid"])
-
-		principal, err := m.authHelper.BuildPrincipal(claims)
-		if err != nil {
+		if principal, err := m.authHelper.BuildPrincipal(claims); err != nil {
 			return response.ApiErrorResponse(
 				ctx,
 				fiber.StatusUnauthorized,
 				err,
 			)
+		} else {
+			ctx.Locals(constant.CtxPrincipalKey, principal)
 		}
-
-		ctx.Locals(constant.CtxPrincipalKey, principal)
 
 		return ctx.Next()
 	}

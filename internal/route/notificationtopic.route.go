@@ -7,6 +7,8 @@ package route
 
 import (
 	"go-firebase/internal/controller"
+	"go-firebase/internal/permission"
+	"go-firebase/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,7 +20,7 @@ type NotificationTopicRoute struct {
 func (r *NotificationTopicRoute) Register(router fiber.Router) {
 	notificationTopicRouter := router.Group("/notification-topics")
 	notificationTopicRouter.Get("/", r.notificationTopicCtrl.GetNotificationTopics)
-	notificationTopicRouter.Post("/", r.notificationTopicCtrl.CreateNotificationTopic)
+	notificationTopicRouter.Post("/", util.HasPermission(permission.CreateNotificationTopicPerm()), r.notificationTopicCtrl.CreateNotificationTopic)
 	notificationTopicRouter.Post("/subscribe", r.notificationTopicCtrl.SubscribeToNotificationTopic)
 	notificationTopicRouter.Post("/unsubscribe", r.notificationTopicCtrl.UnsubscribeFromNotificationTopic)
 }

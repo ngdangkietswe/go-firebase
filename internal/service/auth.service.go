@@ -16,6 +16,7 @@ import (
 	"go-firebase/pkg/model"
 	"go-firebase/pkg/request"
 	"go-firebase/pkg/response"
+	"go-firebase/pkg/util"
 
 	"github.com/google/uuid"
 	"github.com/ngdangkietswe/swe-go-common-shared/logger"
@@ -105,7 +106,7 @@ func (s *authSvc) RefreshToken(ctx context.Context, request *request.RefreshToke
 }
 
 func (s *authSvc) CurrentUser(ctx context.Context) (*model.User, error) {
-	principal := ctx.Value(constant.CtxPrincipalKey).(*model.Principal)
+	principal := util.GetPrincipal(ctx)
 
 	user, err := s.userRepo.FindByID(ctx, uuid.MustParse(principal.SystemUID))
 	if err != nil {

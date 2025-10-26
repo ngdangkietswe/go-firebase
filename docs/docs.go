@@ -633,7 +633,7 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
-                "description": "Retrieve user information",
+                "description": "Retrieve a list of users with pagination and optional search",
                 "consumes": [
                     "application/json"
                 ],
@@ -643,14 +643,37 @@ const docTemplate = `{
                 "tags": [
                     "User API"
                 ],
-                "summary": "Get user",
+                "summary": "Get users list",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
-                        "description": "User Email or ID",
-                        "name": "identifier",
-                        "in": "query",
-                        "required": true
+                        "description": "Sort by field",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order (asc or desc)",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
                     },
                     {
                         "type": "string",
@@ -701,6 +724,56 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/request.CreateUserRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{identifier}": {
+            "get": {
+                "description": "Retrieve user information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User API"
+                ],
+                "summary": "Get user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User Identifier (ID or Email)",
+                        "name": "identifier",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Comma-separated list of related entities to preload",
+                        "name": "preload",
+                        "in": "query"
                     }
                 ],
                 "responses": {

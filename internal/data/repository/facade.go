@@ -16,6 +16,7 @@ import (
 type (
 	UserRepository interface {
 		Save(ctx context.Context, tx *ent.Tx, request *request.CreateUserRequest, firebaseUID string) (*ent.User, error)
+		FindAll(ctx context.Context, request *request.ListUserRequest) ([]*ent.User, int, error)
 		FindByEmail(ctx context.Context, email string) (*ent.User, error)
 		FindByID(ctx context.Context, id uuid.UUID) (*ent.User, error)
 		FindByEmailOrID(ctx context.Context, identifier string) (*ent.User, error)

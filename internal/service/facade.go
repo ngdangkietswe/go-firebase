@@ -16,6 +16,7 @@ type (
 	UserService interface {
 		CreateUser(ctx context.Context, request *request.CreateUserRequest) (*response.CreateUserResponse, error)
 		GetUser(ctx context.Context, request *request.GetUserRequest) (*model.User, error)
+		GetUsers(ctx context.Context, request *request.ListUserRequest) (*response.ListResponse, error)
 	}
 
 	AuthService interface {

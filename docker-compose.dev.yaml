@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  # App
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: go-firebase
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./config/config.env

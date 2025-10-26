@@ -21,3 +21,12 @@ type Permission struct {
 	Action   string `json:"action"`
 	Resource string `json:"resource"`
 }
+
+func (principal *Principal) HasPermission(perm *Permission) bool {
+	for _, p := range principal.Permissions {
+		if p.Action == perm.Action && p.Resource == perm.Resource {
+			return true
+		}
+	}
+	return false
+}

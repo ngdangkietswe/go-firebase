@@ -1,0 +1,5 @@
+config/
+.git
+.gitignore
+README.md
+asset/
