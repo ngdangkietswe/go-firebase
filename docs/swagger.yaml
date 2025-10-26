@@ -244,6 +244,93 @@ paths:
       summary: Register a device token
       tags:
       - Device Token API
+  /file-storage/download:
+    post:
+      consumes:
+      - application/json
+      description: Generate a presigned URL for downloading a file from Firebase Storage
+      parameters:
+      - description: Bucket Name
+        in: query
+        name: bucket_name
+        required: true
+        type: string
+      - description: Object Name
+        in: query
+        name: object_name
+        required: true
+        type: string
+      - default: 0
+        description: Expire Time in seconds
+        in: query
+        name: expire_time
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      security:
+      - JWT: []
+      summary: Generate a presigned download URL
+      tags:
+      - File Storage API
+  /file-storage/upload:
+    post:
+      consumes:
+      - application/json
+      description: Generate a presigned URL for uploading a file to Firebase Storage
+      parameters:
+      - description: Bucket Name
+        in: query
+        name: bucket_name
+        required: true
+        type: string
+      - description: Object Name
+        in: query
+        name: object_name
+        required: true
+        type: string
+      - default: image/png
+        description: Content Type
+        in: query
+        name: content_type
+        type: string
+      - default: 0
+        description: Expire Time in seconds
+        in: query
+        name: expire_time
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      security:
+      - JWT: []
+      summary: Generate a presigned upload URL
+      tags:
+      - File Storage API
   /notification-topics:
     get:
       consumes:
@@ -548,6 +635,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ApiResponse'
+      security:
+      - JWT: []
       summary: Get users list
       tags:
       - User API
@@ -577,6 +666,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ApiResponse'
+      security:
+      - JWT: []
       summary: Create a new user
       tags:
       - User API
@@ -610,6 +701,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ApiResponse'
+      security:
+      - JWT: []
       summary: Get user
       tags:
       - User API

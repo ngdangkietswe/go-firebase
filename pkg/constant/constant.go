@@ -23,3 +23,5 @@ const NotificationTopicAlgo = "algo"
 
 const UserRoleCacheKeyPrefix = "user_role:"             // ex: "user_role:<system_uid>"
 const UserPermissionCacheKeyPrefix = "user_permission:" // ex: "user_permission:<system_uid>"
+
+const DefaultExpirePresignURLDuration = time.Duration(15) * time.Minute

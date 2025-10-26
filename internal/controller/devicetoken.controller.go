@@ -43,7 +43,7 @@ func (c *DeviceTokenCtrl) RegisterDeviceToken(ctx *fiber.Ctx) error {
 	return response.ApiSuccessResponse(ctx, res)
 }
 
-func NewDeviceTokenCtrl(
+func NewDeviceTokenController(
 	deviceTokenHandler *handler.DeviceTokenHandler,
 ) *DeviceTokenCtrl {
 	return &DeviceTokenCtrl{

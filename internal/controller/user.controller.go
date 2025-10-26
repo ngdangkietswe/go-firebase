@@ -105,7 +105,7 @@ func (c *UserCtrl) GetUser(ctx *fiber.Ctx) error {
 	return response.ApiSuccessResponse(ctx, res)
 }
 
-func NewUserCtrl(
+func NewUserController(
 	userHandler *handler.UserHandler,
 ) *UserCtrl {
 	return &UserCtrl{

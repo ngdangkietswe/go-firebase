@@ -5,7 +5,10 @@
 
 package firebase
 
-import "go-firebase/pkg/request"
+import (
+	"go-firebase/pkg/request"
+	"time"
+)
 
 type (
 	FCMClient interface {
@@ -23,5 +26,10 @@ type (
 		VerifyIDToken(idToken string) (map[string]interface{}, error)
 		RefreshToken(request *request.RefreshTokenRequest) (map[string]interface{}, error)
 		CustomToken(claims map[string]interface{}) (string /*customToken*/, error)
+	}
+
+	FStorageClient interface {
+		UploadFile(bucketName string, objectName string, contentType string, expireDuration time.Duration) (string /*presignUrl*/, error)
+		DownloadFile(bucketName string, objectName string, expireDuration time.Duration) (string /*presignUrl*/, error)
 	}
 )

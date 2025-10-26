@@ -13,4 +13,5 @@ var Module = fx.Provide(
 	NewDeviceTokenHandler,
 	NewNotificationHandler,
 	NewNotificationTopicHandler,
+	NewFileStorageHandler,
 )

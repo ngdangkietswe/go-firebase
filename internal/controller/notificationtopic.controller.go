@@ -125,7 +125,7 @@ func (c *NotificationTopicCtrl) UnsubscribeFromNotificationTopic(ctx *fiber.Ctx)
 	return response.ApiSuccessResponse(ctx, res)
 }
 
-func NewNotificationTopicCtrl(
+func NewNotificationTopicController(
 	notificationTopicHandler *handler.NotificationTopicHandler,
 ) *NotificationTopicCtrl {
 	return &NotificationTopicCtrl{

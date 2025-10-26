@@ -233,6 +233,139 @@
                 }
             }
         },
+        "/file-storage/download": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Generate a presigned URL for downloading a file from Firebase Storage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File Storage API"
+                ],
+                "summary": "Generate a presigned download URL",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bucket Name",
+                        "name": "bucket_name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Object Name",
+                        "name": "object_name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Expire Time in seconds",
+                        "name": "expire_time",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file-storage/upload": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Generate a presigned URL for uploading a file to Firebase Storage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File Storage API"
+                ],
+                "summary": "Generate a presigned upload URL",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bucket Name",
+                        "name": "bucket_name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Object Name",
+                        "name": "object_name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "image/png",
+                        "description": "Content Type",
+                        "name": "content_type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Expire Time in seconds",
+                        "name": "expire_time",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/notification-topics": {
             "get": {
                 "description": "Retrieve a list of notification topics",
@@ -630,6 +763,11 @@
         },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Retrieve a list of users with pagination and optional search",
                 "consumes": [
                     "application/json"
@@ -701,6 +839,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Create a new user with the provided information",
                 "consumes": [
                     "application/json"
@@ -747,6 +890,11 @@
         },
         "/users/{identifier}": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Retrieve user information",
                 "consumes": [
                     "application/json"

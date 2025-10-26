@@ -8,9 +8,10 @@ package controller
 import "go.uber.org/fx"
 
 var Module = fx.Provide(
-	NewAuthCtrl,
-	NewUserCtrl,
-	NewDeviceTokenCtrl,
-	NewNotificationCtrl,
-	NewNotificationTopicCtrl,
+	NewAuthController,
+	NewUserController,
+	NewDeviceTokenController,
+	NewNotificationController,
+	NewNotificationTopicController,
+	NewFileStorageController,
 )

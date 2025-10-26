@@ -43,4 +43,9 @@ type (
 		SubscribeNotificationTopic(ctx context.Context, request *request.SubscribeNotificationTopicRequest) (*response.EmptyResponse, error)
 		UnsubscribeNotificationTopic(ctx context.Context, request *request.SubscribeNotificationTopicRequest) (*response.EmptyResponse, error)
 	}
+
+	FileStorageService interface {
+		GenerateUploadURL(ctx context.Context, request *request.GetPresignURLRequest) (*response.PresignURLResponse, error)
+		GenerateDownloadURL(ctx context.Context, request *request.GetPresignURLRequest) (*response.PresignURLResponse, error)
+	}
 )

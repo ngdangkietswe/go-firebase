@@ -117,7 +117,7 @@ func (c *AuthCtrl) CurrentUser(ctx *fiber.Ctx) error {
 	return response.ApiSuccessResponse(ctx, res)
 }
 
-func NewAuthCtrl(
+func NewAuthController(
 	authHandler *handler.AuthHandler,
 ) *AuthCtrl {
 	return &AuthCtrl{

@@ -11,4 +11,5 @@ var Module = fx.Provide(
 	NewFirebaseClient,
 	NewFCMClient,
 	NewFAuthClient,
+	NewFStorageClient,
 )

@@ -118,7 +118,7 @@ func (c *NotificationCtrl) MarkAllNotificationsAsRead(ctx *fiber.Ctx) error {
 	return response.ApiSuccessResponse(ctx, res)
 }
 
-func NewNotificationCtrl(
+func NewNotificationController(
 	notificationHandler *handler.NotificationHandler,
 ) *NotificationCtrl {
 	return &NotificationCtrl{
