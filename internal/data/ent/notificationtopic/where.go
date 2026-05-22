@@ -66,6 +66,31 @@ func UpdatedAt(v time.Time) predicate.NotificationTopic {
 	return predicate.NotificationTopic(sql.FieldEQ(FieldUpdatedAt, v))
 }
 
+// DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
+func DeletedAt(v time.Time) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// CreatedBy applies equality check predicate on the "created_by" field. It's identical to CreatedByEQ.
+func CreatedBy(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldCreatedBy, v))
+}
+
+// UpdatedBy applies equality check predicate on the "updated_by" field. It's identical to UpdatedByEQ.
+func UpdatedBy(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldUpdatedBy, v))
+}
+
+// DeletedBy applies equality check predicate on the "deleted_by" field. It's identical to DeletedByEQ.
+func DeletedBy(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldDeletedBy, v))
+}
+
+// Deleted applies equality check predicate on the "deleted" field. It's identical to DeletedEQ.
+func Deleted(v bool) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldDeleted, v))
+}
+
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
 func Name(v string) predicate.NotificationTopic {
 	return predicate.NotificationTopic(sql.FieldEQ(FieldName, v))
@@ -154,6 +179,226 @@ func UpdatedAtLT(v time.Time) predicate.NotificationTopic {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.NotificationTopic {
 	return predicate.NotificationTopic(sql.FieldLTE(FieldUpdatedAt, v))
+}
+
+// UpdatedAtIsNil applies the IsNil predicate on the "updated_at" field.
+func UpdatedAtIsNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldIsNull(FieldUpdatedAt))
+}
+
+// UpdatedAtNotNil applies the NotNil predicate on the "updated_at" field.
+func UpdatedAtNotNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNotNull(FieldUpdatedAt))
+}
+
+// DeletedAtEQ applies the EQ predicate on the "deleted_at" field.
+func DeletedAtEQ(v time.Time) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// DeletedAtNEQ applies the NEQ predicate on the "deleted_at" field.
+func DeletedAtNEQ(v time.Time) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNEQ(FieldDeletedAt, v))
+}
+
+// DeletedAtIn applies the In predicate on the "deleted_at" field.
+func DeletedAtIn(vs ...time.Time) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldIn(FieldDeletedAt, vs...))
+}
+
+// DeletedAtNotIn applies the NotIn predicate on the "deleted_at" field.
+func DeletedAtNotIn(vs ...time.Time) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNotIn(FieldDeletedAt, vs...))
+}
+
+// DeletedAtGT applies the GT predicate on the "deleted_at" field.
+func DeletedAtGT(v time.Time) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldGT(FieldDeletedAt, v))
+}
+
+// DeletedAtGTE applies the GTE predicate on the "deleted_at" field.
+func DeletedAtGTE(v time.Time) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldGTE(FieldDeletedAt, v))
+}
+
+// DeletedAtLT applies the LT predicate on the "deleted_at" field.
+func DeletedAtLT(v time.Time) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldLT(FieldDeletedAt, v))
+}
+
+// DeletedAtLTE applies the LTE predicate on the "deleted_at" field.
+func DeletedAtLTE(v time.Time) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldLTE(FieldDeletedAt, v))
+}
+
+// DeletedAtIsNil applies the IsNil predicate on the "deleted_at" field.
+func DeletedAtIsNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldIsNull(FieldDeletedAt))
+}
+
+// DeletedAtNotNil applies the NotNil predicate on the "deleted_at" field.
+func DeletedAtNotNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNotNull(FieldDeletedAt))
+}
+
+// CreatedByEQ applies the EQ predicate on the "created_by" field.
+func CreatedByEQ(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldCreatedBy, v))
+}
+
+// CreatedByNEQ applies the NEQ predicate on the "created_by" field.
+func CreatedByNEQ(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNEQ(FieldCreatedBy, v))
+}
+
+// CreatedByIn applies the In predicate on the "created_by" field.
+func CreatedByIn(vs ...uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldIn(FieldCreatedBy, vs...))
+}
+
+// CreatedByNotIn applies the NotIn predicate on the "created_by" field.
+func CreatedByNotIn(vs ...uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNotIn(FieldCreatedBy, vs...))
+}
+
+// CreatedByGT applies the GT predicate on the "created_by" field.
+func CreatedByGT(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldGT(FieldCreatedBy, v))
+}
+
+// CreatedByGTE applies the GTE predicate on the "created_by" field.
+func CreatedByGTE(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldGTE(FieldCreatedBy, v))
+}
+
+// CreatedByLT applies the LT predicate on the "created_by" field.
+func CreatedByLT(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldLT(FieldCreatedBy, v))
+}
+
+// CreatedByLTE applies the LTE predicate on the "created_by" field.
+func CreatedByLTE(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldLTE(FieldCreatedBy, v))
+}
+
+// CreatedByIsNil applies the IsNil predicate on the "created_by" field.
+func CreatedByIsNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldIsNull(FieldCreatedBy))
+}
+
+// CreatedByNotNil applies the NotNil predicate on the "created_by" field.
+func CreatedByNotNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNotNull(FieldCreatedBy))
+}
+
+// UpdatedByEQ applies the EQ predicate on the "updated_by" field.
+func UpdatedByEQ(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldUpdatedBy, v))
+}
+
+// UpdatedByNEQ applies the NEQ predicate on the "updated_by" field.
+func UpdatedByNEQ(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNEQ(FieldUpdatedBy, v))
+}
+
+// UpdatedByIn applies the In predicate on the "updated_by" field.
+func UpdatedByIn(vs ...uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldIn(FieldUpdatedBy, vs...))
+}
+
+// UpdatedByNotIn applies the NotIn predicate on the "updated_by" field.
+func UpdatedByNotIn(vs ...uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNotIn(FieldUpdatedBy, vs...))
+}
+
+// UpdatedByGT applies the GT predicate on the "updated_by" field.
+func UpdatedByGT(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldGT(FieldUpdatedBy, v))
+}
+
+// UpdatedByGTE applies the GTE predicate on the "updated_by" field.
+func UpdatedByGTE(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldGTE(FieldUpdatedBy, v))
+}
+
+// UpdatedByLT applies the LT predicate on the "updated_by" field.
+func UpdatedByLT(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldLT(FieldUpdatedBy, v))
+}
+
+// UpdatedByLTE applies the LTE predicate on the "updated_by" field.
+func UpdatedByLTE(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldLTE(FieldUpdatedBy, v))
+}
+
+// UpdatedByIsNil applies the IsNil predicate on the "updated_by" field.
+func UpdatedByIsNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldIsNull(FieldUpdatedBy))
+}
+
+// UpdatedByNotNil applies the NotNil predicate on the "updated_by" field.
+func UpdatedByNotNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNotNull(FieldUpdatedBy))
+}
+
+// DeletedByEQ applies the EQ predicate on the "deleted_by" field.
+func DeletedByEQ(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldDeletedBy, v))
+}
+
+// DeletedByNEQ applies the NEQ predicate on the "deleted_by" field.
+func DeletedByNEQ(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNEQ(FieldDeletedBy, v))
+}
+
+// DeletedByIn applies the In predicate on the "deleted_by" field.
+func DeletedByIn(vs ...uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldIn(FieldDeletedBy, vs...))
+}
+
+// DeletedByNotIn applies the NotIn predicate on the "deleted_by" field.
+func DeletedByNotIn(vs ...uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNotIn(FieldDeletedBy, vs...))
+}
+
+// DeletedByGT applies the GT predicate on the "deleted_by" field.
+func DeletedByGT(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldGT(FieldDeletedBy, v))
+}
+
+// DeletedByGTE applies the GTE predicate on the "deleted_by" field.
+func DeletedByGTE(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldGTE(FieldDeletedBy, v))
+}
+
+// DeletedByLT applies the LT predicate on the "deleted_by" field.
+func DeletedByLT(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldLT(FieldDeletedBy, v))
+}
+
+// DeletedByLTE applies the LTE predicate on the "deleted_by" field.
+func DeletedByLTE(v uuid.UUID) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldLTE(FieldDeletedBy, v))
+}
+
+// DeletedByIsNil applies the IsNil predicate on the "deleted_by" field.
+func DeletedByIsNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldIsNull(FieldDeletedBy))
+}
+
+// DeletedByNotNil applies the NotNil predicate on the "deleted_by" field.
+func DeletedByNotNil() predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNotNull(FieldDeletedBy))
+}
+
+// DeletedEQ applies the EQ predicate on the "deleted" field.
+func DeletedEQ(v bool) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldEQ(FieldDeleted, v))
+}
+
+// DeletedNEQ applies the NEQ predicate on the "deleted" field.
+func DeletedNEQ(v bool) predicate.NotificationTopic {
+	return predicate.NotificationTopic(sql.FieldNEQ(FieldDeleted, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.

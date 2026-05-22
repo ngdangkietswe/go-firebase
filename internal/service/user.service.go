@@ -17,6 +17,7 @@ import (
 	"go-firebase/pkg/response"
 	"go-firebase/pkg/util"
 
+	"github.com/google/uuid"
 	"github.com/ngdangkietswe/swe-go-common-shared/logger"
 	"go.uber.org/zap"
 )
@@ -82,6 +83,62 @@ func (s *userSvc) GetUser(ctx context.Context, request *request.GetUserRequest) 
 	s.userHelper.Preload(ctx, []*model.User{mUser}, request.Preload)
 
 	return mUser, nil
+}
+
+func (s *userSvc) EnDisableUser(ctx context.Context, request *request.EnDisableUserRequest) (*response.EmptyResponse, error) {
+	userID := uuid.MustParse(request.UserID)
+	user, err := s.userRepo.FindByID(ctx, userID)
+
+	if err != nil {
+		s.logger.Error("Failed to find user by ID", zap.String("userID", request.UserID), zap.Error(err))
+		return nil, err
+	}
+
+	if err = repository.WithTx(ctx, s.cli, s.logger, func(tx *ent.Tx) error {
+		if err := s.userRepo.UpdateStatus(ctx, tx, userID, request.Disable); err != nil {
+			s.logger.Error("Failed to update user status", zap.String("userID", request.UserID), zap.Error(err))
+			return err
+		}
+
+		if err := s.fAuthCli.EnDisableAccount(user.FirebaseUID, request.Disable); err != nil {
+			s.logger.Error("Failed to enable/disable firebase account", zap.String("firebaseUID", user.FirebaseUID), zap.Error(err))
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return &response.EmptyResponse{}, nil
+}
+
+func (s *userSvc) DeleteUser(ctx context.Context, request *request.IDRequest) (*response.EmptyResponse, error) {
+	userID := uuid.MustParse(request.ID)
+	user, err := s.userRepo.FindByID(ctx, userID)
+
+	if err != nil {
+		s.logger.Error("Failed to find user by ID", zap.String("userID", request.ID), zap.Error(err))
+		return nil, err
+	}
+
+	if err = repository.WithTx(ctx, s.cli, s.logger, func(tx *ent.Tx) error {
+		if err := s.userRepo.DeleteByID(ctx, tx, userID); err != nil {
+			s.logger.Error("Failed to delete user by ID", zap.String("userID", request.ID), zap.Error(err))
+			return err
+		}
+
+		if err := s.fAuthCli.DeleteAccount(user.FirebaseUID); err != nil {
+			s.logger.Error("Failed to delete firebase account", zap.String("firebaseUID", user.FirebaseUID), zap.Error(err))
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return &response.EmptyResponse{}, nil
 }
 
 func NewUserService(

@@ -17,13 +17,19 @@ type (
 		CreateUser(ctx context.Context, request *request.CreateUserRequest) (*response.CreateUserResponse, error)
 		GetUser(ctx context.Context, request *request.GetUserRequest) (*model.User, error)
 		GetUsers(ctx context.Context, request *request.ListUserRequest) (*response.ListResponse, error)
+		EnDisableUser(ctx context.Context, request *request.EnDisableUserRequest) (*response.EmptyResponse, error)
+		DeleteUser(ctx context.Context, request *request.IDRequest) (*response.EmptyResponse, error)
 	}
 
 	AuthService interface {
 		Login(ctx context.Context, request *request.LoginRequest) (*response.LoginResponse, error)
 		VerifyToken(ctx context.Context, request *request.VerifyTokenRequest) (*response.EmptyResponse, error)
 		RefreshToken(ctx context.Context, request *request.RefreshTokenRequest) (*response.RefreshTokenResponse, error)
+		RevokeToken(ctx context.Context, request *request.RevokeTokenRequest) (*response.EmptyResponse, error)
 		CurrentUser(ctx context.Context) (*model.User, error)
+		ForgotPassword(ctx context.Context, request *request.SendPasswordResetMailRequest) (*response.EmptyResponse, error)
+		ConfirmResetPassword(ctx context.Context, request *request.ResetPasswordRequest) (*response.EmptyResponse, error)
+		AdminChangePassword(ctx context.Context, request *request.ChangePasswordRequest) (*response.EmptyResponse, error)
 	}
 
 	DeviceTokenService interface {

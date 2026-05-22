@@ -16,12 +16,17 @@ import (
 type (
 	UserRepository interface {
 		Save(ctx context.Context, tx *ent.Tx, request *request.CreateUserRequest, firebaseUID string) (*ent.User, error)
+		SaveEnt(ctx context.Context, tx *ent.Tx, user *ent.User) error
 		FindAll(ctx context.Context, request *request.ListUserRequest) ([]*ent.User, int, error)
 		FindByEmail(ctx context.Context, email string) (*ent.User, error)
 		FindByID(ctx context.Context, id uuid.UUID) (*ent.User, error)
 		FindByEmailOrID(ctx context.Context, identifier string) (*ent.User, error)
 		FindByFirebaseUID(ctx context.Context, firebaseUID string) (*ent.User, error)
 		ExistsByID(ctx context.Context, id uuid.UUID) (bool, error)
+		ExistsByEmail(ctx context.Context, email string) (bool, error)
+		ExistsByFirebaseUID(ctx context.Context, firebaseUID string) (bool, error)
+		UpdateStatus(ctx context.Context, tx *ent.Tx, id uuid.UUID, disabled bool) error
+		DeleteByID(ctx context.Context, tx *ent.Tx, id uuid.UUID) error
 	}
 
 	DeviceTokenRepository interface {

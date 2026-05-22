@@ -54,6 +54,76 @@ func (_c *NotificationCreate) SetNillableUpdatedAt(v *time.Time) *NotificationCr
 	return _c
 }
 
+// SetDeletedAt sets the "deleted_at" field.
+func (_c *NotificationCreate) SetDeletedAt(v time.Time) *NotificationCreate {
+	_c.mutation.SetDeletedAt(v)
+	return _c
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_c *NotificationCreate) SetNillableDeletedAt(v *time.Time) *NotificationCreate {
+	if v != nil {
+		_c.SetDeletedAt(*v)
+	}
+	return _c
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_c *NotificationCreate) SetCreatedBy(v uuid.UUID) *NotificationCreate {
+	_c.mutation.SetCreatedBy(v)
+	return _c
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_c *NotificationCreate) SetNillableCreatedBy(v *uuid.UUID) *NotificationCreate {
+	if v != nil {
+		_c.SetCreatedBy(*v)
+	}
+	return _c
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_c *NotificationCreate) SetUpdatedBy(v uuid.UUID) *NotificationCreate {
+	_c.mutation.SetUpdatedBy(v)
+	return _c
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_c *NotificationCreate) SetNillableUpdatedBy(v *uuid.UUID) *NotificationCreate {
+	if v != nil {
+		_c.SetUpdatedBy(*v)
+	}
+	return _c
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_c *NotificationCreate) SetDeletedBy(v uuid.UUID) *NotificationCreate {
+	_c.mutation.SetDeletedBy(v)
+	return _c
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_c *NotificationCreate) SetNillableDeletedBy(v *uuid.UUID) *NotificationCreate {
+	if v != nil {
+		_c.SetDeletedBy(*v)
+	}
+	return _c
+}
+
+// SetDeleted sets the "deleted" field.
+func (_c *NotificationCreate) SetDeleted(v bool) *NotificationCreate {
+	_c.mutation.SetDeleted(v)
+	return _c
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_c *NotificationCreate) SetNillableDeleted(v *bool) *NotificationCreate {
+	if v != nil {
+		_c.SetDeleted(*v)
+	}
+	return _c
+}
+
 // SetUserID sets the "user_id" field.
 func (_c *NotificationCreate) SetUserID(v uuid.UUID) *NotificationCreate {
 	_c.mutation.SetUserID(v)
@@ -191,9 +261,9 @@ func (_c *NotificationCreate) defaults() {
 		v := notification.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
 	}
-	if _, ok := _c.mutation.UpdatedAt(); !ok {
-		v := notification.DefaultUpdatedAt()
-		_c.mutation.SetUpdatedAt(v)
+	if _, ok := _c.mutation.Deleted(); !ok {
+		v := notification.DefaultDeleted
+		_c.mutation.SetDeleted(v)
 	}
 	if _, ok := _c.mutation.SentAt(); !ok {
 		v := notification.DefaultSentAt()
@@ -214,8 +284,8 @@ func (_c *NotificationCreate) check() error {
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Notification.created_at"`)}
 	}
-	if _, ok := _c.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Notification.updated_at"`)}
+	if _, ok := _c.mutation.Deleted(); !ok {
+		return &ValidationError{Name: "deleted", err: errors.New(`ent: missing required field "Notification.deleted"`)}
 	}
 	if _, ok := _c.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Notification.title"`)}
@@ -271,7 +341,27 @@ func (_c *NotificationCreate) createSpec() (*Notification, *sqlgraph.CreateSpec)
 	}
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(notification.FieldUpdatedAt, field.TypeTime, value)
-		_node.UpdatedAt = value
+		_node.UpdatedAt = &value
+	}
+	if value, ok := _c.mutation.DeletedAt(); ok {
+		_spec.SetField(notification.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = &value
+	}
+	if value, ok := _c.mutation.CreatedBy(); ok {
+		_spec.SetField(notification.FieldCreatedBy, field.TypeUUID, value)
+		_node.CreatedBy = &value
+	}
+	if value, ok := _c.mutation.UpdatedBy(); ok {
+		_spec.SetField(notification.FieldUpdatedBy, field.TypeUUID, value)
+		_node.UpdatedBy = &value
+	}
+	if value, ok := _c.mutation.DeletedBy(); ok {
+		_spec.SetField(notification.FieldDeletedBy, field.TypeUUID, value)
+		_node.DeletedBy = &value
+	}
+	if value, ok := _c.mutation.Deleted(); ok {
+		_spec.SetField(notification.FieldDeleted, field.TypeBool, value)
+		_node.Deleted = value
 	}
 	if value, ok := _c.mutation.Title(); ok {
 		_spec.SetField(notification.FieldTitle, field.TypeString, value)
@@ -388,6 +478,96 @@ func (u *NotificationUpsert) SetUpdatedAt(v time.Time) *NotificationUpsert {
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
 func (u *NotificationUpsert) UpdateUpdatedAt() *NotificationUpsert {
 	u.SetExcluded(notification.FieldUpdatedAt)
+	return u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *NotificationUpsert) ClearUpdatedAt() *NotificationUpsert {
+	u.SetNull(notification.FieldUpdatedAt)
+	return u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *NotificationUpsert) SetDeletedAt(v time.Time) *NotificationUpsert {
+	u.Set(notification.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *NotificationUpsert) UpdateDeletedAt() *NotificationUpsert {
+	u.SetExcluded(notification.FieldDeletedAt)
+	return u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *NotificationUpsert) ClearDeletedAt() *NotificationUpsert {
+	u.SetNull(notification.FieldDeletedAt)
+	return u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *NotificationUpsert) SetCreatedBy(v uuid.UUID) *NotificationUpsert {
+	u.Set(notification.FieldCreatedBy, v)
+	return u
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *NotificationUpsert) UpdateCreatedBy() *NotificationUpsert {
+	u.SetExcluded(notification.FieldCreatedBy)
+	return u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *NotificationUpsert) ClearCreatedBy() *NotificationUpsert {
+	u.SetNull(notification.FieldCreatedBy)
+	return u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *NotificationUpsert) SetUpdatedBy(v uuid.UUID) *NotificationUpsert {
+	u.Set(notification.FieldUpdatedBy, v)
+	return u
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *NotificationUpsert) UpdateUpdatedBy() *NotificationUpsert {
+	u.SetExcluded(notification.FieldUpdatedBy)
+	return u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *NotificationUpsert) ClearUpdatedBy() *NotificationUpsert {
+	u.SetNull(notification.FieldUpdatedBy)
+	return u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *NotificationUpsert) SetDeletedBy(v uuid.UUID) *NotificationUpsert {
+	u.Set(notification.FieldDeletedBy, v)
+	return u
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *NotificationUpsert) UpdateDeletedBy() *NotificationUpsert {
+	u.SetExcluded(notification.FieldDeletedBy)
+	return u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *NotificationUpsert) ClearDeletedBy() *NotificationUpsert {
+	u.SetNull(notification.FieldDeletedBy)
+	return u
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *NotificationUpsert) SetDeleted(v bool) *NotificationUpsert {
+	u.Set(notification.FieldDeleted, v)
+	return u
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *NotificationUpsert) UpdateDeleted() *NotificationUpsert {
+	u.SetExcluded(notification.FieldDeleted)
 	return u
 }
 
@@ -555,6 +735,111 @@ func (u *NotificationUpsertOne) SetUpdatedAt(v time.Time) *NotificationUpsertOne
 func (u *NotificationUpsertOne) UpdateUpdatedAt() *NotificationUpsertOne {
 	return u.Update(func(s *NotificationUpsert) {
 		s.UpdateUpdatedAt()
+	})
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *NotificationUpsertOne) ClearUpdatedAt() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *NotificationUpsertOne) SetDeletedAt(v time.Time) *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *NotificationUpsertOne) UpdateDeletedAt() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *NotificationUpsertOne) ClearDeletedAt() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *NotificationUpsertOne) SetCreatedBy(v uuid.UUID) *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetCreatedBy(v)
+	})
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *NotificationUpsertOne) UpdateCreatedBy() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateCreatedBy()
+	})
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *NotificationUpsertOne) ClearCreatedBy() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *NotificationUpsertOne) SetUpdatedBy(v uuid.UUID) *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetUpdatedBy(v)
+	})
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *NotificationUpsertOne) UpdateUpdatedBy() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateUpdatedBy()
+	})
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *NotificationUpsertOne) ClearUpdatedBy() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearUpdatedBy()
+	})
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *NotificationUpsertOne) SetDeletedBy(v uuid.UUID) *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetDeletedBy(v)
+	})
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *NotificationUpsertOne) UpdateDeletedBy() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateDeletedBy()
+	})
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *NotificationUpsertOne) ClearDeletedBy() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearDeletedBy()
+	})
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *NotificationUpsertOne) SetDeleted(v bool) *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetDeleted(v)
+	})
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *NotificationUpsertOne) UpdateDeleted() *NotificationUpsertOne {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateDeleted()
 	})
 }
 
@@ -906,6 +1191,111 @@ func (u *NotificationUpsertBulk) SetUpdatedAt(v time.Time) *NotificationUpsertBu
 func (u *NotificationUpsertBulk) UpdateUpdatedAt() *NotificationUpsertBulk {
 	return u.Update(func(s *NotificationUpsert) {
 		s.UpdateUpdatedAt()
+	})
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *NotificationUpsertBulk) ClearUpdatedAt() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *NotificationUpsertBulk) SetDeletedAt(v time.Time) *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *NotificationUpsertBulk) UpdateDeletedAt() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *NotificationUpsertBulk) ClearDeletedAt() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *NotificationUpsertBulk) SetCreatedBy(v uuid.UUID) *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetCreatedBy(v)
+	})
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *NotificationUpsertBulk) UpdateCreatedBy() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateCreatedBy()
+	})
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *NotificationUpsertBulk) ClearCreatedBy() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *NotificationUpsertBulk) SetUpdatedBy(v uuid.UUID) *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetUpdatedBy(v)
+	})
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *NotificationUpsertBulk) UpdateUpdatedBy() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateUpdatedBy()
+	})
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *NotificationUpsertBulk) ClearUpdatedBy() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearUpdatedBy()
+	})
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *NotificationUpsertBulk) SetDeletedBy(v uuid.UUID) *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetDeletedBy(v)
+	})
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *NotificationUpsertBulk) UpdateDeletedBy() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateDeletedBy()
+	})
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *NotificationUpsertBulk) ClearDeletedBy() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.ClearDeletedBy()
+	})
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *NotificationUpsertBulk) SetDeleted(v bool) *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.SetDeleted(v)
+	})
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *NotificationUpsertBulk) UpdateDeleted() *NotificationUpsertBulk {
+	return u.Update(func(s *NotificationUpsert) {
+		s.UpdateDeleted()
 	})
 }
 

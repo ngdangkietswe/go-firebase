@@ -105,6 +105,60 @@ func (c *UserCtrl) GetUser(ctx *fiber.Ctx) error {
 	return response.ApiSuccessResponse(ctx, res)
 }
 
+// EnDisableUser godoc
+// @Summary      Enable or Disable User
+// @Description  Enable or disable a user account
+// @Tags         User API
+// @Accept       json
+// @Produce      json
+// @Param        user  body      request.EnDisableUserRequest  true  "Enable/Disable User Info"
+// @Success      200   {object}  response.ApiResponse
+// @Failure      400   {object}  response.ApiResponse
+// @Failure      500   {object}  response.ApiResponse
+// @Router       /users/{id}/en-disable [put]
+// @Security     JWT
+func (c *UserCtrl) EnDisableUser(ctx *fiber.Ctx) error {
+	var req *request.EnDisableUserRequest
+
+	if err := ctx.BodyParser(&req); err != nil {
+		return response.ApiErrorResponse(ctx, fiber.StatusBadRequest, err)
+	}
+
+	req.UserID = ctx.Params("id")
+
+	res, err := c.userHandler.EnDisableUser(ctx, req)
+	if err != nil {
+		return response.ApiErrorResponse(ctx, fiber.StatusInternalServerError, err)
+	}
+
+	return response.ApiSuccessResponse(ctx, res)
+}
+
+// DeleteUser godoc
+// @Summary      Delete User
+// @Description  Delete a user account
+// @Tags         User API
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string                     true  "User ID"
+// @Success      200  {object}  response.ApiResponse
+// @Failure      400  {object}  response.ApiResponse
+// @Failure      500  {object}  response.ApiResponse
+// @Router       /users/{id} [delete]
+// @Security     JWT
+func (c *UserCtrl) DeleteUser(ctx *fiber.Ctx) error {
+	req := &request.IDRequest{
+		ID: ctx.Params("id"),
+	}
+
+	res, err := c.userHandler.DeleteUser(ctx, req)
+	if err != nil {
+		return response.ApiErrorResponse(ctx, fiber.StatusInternalServerError, err)
+	}
+
+	return response.ApiSuccessResponse(ctx, res)
+}
+
 func NewUserController(
 	userHandler *handler.UserHandler,
 ) *UserCtrl {

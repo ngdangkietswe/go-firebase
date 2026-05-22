@@ -41,6 +41,18 @@ func (h *UserHandler) GetUser(c *fiber.Ctx, request *request.GetUserRequest) (*m
 	return util.SafeFunc(newCtx, request, h.userSvc.GetUser)
 }
 
+func (h *UserHandler) EnDisableUser(c *fiber.Ctx, request *request.EnDisableUserRequest) (*response.EmptyResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
+	defer cancel()
+	return util.SafeFunc(newCtx, request, h.userSvc.EnDisableUser)
+}
+
+func (h *UserHandler) DeleteUser(c *fiber.Ctx, request *request.IDRequest) (*response.EmptyResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
+	defer cancel()
+	return util.SafeFunc(newCtx, request, h.userSvc.DeleteUser)
+}
+
 func NewUserHandler(
 	logger *logger.Logger,
 	userSvc service.UserService,

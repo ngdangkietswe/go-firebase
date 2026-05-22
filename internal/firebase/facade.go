@@ -25,7 +25,13 @@ type (
 		Signup(request *request.CreateUserRequest) (string /*firebaseUID*/, error)
 		VerifyIDToken(idToken string) (map[string]interface{}, error)
 		RefreshToken(request *request.RefreshTokenRequest) (map[string]interface{}, error)
+		RevokeToken(request *request.RevokeTokenRequest) error
 		CustomToken(claims map[string]interface{}) (string /*customToken*/, error)
+		EnDisableAccount(firebaseUID string, disabled bool) error
+		DeleteAccount(firebaseUID string) error
+		SendPasswordResetEmail(request *request.SendPasswordResetMailRequest) error
+		ResetPassword(request *request.ResetPasswordRequest) error
+		ChangePassword(request *request.ChangePasswordRequest) error
 	}
 
 	FStorageClient interface {

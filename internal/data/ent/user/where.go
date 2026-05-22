@@ -66,6 +66,31 @@ func UpdatedAt(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldUpdatedAt, v))
 }
 
+// DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
+func DeletedAt(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// CreatedBy applies equality check predicate on the "created_by" field. It's identical to CreatedByEQ.
+func CreatedBy(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldCreatedBy, v))
+}
+
+// UpdatedBy applies equality check predicate on the "updated_by" field. It's identical to UpdatedByEQ.
+func UpdatedBy(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldUpdatedBy, v))
+}
+
+// DeletedBy applies equality check predicate on the "deleted_by" field. It's identical to DeletedByEQ.
+func DeletedBy(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldDeletedBy, v))
+}
+
+// Deleted applies equality check predicate on the "deleted" field. It's identical to DeletedEQ.
+func Deleted(v bool) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldDeleted, v))
+}
+
 // Email applies equality check predicate on the "email" field. It's identical to EmailEQ.
 func Email(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldEmail, v))
@@ -89,6 +114,31 @@ func DisplayName(v string) predicate.User {
 // FirebaseUID applies equality check predicate on the "firebase_uid" field. It's identical to FirebaseUIDEQ.
 func FirebaseUID(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldFirebaseUID, v))
+}
+
+// Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
+func Status(v int32) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldStatus, v))
+}
+
+// LastLoginAt applies equality check predicate on the "last_login_at" field. It's identical to LastLoginAtEQ.
+func LastLoginAt(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLastLoginAt, v))
+}
+
+// LastLoginIP applies equality check predicate on the "last_login_ip" field. It's identical to LastLoginIPEQ.
+func LastLoginIP(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLastLoginIP, v))
+}
+
+// LastLoginUserAgent applies equality check predicate on the "last_login_user_agent" field. It's identical to LastLoginUserAgentEQ.
+func LastLoginUserAgent(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLastLoginUserAgent, v))
+}
+
+// FailedLoginAttempts applies equality check predicate on the "failed_login_attempts" field. It's identical to FailedLoginAttemptsEQ.
+func FailedLoginAttempts(v int32) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldFailedLoginAttempts, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -169,6 +219,226 @@ func UpdatedAtLT(v time.Time) predicate.User {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldUpdatedAt, v))
+}
+
+// UpdatedAtIsNil applies the IsNil predicate on the "updated_at" field.
+func UpdatedAtIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldUpdatedAt))
+}
+
+// UpdatedAtNotNil applies the NotNil predicate on the "updated_at" field.
+func UpdatedAtNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldUpdatedAt))
+}
+
+// DeletedAtEQ applies the EQ predicate on the "deleted_at" field.
+func DeletedAtEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// DeletedAtNEQ applies the NEQ predicate on the "deleted_at" field.
+func DeletedAtNEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldDeletedAt, v))
+}
+
+// DeletedAtIn applies the In predicate on the "deleted_at" field.
+func DeletedAtIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldIn(FieldDeletedAt, vs...))
+}
+
+// DeletedAtNotIn applies the NotIn predicate on the "deleted_at" field.
+func DeletedAtNotIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldDeletedAt, vs...))
+}
+
+// DeletedAtGT applies the GT predicate on the "deleted_at" field.
+func DeletedAtGT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGT(FieldDeletedAt, v))
+}
+
+// DeletedAtGTE applies the GTE predicate on the "deleted_at" field.
+func DeletedAtGTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldDeletedAt, v))
+}
+
+// DeletedAtLT applies the LT predicate on the "deleted_at" field.
+func DeletedAtLT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLT(FieldDeletedAt, v))
+}
+
+// DeletedAtLTE applies the LTE predicate on the "deleted_at" field.
+func DeletedAtLTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldDeletedAt, v))
+}
+
+// DeletedAtIsNil applies the IsNil predicate on the "deleted_at" field.
+func DeletedAtIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldDeletedAt))
+}
+
+// DeletedAtNotNil applies the NotNil predicate on the "deleted_at" field.
+func DeletedAtNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldDeletedAt))
+}
+
+// CreatedByEQ applies the EQ predicate on the "created_by" field.
+func CreatedByEQ(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldCreatedBy, v))
+}
+
+// CreatedByNEQ applies the NEQ predicate on the "created_by" field.
+func CreatedByNEQ(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldCreatedBy, v))
+}
+
+// CreatedByIn applies the In predicate on the "created_by" field.
+func CreatedByIn(vs ...uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldIn(FieldCreatedBy, vs...))
+}
+
+// CreatedByNotIn applies the NotIn predicate on the "created_by" field.
+func CreatedByNotIn(vs ...uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldCreatedBy, vs...))
+}
+
+// CreatedByGT applies the GT predicate on the "created_by" field.
+func CreatedByGT(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldGT(FieldCreatedBy, v))
+}
+
+// CreatedByGTE applies the GTE predicate on the "created_by" field.
+func CreatedByGTE(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldCreatedBy, v))
+}
+
+// CreatedByLT applies the LT predicate on the "created_by" field.
+func CreatedByLT(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldLT(FieldCreatedBy, v))
+}
+
+// CreatedByLTE applies the LTE predicate on the "created_by" field.
+func CreatedByLTE(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldCreatedBy, v))
+}
+
+// CreatedByIsNil applies the IsNil predicate on the "created_by" field.
+func CreatedByIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldCreatedBy))
+}
+
+// CreatedByNotNil applies the NotNil predicate on the "created_by" field.
+func CreatedByNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldCreatedBy))
+}
+
+// UpdatedByEQ applies the EQ predicate on the "updated_by" field.
+func UpdatedByEQ(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldUpdatedBy, v))
+}
+
+// UpdatedByNEQ applies the NEQ predicate on the "updated_by" field.
+func UpdatedByNEQ(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldUpdatedBy, v))
+}
+
+// UpdatedByIn applies the In predicate on the "updated_by" field.
+func UpdatedByIn(vs ...uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldIn(FieldUpdatedBy, vs...))
+}
+
+// UpdatedByNotIn applies the NotIn predicate on the "updated_by" field.
+func UpdatedByNotIn(vs ...uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldUpdatedBy, vs...))
+}
+
+// UpdatedByGT applies the GT predicate on the "updated_by" field.
+func UpdatedByGT(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldGT(FieldUpdatedBy, v))
+}
+
+// UpdatedByGTE applies the GTE predicate on the "updated_by" field.
+func UpdatedByGTE(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldUpdatedBy, v))
+}
+
+// UpdatedByLT applies the LT predicate on the "updated_by" field.
+func UpdatedByLT(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldLT(FieldUpdatedBy, v))
+}
+
+// UpdatedByLTE applies the LTE predicate on the "updated_by" field.
+func UpdatedByLTE(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldUpdatedBy, v))
+}
+
+// UpdatedByIsNil applies the IsNil predicate on the "updated_by" field.
+func UpdatedByIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldUpdatedBy))
+}
+
+// UpdatedByNotNil applies the NotNil predicate on the "updated_by" field.
+func UpdatedByNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldUpdatedBy))
+}
+
+// DeletedByEQ applies the EQ predicate on the "deleted_by" field.
+func DeletedByEQ(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldDeletedBy, v))
+}
+
+// DeletedByNEQ applies the NEQ predicate on the "deleted_by" field.
+func DeletedByNEQ(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldDeletedBy, v))
+}
+
+// DeletedByIn applies the In predicate on the "deleted_by" field.
+func DeletedByIn(vs ...uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldIn(FieldDeletedBy, vs...))
+}
+
+// DeletedByNotIn applies the NotIn predicate on the "deleted_by" field.
+func DeletedByNotIn(vs ...uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldDeletedBy, vs...))
+}
+
+// DeletedByGT applies the GT predicate on the "deleted_by" field.
+func DeletedByGT(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldGT(FieldDeletedBy, v))
+}
+
+// DeletedByGTE applies the GTE predicate on the "deleted_by" field.
+func DeletedByGTE(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldDeletedBy, v))
+}
+
+// DeletedByLT applies the LT predicate on the "deleted_by" field.
+func DeletedByLT(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldLT(FieldDeletedBy, v))
+}
+
+// DeletedByLTE applies the LTE predicate on the "deleted_by" field.
+func DeletedByLTE(v uuid.UUID) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldDeletedBy, v))
+}
+
+// DeletedByIsNil applies the IsNil predicate on the "deleted_by" field.
+func DeletedByIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldDeletedBy))
+}
+
+// DeletedByNotNil applies the NotNil predicate on the "deleted_by" field.
+func DeletedByNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldDeletedBy))
+}
+
+// DeletedEQ applies the EQ predicate on the "deleted" field.
+func DeletedEQ(v bool) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldDeleted, v))
+}
+
+// DeletedNEQ applies the NEQ predicate on the "deleted" field.
+func DeletedNEQ(v bool) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldDeleted, v))
 }
 
 // EmailEQ applies the EQ predicate on the "email" field.
@@ -524,6 +794,286 @@ func FirebaseUIDEqualFold(v string) predicate.User {
 // FirebaseUIDContainsFold applies the ContainsFold predicate on the "firebase_uid" field.
 func FirebaseUIDContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldFirebaseUID, v))
+}
+
+// StatusEQ applies the EQ predicate on the "status" field.
+func StatusEQ(v int32) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldStatus, v))
+}
+
+// StatusNEQ applies the NEQ predicate on the "status" field.
+func StatusNEQ(v int32) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldStatus, v))
+}
+
+// StatusIn applies the In predicate on the "status" field.
+func StatusIn(vs ...int32) predicate.User {
+	return predicate.User(sql.FieldIn(FieldStatus, vs...))
+}
+
+// StatusNotIn applies the NotIn predicate on the "status" field.
+func StatusNotIn(vs ...int32) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldStatus, vs...))
+}
+
+// StatusGT applies the GT predicate on the "status" field.
+func StatusGT(v int32) predicate.User {
+	return predicate.User(sql.FieldGT(FieldStatus, v))
+}
+
+// StatusGTE applies the GTE predicate on the "status" field.
+func StatusGTE(v int32) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldStatus, v))
+}
+
+// StatusLT applies the LT predicate on the "status" field.
+func StatusLT(v int32) predicate.User {
+	return predicate.User(sql.FieldLT(FieldStatus, v))
+}
+
+// StatusLTE applies the LTE predicate on the "status" field.
+func StatusLTE(v int32) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldStatus, v))
+}
+
+// LastLoginAtEQ applies the EQ predicate on the "last_login_at" field.
+func LastLoginAtEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLastLoginAt, v))
+}
+
+// LastLoginAtNEQ applies the NEQ predicate on the "last_login_at" field.
+func LastLoginAtNEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldLastLoginAt, v))
+}
+
+// LastLoginAtIn applies the In predicate on the "last_login_at" field.
+func LastLoginAtIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldIn(FieldLastLoginAt, vs...))
+}
+
+// LastLoginAtNotIn applies the NotIn predicate on the "last_login_at" field.
+func LastLoginAtNotIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldLastLoginAt, vs...))
+}
+
+// LastLoginAtGT applies the GT predicate on the "last_login_at" field.
+func LastLoginAtGT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGT(FieldLastLoginAt, v))
+}
+
+// LastLoginAtGTE applies the GTE predicate on the "last_login_at" field.
+func LastLoginAtGTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldLastLoginAt, v))
+}
+
+// LastLoginAtLT applies the LT predicate on the "last_login_at" field.
+func LastLoginAtLT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLT(FieldLastLoginAt, v))
+}
+
+// LastLoginAtLTE applies the LTE predicate on the "last_login_at" field.
+func LastLoginAtLTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldLastLoginAt, v))
+}
+
+// LastLoginAtIsNil applies the IsNil predicate on the "last_login_at" field.
+func LastLoginAtIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldLastLoginAt))
+}
+
+// LastLoginAtNotNil applies the NotNil predicate on the "last_login_at" field.
+func LastLoginAtNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldLastLoginAt))
+}
+
+// LastLoginIPEQ applies the EQ predicate on the "last_login_ip" field.
+func LastLoginIPEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLastLoginIP, v))
+}
+
+// LastLoginIPNEQ applies the NEQ predicate on the "last_login_ip" field.
+func LastLoginIPNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldLastLoginIP, v))
+}
+
+// LastLoginIPIn applies the In predicate on the "last_login_ip" field.
+func LastLoginIPIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldLastLoginIP, vs...))
+}
+
+// LastLoginIPNotIn applies the NotIn predicate on the "last_login_ip" field.
+func LastLoginIPNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldLastLoginIP, vs...))
+}
+
+// LastLoginIPGT applies the GT predicate on the "last_login_ip" field.
+func LastLoginIPGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldLastLoginIP, v))
+}
+
+// LastLoginIPGTE applies the GTE predicate on the "last_login_ip" field.
+func LastLoginIPGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldLastLoginIP, v))
+}
+
+// LastLoginIPLT applies the LT predicate on the "last_login_ip" field.
+func LastLoginIPLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldLastLoginIP, v))
+}
+
+// LastLoginIPLTE applies the LTE predicate on the "last_login_ip" field.
+func LastLoginIPLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldLastLoginIP, v))
+}
+
+// LastLoginIPContains applies the Contains predicate on the "last_login_ip" field.
+func LastLoginIPContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldLastLoginIP, v))
+}
+
+// LastLoginIPHasPrefix applies the HasPrefix predicate on the "last_login_ip" field.
+func LastLoginIPHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldLastLoginIP, v))
+}
+
+// LastLoginIPHasSuffix applies the HasSuffix predicate on the "last_login_ip" field.
+func LastLoginIPHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldLastLoginIP, v))
+}
+
+// LastLoginIPIsNil applies the IsNil predicate on the "last_login_ip" field.
+func LastLoginIPIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldLastLoginIP))
+}
+
+// LastLoginIPNotNil applies the NotNil predicate on the "last_login_ip" field.
+func LastLoginIPNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldLastLoginIP))
+}
+
+// LastLoginIPEqualFold applies the EqualFold predicate on the "last_login_ip" field.
+func LastLoginIPEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldLastLoginIP, v))
+}
+
+// LastLoginIPContainsFold applies the ContainsFold predicate on the "last_login_ip" field.
+func LastLoginIPContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldLastLoginIP, v))
+}
+
+// LastLoginUserAgentEQ applies the EQ predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentNEQ applies the NEQ predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentIn applies the In predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldLastLoginUserAgent, vs...))
+}
+
+// LastLoginUserAgentNotIn applies the NotIn predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldLastLoginUserAgent, vs...))
+}
+
+// LastLoginUserAgentGT applies the GT predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentGTE applies the GTE predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentLT applies the LT predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentLTE applies the LTE predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentContains applies the Contains predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentHasPrefix applies the HasPrefix predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentHasSuffix applies the HasSuffix predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentIsNil applies the IsNil predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldLastLoginUserAgent))
+}
+
+// LastLoginUserAgentNotNil applies the NotNil predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldLastLoginUserAgent))
+}
+
+// LastLoginUserAgentEqualFold applies the EqualFold predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldLastLoginUserAgent, v))
+}
+
+// LastLoginUserAgentContainsFold applies the ContainsFold predicate on the "last_login_user_agent" field.
+func LastLoginUserAgentContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldLastLoginUserAgent, v))
+}
+
+// FailedLoginAttemptsEQ applies the EQ predicate on the "failed_login_attempts" field.
+func FailedLoginAttemptsEQ(v int32) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldFailedLoginAttempts, v))
+}
+
+// FailedLoginAttemptsNEQ applies the NEQ predicate on the "failed_login_attempts" field.
+func FailedLoginAttemptsNEQ(v int32) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldFailedLoginAttempts, v))
+}
+
+// FailedLoginAttemptsIn applies the In predicate on the "failed_login_attempts" field.
+func FailedLoginAttemptsIn(vs ...int32) predicate.User {
+	return predicate.User(sql.FieldIn(FieldFailedLoginAttempts, vs...))
+}
+
+// FailedLoginAttemptsNotIn applies the NotIn predicate on the "failed_login_attempts" field.
+func FailedLoginAttemptsNotIn(vs ...int32) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldFailedLoginAttempts, vs...))
+}
+
+// FailedLoginAttemptsGT applies the GT predicate on the "failed_login_attempts" field.
+func FailedLoginAttemptsGT(v int32) predicate.User {
+	return predicate.User(sql.FieldGT(FieldFailedLoginAttempts, v))
+}
+
+// FailedLoginAttemptsGTE applies the GTE predicate on the "failed_login_attempts" field.
+func FailedLoginAttemptsGTE(v int32) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldFailedLoginAttempts, v))
+}
+
+// FailedLoginAttemptsLT applies the LT predicate on the "failed_login_attempts" field.
+func FailedLoginAttemptsLT(v int32) predicate.User {
+	return predicate.User(sql.FieldLT(FieldFailedLoginAttempts, v))
+}
+
+// FailedLoginAttemptsLTE applies the LTE predicate on the "failed_login_attempts" field.
+func FailedLoginAttemptsLTE(v int32) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldFailedLoginAttempts, v))
 }
 
 // HasDeviceTokens applies the HasEdge predicate on the "device_tokens" edge.

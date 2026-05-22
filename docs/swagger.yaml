@@ -1,5 +1,16 @@
 basePath: /api/v1
 definitions:
+  request.ChangePasswordRequest:
+    properties:
+      firebase_uid:
+        type: string
+      new_password:
+        minLength: 6
+        type: string
+    required:
+    - firebase_uid
+    - new_password
+    type: object
   request.CreateNotificationTopicRequest:
     properties:
       topic_name:
@@ -23,6 +34,13 @@ definitions:
     - first_name
     - last_name
     - password
+    type: object
+  request.EnDisableUserRequest:
+    properties:
+      disable:
+        type: boolean
+      user_id:
+        type: string
     type: object
   request.LoginRequest:
     properties:
@@ -57,6 +75,17 @@ definitions:
     - identifier
     - platform
     type: object
+  request.ResetPasswordRequest:
+    properties:
+      new_password:
+        minLength: 6
+        type: string
+      oob_code:
+        type: string
+    required:
+    - new_password
+    - oob_code
+    type: object
   request.SendNotificationRequest:
     properties:
       body:
@@ -73,6 +102,13 @@ definitions:
         type: string
       user_id:
         type: string
+    type: object
+  request.SendPasswordResetMailRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
     type: object
   request.SubscribeNotificationTopicRequest:
     properties:
@@ -106,6 +142,67 @@ info:
   title: Go Firebase API
   version: "1.0"
 paths:
+  /auth/admin/change-password:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to change a user's password using the user's Firebase
+        UID and the new password.
+      parameters:
+      - description: Change Password Info
+        in: body
+        name: change_password
+        required: true
+        schema:
+          $ref: '#/definitions/request.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Admin Change Password
+      tags:
+      - Auth API
+  /auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: Sends a password reset email to the user.
+      parameters:
+      - description: Forgot Password Info
+        in: body
+        name: forgot_password
+        required: true
+        schema:
+          $ref: '#/definitions/request.SendPasswordResetMailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Forgot Password
+      tags:
+      - Auth API
   /auth/login:
     post:
       consumes:
@@ -183,6 +280,36 @@ paths:
           schema:
             $ref: '#/definitions/response.ApiResponse'
       summary: Refresh Firebase ID Token
+      tags:
+      - Auth API
+  /auth/reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Resets the user's password using the provided oobCode and new password.
+      parameters:
+      - description: Reset Password Info
+        in: body
+        name: reset_password
+        required: true
+        schema:
+          $ref: '#/definitions/request.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Reset Password
       tags:
       - Auth API
   /auth/verify-token:
@@ -669,6 +796,69 @@ paths:
       security:
       - JWT: []
       summary: Create a new user
+      tags:
+      - User API
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user account
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      security:
+      - JWT: []
+      summary: Delete User
+      tags:
+      - User API
+  /users/{id}/en-disable:
+    put:
+      consumes:
+      - application/json
+      description: Enable or disable a user account
+      parameters:
+      - description: Enable/Disable User Info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.EnDisableUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      security:
+      - JWT: []
+      summary: Enable or Disable User
       tags:
       - User API
   /users/{identifier}:

@@ -8,6 +8,7 @@ package model
 type Principal struct {
 	FirebaseUID string        `json:"firebase_uid"`
 	SystemUID   string        `json:"system_uid"`
+	Email       string        `json:"email"`
 	Roles       []*Role       `json:"roles"`
 	Permissions []*Permission `json:"permissions"`
 }

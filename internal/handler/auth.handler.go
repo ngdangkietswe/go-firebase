@@ -41,10 +41,34 @@ func (h *AuthHandler) RefreshToken(c *fiber.Ctx, request *request.RefreshTokenRe
 	return util.SafeFunc(newCtx, request, h.authSvc.RefreshToken)
 }
 
+func (h *AuthHandler) RevokeToken(c *fiber.Ctx, request *request.RevokeTokenRequest) (*response.EmptyResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
+	defer cancel()
+	return util.SafeFunc(newCtx, request, h.authSvc.RevokeToken)
+}
+
 func (h *AuthHandler) CurrentUser(c *fiber.Ctx) (*model.User, error) {
 	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
 	defer cancel()
 	return util.SafeFuncNoReq(newCtx, h.authSvc.CurrentUser)
+}
+
+func (h *AuthHandler) ForgotPassword(c *fiber.Ctx, request *request.SendPasswordResetMailRequest) (*response.EmptyResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
+	defer cancel()
+	return util.SafeFunc(newCtx, request, h.authSvc.ForgotPassword)
+}
+
+func (h *AuthHandler) ResetPassword(c *fiber.Ctx, request *request.ResetPasswordRequest) (*response.EmptyResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
+	defer cancel()
+	return util.SafeFunc(newCtx, request, h.authSvc.ConfirmResetPassword)
+}
+
+func (h *AuthHandler) AdminChangePassword(c *fiber.Ctx, request *request.ChangePasswordRequest) (*response.EmptyResponse, error) {
+	newCtx, cancel := context.WithTimeout(util.FiberCtxToContext(c), constant.CtxTimeOut)
+	defer cancel()
+	return util.SafeFunc(newCtx, request, h.authSvc.AdminChangePassword)
 }
 
 func NewAuthHandler(

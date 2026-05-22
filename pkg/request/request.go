@@ -5,6 +5,10 @@
 
 package request
 
+type IDRequest struct {
+	ID string `json:"id" binding:"required,uuid"`
+}
+
 type PaginateRequest struct {
 	Page     int    `json:"page" binding:"required,min=1"`
 	PageSize int    `json:"page_size" binding:"required,min=1,max=100"`

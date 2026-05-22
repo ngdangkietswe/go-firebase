@@ -57,6 +57,76 @@ func (_c *UserCreate) SetNillableUpdatedAt(v *time.Time) *UserCreate {
 	return _c
 }
 
+// SetDeletedAt sets the "deleted_at" field.
+func (_c *UserCreate) SetDeletedAt(v time.Time) *UserCreate {
+	_c.mutation.SetDeletedAt(v)
+	return _c
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_c *UserCreate) SetNillableDeletedAt(v *time.Time) *UserCreate {
+	if v != nil {
+		_c.SetDeletedAt(*v)
+	}
+	return _c
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_c *UserCreate) SetCreatedBy(v uuid.UUID) *UserCreate {
+	_c.mutation.SetCreatedBy(v)
+	return _c
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_c *UserCreate) SetNillableCreatedBy(v *uuid.UUID) *UserCreate {
+	if v != nil {
+		_c.SetCreatedBy(*v)
+	}
+	return _c
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_c *UserCreate) SetUpdatedBy(v uuid.UUID) *UserCreate {
+	_c.mutation.SetUpdatedBy(v)
+	return _c
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_c *UserCreate) SetNillableUpdatedBy(v *uuid.UUID) *UserCreate {
+	if v != nil {
+		_c.SetUpdatedBy(*v)
+	}
+	return _c
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_c *UserCreate) SetDeletedBy(v uuid.UUID) *UserCreate {
+	_c.mutation.SetDeletedBy(v)
+	return _c
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_c *UserCreate) SetNillableDeletedBy(v *uuid.UUID) *UserCreate {
+	if v != nil {
+		_c.SetDeletedBy(*v)
+	}
+	return _c
+}
+
+// SetDeleted sets the "deleted" field.
+func (_c *UserCreate) SetDeleted(v bool) *UserCreate {
+	_c.mutation.SetDeleted(v)
+	return _c
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_c *UserCreate) SetNillableDeleted(v *bool) *UserCreate {
+	if v != nil {
+		_c.SetDeleted(*v)
+	}
+	return _c
+}
+
 // SetEmail sets the "email" field.
 func (_c *UserCreate) SetEmail(v string) *UserCreate {
 	_c.mutation.SetEmail(v)
@@ -108,6 +178,76 @@ func (_c *UserCreate) SetNillableDisplayName(v *string) *UserCreate {
 // SetFirebaseUID sets the "firebase_uid" field.
 func (_c *UserCreate) SetFirebaseUID(v string) *UserCreate {
 	_c.mutation.SetFirebaseUID(v)
+	return _c
+}
+
+// SetStatus sets the "status" field.
+func (_c *UserCreate) SetStatus(v int32) *UserCreate {
+	_c.mutation.SetStatus(v)
+	return _c
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_c *UserCreate) SetNillableStatus(v *int32) *UserCreate {
+	if v != nil {
+		_c.SetStatus(*v)
+	}
+	return _c
+}
+
+// SetLastLoginAt sets the "last_login_at" field.
+func (_c *UserCreate) SetLastLoginAt(v time.Time) *UserCreate {
+	_c.mutation.SetLastLoginAt(v)
+	return _c
+}
+
+// SetNillableLastLoginAt sets the "last_login_at" field if the given value is not nil.
+func (_c *UserCreate) SetNillableLastLoginAt(v *time.Time) *UserCreate {
+	if v != nil {
+		_c.SetLastLoginAt(*v)
+	}
+	return _c
+}
+
+// SetLastLoginIP sets the "last_login_ip" field.
+func (_c *UserCreate) SetLastLoginIP(v string) *UserCreate {
+	_c.mutation.SetLastLoginIP(v)
+	return _c
+}
+
+// SetNillableLastLoginIP sets the "last_login_ip" field if the given value is not nil.
+func (_c *UserCreate) SetNillableLastLoginIP(v *string) *UserCreate {
+	if v != nil {
+		_c.SetLastLoginIP(*v)
+	}
+	return _c
+}
+
+// SetLastLoginUserAgent sets the "last_login_user_agent" field.
+func (_c *UserCreate) SetLastLoginUserAgent(v string) *UserCreate {
+	_c.mutation.SetLastLoginUserAgent(v)
+	return _c
+}
+
+// SetNillableLastLoginUserAgent sets the "last_login_user_agent" field if the given value is not nil.
+func (_c *UserCreate) SetNillableLastLoginUserAgent(v *string) *UserCreate {
+	if v != nil {
+		_c.SetLastLoginUserAgent(*v)
+	}
+	return _c
+}
+
+// SetFailedLoginAttempts sets the "failed_login_attempts" field.
+func (_c *UserCreate) SetFailedLoginAttempts(v int32) *UserCreate {
+	_c.mutation.SetFailedLoginAttempts(v)
+	return _c
+}
+
+// SetNillableFailedLoginAttempts sets the "failed_login_attempts" field if the given value is not nil.
+func (_c *UserCreate) SetNillableFailedLoginAttempts(v *int32) *UserCreate {
+	if v != nil {
+		_c.SetFailedLoginAttempts(*v)
+	}
 	return _c
 }
 
@@ -239,9 +379,17 @@ func (_c *UserCreate) defaults() {
 		v := user.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
 	}
-	if _, ok := _c.mutation.UpdatedAt(); !ok {
-		v := user.DefaultUpdatedAt()
-		_c.mutation.SetUpdatedAt(v)
+	if _, ok := _c.mutation.Deleted(); !ok {
+		v := user.DefaultDeleted
+		_c.mutation.SetDeleted(v)
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		v := user.DefaultStatus
+		_c.mutation.SetStatus(v)
+	}
+	if _, ok := _c.mutation.FailedLoginAttempts(); !ok {
+		v := user.DefaultFailedLoginAttempts
+		_c.mutation.SetFailedLoginAttempts(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := user.DefaultID()
@@ -254,14 +402,20 @@ func (_c *UserCreate) check() error {
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "User.created_at"`)}
 	}
-	if _, ok := _c.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "User.updated_at"`)}
+	if _, ok := _c.mutation.Deleted(); !ok {
+		return &ValidationError{Name: "deleted", err: errors.New(`ent: missing required field "User.deleted"`)}
 	}
 	if _, ok := _c.mutation.Email(); !ok {
 		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "User.email"`)}
 	}
 	if _, ok := _c.mutation.FirebaseUID(); !ok {
 		return &ValidationError{Name: "firebase_uid", err: errors.New(`ent: missing required field "User.firebase_uid"`)}
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "User.status"`)}
+	}
+	if _, ok := _c.mutation.FailedLoginAttempts(); !ok {
+		return &ValidationError{Name: "failed_login_attempts", err: errors.New(`ent: missing required field "User.failed_login_attempts"`)}
 	}
 	return nil
 }
@@ -305,7 +459,27 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
-		_node.UpdatedAt = value
+		_node.UpdatedAt = &value
+	}
+	if value, ok := _c.mutation.DeletedAt(); ok {
+		_spec.SetField(user.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = &value
+	}
+	if value, ok := _c.mutation.CreatedBy(); ok {
+		_spec.SetField(user.FieldCreatedBy, field.TypeUUID, value)
+		_node.CreatedBy = &value
+	}
+	if value, ok := _c.mutation.UpdatedBy(); ok {
+		_spec.SetField(user.FieldUpdatedBy, field.TypeUUID, value)
+		_node.UpdatedBy = &value
+	}
+	if value, ok := _c.mutation.DeletedBy(); ok {
+		_spec.SetField(user.FieldDeletedBy, field.TypeUUID, value)
+		_node.DeletedBy = &value
+	}
+	if value, ok := _c.mutation.Deleted(); ok {
+		_spec.SetField(user.FieldDeleted, field.TypeBool, value)
+		_node.Deleted = value
 	}
 	if value, ok := _c.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
@@ -313,19 +487,39 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := _c.mutation.FirstName(); ok {
 		_spec.SetField(user.FieldFirstName, field.TypeString, value)
-		_node.FirstName = value
+		_node.FirstName = &value
 	}
 	if value, ok := _c.mutation.LastName(); ok {
 		_spec.SetField(user.FieldLastName, field.TypeString, value)
-		_node.LastName = value
+		_node.LastName = &value
 	}
 	if value, ok := _c.mutation.DisplayName(); ok {
 		_spec.SetField(user.FieldDisplayName, field.TypeString, value)
-		_node.DisplayName = value
+		_node.DisplayName = &value
 	}
 	if value, ok := _c.mutation.FirebaseUID(); ok {
 		_spec.SetField(user.FieldFirebaseUID, field.TypeString, value)
 		_node.FirebaseUID = value
+	}
+	if value, ok := _c.mutation.Status(); ok {
+		_spec.SetField(user.FieldStatus, field.TypeInt32, value)
+		_node.Status = value
+	}
+	if value, ok := _c.mutation.LastLoginAt(); ok {
+		_spec.SetField(user.FieldLastLoginAt, field.TypeTime, value)
+		_node.LastLoginAt = &value
+	}
+	if value, ok := _c.mutation.LastLoginIP(); ok {
+		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
+		_node.LastLoginIP = &value
+	}
+	if value, ok := _c.mutation.LastLoginUserAgent(); ok {
+		_spec.SetField(user.FieldLastLoginUserAgent, field.TypeString, value)
+		_node.LastLoginUserAgent = &value
+	}
+	if value, ok := _c.mutation.FailedLoginAttempts(); ok {
+		_spec.SetField(user.FieldFailedLoginAttempts, field.TypeInt32, value)
+		_node.FailedLoginAttempts = value
 	}
 	if nodes := _c.mutation.DeviceTokensIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -471,6 +665,96 @@ func (u *UserUpsert) UpdateUpdatedAt() *UserUpsert {
 	return u
 }
 
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *UserUpsert) ClearUpdatedAt() *UserUpsert {
+	u.SetNull(user.FieldUpdatedAt)
+	return u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *UserUpsert) SetDeletedAt(v time.Time) *UserUpsert {
+	u.Set(user.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *UserUpsert) UpdateDeletedAt() *UserUpsert {
+	u.SetExcluded(user.FieldDeletedAt)
+	return u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *UserUpsert) ClearDeletedAt() *UserUpsert {
+	u.SetNull(user.FieldDeletedAt)
+	return u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *UserUpsert) SetCreatedBy(v uuid.UUID) *UserUpsert {
+	u.Set(user.FieldCreatedBy, v)
+	return u
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *UserUpsert) UpdateCreatedBy() *UserUpsert {
+	u.SetExcluded(user.FieldCreatedBy)
+	return u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *UserUpsert) ClearCreatedBy() *UserUpsert {
+	u.SetNull(user.FieldCreatedBy)
+	return u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *UserUpsert) SetUpdatedBy(v uuid.UUID) *UserUpsert {
+	u.Set(user.FieldUpdatedBy, v)
+	return u
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *UserUpsert) UpdateUpdatedBy() *UserUpsert {
+	u.SetExcluded(user.FieldUpdatedBy)
+	return u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *UserUpsert) ClearUpdatedBy() *UserUpsert {
+	u.SetNull(user.FieldUpdatedBy)
+	return u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *UserUpsert) SetDeletedBy(v uuid.UUID) *UserUpsert {
+	u.Set(user.FieldDeletedBy, v)
+	return u
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *UserUpsert) UpdateDeletedBy() *UserUpsert {
+	u.SetExcluded(user.FieldDeletedBy)
+	return u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *UserUpsert) ClearDeletedBy() *UserUpsert {
+	u.SetNull(user.FieldDeletedBy)
+	return u
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *UserUpsert) SetDeleted(v bool) *UserUpsert {
+	u.Set(user.FieldDeleted, v)
+	return u
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *UserUpsert) UpdateDeleted() *UserUpsert {
+	u.SetExcluded(user.FieldDeleted)
+	return u
+}
+
 // SetEmail sets the "email" field.
 func (u *UserUpsert) SetEmail(v string) *UserUpsert {
 	u.Set(user.FieldEmail, v)
@@ -549,6 +833,96 @@ func (u *UserUpsert) UpdateFirebaseUID() *UserUpsert {
 	return u
 }
 
+// SetStatus sets the "status" field.
+func (u *UserUpsert) SetStatus(v int32) *UserUpsert {
+	u.Set(user.FieldStatus, v)
+	return u
+}
+
+// UpdateStatus sets the "status" field to the value that was provided on create.
+func (u *UserUpsert) UpdateStatus() *UserUpsert {
+	u.SetExcluded(user.FieldStatus)
+	return u
+}
+
+// AddStatus adds v to the "status" field.
+func (u *UserUpsert) AddStatus(v int32) *UserUpsert {
+	u.Add(user.FieldStatus, v)
+	return u
+}
+
+// SetLastLoginAt sets the "last_login_at" field.
+func (u *UserUpsert) SetLastLoginAt(v time.Time) *UserUpsert {
+	u.Set(user.FieldLastLoginAt, v)
+	return u
+}
+
+// UpdateLastLoginAt sets the "last_login_at" field to the value that was provided on create.
+func (u *UserUpsert) UpdateLastLoginAt() *UserUpsert {
+	u.SetExcluded(user.FieldLastLoginAt)
+	return u
+}
+
+// ClearLastLoginAt clears the value of the "last_login_at" field.
+func (u *UserUpsert) ClearLastLoginAt() *UserUpsert {
+	u.SetNull(user.FieldLastLoginAt)
+	return u
+}
+
+// SetLastLoginIP sets the "last_login_ip" field.
+func (u *UserUpsert) SetLastLoginIP(v string) *UserUpsert {
+	u.Set(user.FieldLastLoginIP, v)
+	return u
+}
+
+// UpdateLastLoginIP sets the "last_login_ip" field to the value that was provided on create.
+func (u *UserUpsert) UpdateLastLoginIP() *UserUpsert {
+	u.SetExcluded(user.FieldLastLoginIP)
+	return u
+}
+
+// ClearLastLoginIP clears the value of the "last_login_ip" field.
+func (u *UserUpsert) ClearLastLoginIP() *UserUpsert {
+	u.SetNull(user.FieldLastLoginIP)
+	return u
+}
+
+// SetLastLoginUserAgent sets the "last_login_user_agent" field.
+func (u *UserUpsert) SetLastLoginUserAgent(v string) *UserUpsert {
+	u.Set(user.FieldLastLoginUserAgent, v)
+	return u
+}
+
+// UpdateLastLoginUserAgent sets the "last_login_user_agent" field to the value that was provided on create.
+func (u *UserUpsert) UpdateLastLoginUserAgent() *UserUpsert {
+	u.SetExcluded(user.FieldLastLoginUserAgent)
+	return u
+}
+
+// ClearLastLoginUserAgent clears the value of the "last_login_user_agent" field.
+func (u *UserUpsert) ClearLastLoginUserAgent() *UserUpsert {
+	u.SetNull(user.FieldLastLoginUserAgent)
+	return u
+}
+
+// SetFailedLoginAttempts sets the "failed_login_attempts" field.
+func (u *UserUpsert) SetFailedLoginAttempts(v int32) *UserUpsert {
+	u.Set(user.FieldFailedLoginAttempts, v)
+	return u
+}
+
+// UpdateFailedLoginAttempts sets the "failed_login_attempts" field to the value that was provided on create.
+func (u *UserUpsert) UpdateFailedLoginAttempts() *UserUpsert {
+	u.SetExcluded(user.FieldFailedLoginAttempts)
+	return u
+}
+
+// AddFailedLoginAttempts adds v to the "failed_login_attempts" field.
+func (u *UserUpsert) AddFailedLoginAttempts(v int32) *UserUpsert {
+	u.Add(user.FieldFailedLoginAttempts, v)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -611,6 +985,111 @@ func (u *UserUpsertOne) SetUpdatedAt(v time.Time) *UserUpsertOne {
 func (u *UserUpsertOne) UpdateUpdatedAt() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateUpdatedAt()
+	})
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *UserUpsertOne) ClearUpdatedAt() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *UserUpsertOne) SetDeletedAt(v time.Time) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateDeletedAt() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *UserUpsertOne) ClearDeletedAt() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *UserUpsertOne) SetCreatedBy(v uuid.UUID) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetCreatedBy(v)
+	})
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateCreatedBy() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateCreatedBy()
+	})
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *UserUpsertOne) ClearCreatedBy() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *UserUpsertOne) SetUpdatedBy(v uuid.UUID) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetUpdatedBy(v)
+	})
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateUpdatedBy() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateUpdatedBy()
+	})
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *UserUpsertOne) ClearUpdatedBy() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearUpdatedBy()
+	})
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *UserUpsertOne) SetDeletedBy(v uuid.UUID) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetDeletedBy(v)
+	})
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateDeletedBy() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateDeletedBy()
+	})
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *UserUpsertOne) ClearDeletedBy() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearDeletedBy()
+	})
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *UserUpsertOne) SetDeleted(v bool) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetDeleted(v)
+	})
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateDeleted() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateDeleted()
 	})
 }
 
@@ -702,6 +1181,111 @@ func (u *UserUpsertOne) SetFirebaseUID(v string) *UserUpsertOne {
 func (u *UserUpsertOne) UpdateFirebaseUID() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateFirebaseUID()
+	})
+}
+
+// SetStatus sets the "status" field.
+func (u *UserUpsertOne) SetStatus(v int32) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetStatus(v)
+	})
+}
+
+// AddStatus adds v to the "status" field.
+func (u *UserUpsertOne) AddStatus(v int32) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.AddStatus(v)
+	})
+}
+
+// UpdateStatus sets the "status" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateStatus() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateStatus()
+	})
+}
+
+// SetLastLoginAt sets the "last_login_at" field.
+func (u *UserUpsertOne) SetLastLoginAt(v time.Time) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetLastLoginAt(v)
+	})
+}
+
+// UpdateLastLoginAt sets the "last_login_at" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateLastLoginAt() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateLastLoginAt()
+	})
+}
+
+// ClearLastLoginAt clears the value of the "last_login_at" field.
+func (u *UserUpsertOne) ClearLastLoginAt() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearLastLoginAt()
+	})
+}
+
+// SetLastLoginIP sets the "last_login_ip" field.
+func (u *UserUpsertOne) SetLastLoginIP(v string) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetLastLoginIP(v)
+	})
+}
+
+// UpdateLastLoginIP sets the "last_login_ip" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateLastLoginIP() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateLastLoginIP()
+	})
+}
+
+// ClearLastLoginIP clears the value of the "last_login_ip" field.
+func (u *UserUpsertOne) ClearLastLoginIP() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearLastLoginIP()
+	})
+}
+
+// SetLastLoginUserAgent sets the "last_login_user_agent" field.
+func (u *UserUpsertOne) SetLastLoginUserAgent(v string) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetLastLoginUserAgent(v)
+	})
+}
+
+// UpdateLastLoginUserAgent sets the "last_login_user_agent" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateLastLoginUserAgent() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateLastLoginUserAgent()
+	})
+}
+
+// ClearLastLoginUserAgent clears the value of the "last_login_user_agent" field.
+func (u *UserUpsertOne) ClearLastLoginUserAgent() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearLastLoginUserAgent()
+	})
+}
+
+// SetFailedLoginAttempts sets the "failed_login_attempts" field.
+func (u *UserUpsertOne) SetFailedLoginAttempts(v int32) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetFailedLoginAttempts(v)
+	})
+}
+
+// AddFailedLoginAttempts adds v to the "failed_login_attempts" field.
+func (u *UserUpsertOne) AddFailedLoginAttempts(v int32) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.AddFailedLoginAttempts(v)
+	})
+}
+
+// UpdateFailedLoginAttempts sets the "failed_login_attempts" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateFailedLoginAttempts() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateFailedLoginAttempts()
 	})
 }
 
@@ -937,6 +1521,111 @@ func (u *UserUpsertBulk) UpdateUpdatedAt() *UserUpsertBulk {
 	})
 }
 
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *UserUpsertBulk) ClearUpdatedAt() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *UserUpsertBulk) SetDeletedAt(v time.Time) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateDeletedAt() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *UserUpsertBulk) ClearDeletedAt() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *UserUpsertBulk) SetCreatedBy(v uuid.UUID) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetCreatedBy(v)
+	})
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateCreatedBy() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateCreatedBy()
+	})
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *UserUpsertBulk) ClearCreatedBy() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *UserUpsertBulk) SetUpdatedBy(v uuid.UUID) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetUpdatedBy(v)
+	})
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateUpdatedBy() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateUpdatedBy()
+	})
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *UserUpsertBulk) ClearUpdatedBy() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearUpdatedBy()
+	})
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *UserUpsertBulk) SetDeletedBy(v uuid.UUID) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetDeletedBy(v)
+	})
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateDeletedBy() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateDeletedBy()
+	})
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *UserUpsertBulk) ClearDeletedBy() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearDeletedBy()
+	})
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *UserUpsertBulk) SetDeleted(v bool) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetDeleted(v)
+	})
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateDeleted() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateDeleted()
+	})
+}
+
 // SetEmail sets the "email" field.
 func (u *UserUpsertBulk) SetEmail(v string) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
@@ -1025,6 +1714,111 @@ func (u *UserUpsertBulk) SetFirebaseUID(v string) *UserUpsertBulk {
 func (u *UserUpsertBulk) UpdateFirebaseUID() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateFirebaseUID()
+	})
+}
+
+// SetStatus sets the "status" field.
+func (u *UserUpsertBulk) SetStatus(v int32) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetStatus(v)
+	})
+}
+
+// AddStatus adds v to the "status" field.
+func (u *UserUpsertBulk) AddStatus(v int32) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.AddStatus(v)
+	})
+}
+
+// UpdateStatus sets the "status" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateStatus() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateStatus()
+	})
+}
+
+// SetLastLoginAt sets the "last_login_at" field.
+func (u *UserUpsertBulk) SetLastLoginAt(v time.Time) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetLastLoginAt(v)
+	})
+}
+
+// UpdateLastLoginAt sets the "last_login_at" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateLastLoginAt() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateLastLoginAt()
+	})
+}
+
+// ClearLastLoginAt clears the value of the "last_login_at" field.
+func (u *UserUpsertBulk) ClearLastLoginAt() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearLastLoginAt()
+	})
+}
+
+// SetLastLoginIP sets the "last_login_ip" field.
+func (u *UserUpsertBulk) SetLastLoginIP(v string) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetLastLoginIP(v)
+	})
+}
+
+// UpdateLastLoginIP sets the "last_login_ip" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateLastLoginIP() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateLastLoginIP()
+	})
+}
+
+// ClearLastLoginIP clears the value of the "last_login_ip" field.
+func (u *UserUpsertBulk) ClearLastLoginIP() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearLastLoginIP()
+	})
+}
+
+// SetLastLoginUserAgent sets the "last_login_user_agent" field.
+func (u *UserUpsertBulk) SetLastLoginUserAgent(v string) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetLastLoginUserAgent(v)
+	})
+}
+
+// UpdateLastLoginUserAgent sets the "last_login_user_agent" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateLastLoginUserAgent() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateLastLoginUserAgent()
+	})
+}
+
+// ClearLastLoginUserAgent clears the value of the "last_login_user_agent" field.
+func (u *UserUpsertBulk) ClearLastLoginUserAgent() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearLastLoginUserAgent()
+	})
+}
+
+// SetFailedLoginAttempts sets the "failed_login_attempts" field.
+func (u *UserUpsertBulk) SetFailedLoginAttempts(v int32) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetFailedLoginAttempts(v)
+	})
+}
+
+// AddFailedLoginAttempts adds v to the "failed_login_attempts" field.
+func (u *UserUpsertBulk) AddFailedLoginAttempts(v int32) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.AddFailedLoginAttempts(v)
+	})
+}
+
+// UpdateFailedLoginAttempts sets the "failed_login_attempts" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateFailedLoginAttempts() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateFailedLoginAttempts()
 	})
 }
 

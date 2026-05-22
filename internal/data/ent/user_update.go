@@ -40,6 +40,114 @@ func (_u *UserUpdate) SetUpdatedAt(v time.Time) *UserUpdate {
 	return _u
 }
 
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableUpdatedAt(v *time.Time) *UserUpdate {
+	if v != nil {
+		_u.SetUpdatedAt(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (_u *UserUpdate) ClearUpdatedAt() *UserUpdate {
+	_u.mutation.ClearUpdatedAt()
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *UserUpdate) SetDeletedAt(v time.Time) *UserUpdate {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableDeletedAt(v *time.Time) *UserUpdate {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *UserUpdate) ClearDeletedAt() *UserUpdate {
+	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_u *UserUpdate) SetCreatedBy(v uuid.UUID) *UserUpdate {
+	_u.mutation.SetCreatedBy(v)
+	return _u
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableCreatedBy(v *uuid.UUID) *UserUpdate {
+	if v != nil {
+		_u.SetCreatedBy(*v)
+	}
+	return _u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (_u *UserUpdate) ClearCreatedBy() *UserUpdate {
+	_u.mutation.ClearCreatedBy()
+	return _u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *UserUpdate) SetUpdatedBy(v uuid.UUID) *UserUpdate {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableUpdatedBy(v *uuid.UUID) *UserUpdate {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (_u *UserUpdate) ClearUpdatedBy() *UserUpdate {
+	_u.mutation.ClearUpdatedBy()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *UserUpdate) SetDeletedBy(v uuid.UUID) *UserUpdate {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableDeletedBy(v *uuid.UUID) *UserUpdate {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *UserUpdate) ClearDeletedBy() *UserUpdate {
+	_u.mutation.ClearDeletedBy()
+	return _u
+}
+
+// SetDeleted sets the "deleted" field.
+func (_u *UserUpdate) SetDeleted(v bool) *UserUpdate {
+	_u.mutation.SetDeleted(v)
+	return _u
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableDeleted(v *bool) *UserUpdate {
+	if v != nil {
+		_u.SetDeleted(*v)
+	}
+	return _u
+}
+
 // SetEmail sets the "email" field.
 func (_u *UserUpdate) SetEmail(v string) *UserUpdate {
 	_u.mutation.SetEmail(v)
@@ -125,6 +233,108 @@ func (_u *UserUpdate) SetNillableFirebaseUID(v *string) *UserUpdate {
 	if v != nil {
 		_u.SetFirebaseUID(*v)
 	}
+	return _u
+}
+
+// SetStatus sets the "status" field.
+func (_u *UserUpdate) SetStatus(v int32) *UserUpdate {
+	_u.mutation.ResetStatus()
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableStatus(v *int32) *UserUpdate {
+	if v != nil {
+		_u.SetStatus(*v)
+	}
+	return _u
+}
+
+// AddStatus adds value to the "status" field.
+func (_u *UserUpdate) AddStatus(v int32) *UserUpdate {
+	_u.mutation.AddStatus(v)
+	return _u
+}
+
+// SetLastLoginAt sets the "last_login_at" field.
+func (_u *UserUpdate) SetLastLoginAt(v time.Time) *UserUpdate {
+	_u.mutation.SetLastLoginAt(v)
+	return _u
+}
+
+// SetNillableLastLoginAt sets the "last_login_at" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableLastLoginAt(v *time.Time) *UserUpdate {
+	if v != nil {
+		_u.SetLastLoginAt(*v)
+	}
+	return _u
+}
+
+// ClearLastLoginAt clears the value of the "last_login_at" field.
+func (_u *UserUpdate) ClearLastLoginAt() *UserUpdate {
+	_u.mutation.ClearLastLoginAt()
+	return _u
+}
+
+// SetLastLoginIP sets the "last_login_ip" field.
+func (_u *UserUpdate) SetLastLoginIP(v string) *UserUpdate {
+	_u.mutation.SetLastLoginIP(v)
+	return _u
+}
+
+// SetNillableLastLoginIP sets the "last_login_ip" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableLastLoginIP(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetLastLoginIP(*v)
+	}
+	return _u
+}
+
+// ClearLastLoginIP clears the value of the "last_login_ip" field.
+func (_u *UserUpdate) ClearLastLoginIP() *UserUpdate {
+	_u.mutation.ClearLastLoginIP()
+	return _u
+}
+
+// SetLastLoginUserAgent sets the "last_login_user_agent" field.
+func (_u *UserUpdate) SetLastLoginUserAgent(v string) *UserUpdate {
+	_u.mutation.SetLastLoginUserAgent(v)
+	return _u
+}
+
+// SetNillableLastLoginUserAgent sets the "last_login_user_agent" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableLastLoginUserAgent(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetLastLoginUserAgent(*v)
+	}
+	return _u
+}
+
+// ClearLastLoginUserAgent clears the value of the "last_login_user_agent" field.
+func (_u *UserUpdate) ClearLastLoginUserAgent() *UserUpdate {
+	_u.mutation.ClearLastLoginUserAgent()
+	return _u
+}
+
+// SetFailedLoginAttempts sets the "failed_login_attempts" field.
+func (_u *UserUpdate) SetFailedLoginAttempts(v int32) *UserUpdate {
+	_u.mutation.ResetFailedLoginAttempts()
+	_u.mutation.SetFailedLoginAttempts(v)
+	return _u
+}
+
+// SetNillableFailedLoginAttempts sets the "failed_login_attempts" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableFailedLoginAttempts(v *int32) *UserUpdate {
+	if v != nil {
+		_u.SetFailedLoginAttempts(*v)
+	}
+	return _u
+}
+
+// AddFailedLoginAttempts adds value to the "failed_login_attempts" field.
+func (_u *UserUpdate) AddFailedLoginAttempts(v int32) *UserUpdate {
+	_u.mutation.AddFailedLoginAttempts(v)
 	return _u
 }
 
@@ -315,7 +525,6 @@ func (_u *UserUpdate) RemoveUserPermissions(v ...*UserPermission) *UserUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *UserUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -341,14 +550,6 @@ func (_u *UserUpdate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (_u *UserUpdate) defaults() {
-	if _, ok := _u.mutation.UpdatedAt(); !ok {
-		v := user.UpdateDefaultUpdatedAt()
-		_u.mutation.SetUpdatedAt(v)
-	}
-}
-
 func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
@@ -360,6 +561,36 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if _u.mutation.UpdatedAtCleared() {
+		_spec.ClearField(user.FieldUpdatedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(user.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(user.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreatedBy(); ok {
+		_spec.SetField(user.FieldCreatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.CreatedByCleared() {
+		_spec.ClearField(user.FieldCreatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(user.FieldUpdatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.UpdatedByCleared() {
+		_spec.ClearField(user.FieldUpdatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(user.FieldDeletedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(user.FieldDeletedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.Deleted(); ok {
+		_spec.SetField(user.FieldDeleted, field.TypeBool, value)
 	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
@@ -384,6 +615,36 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.FirebaseUID(); ok {
 		_spec.SetField(user.FieldFirebaseUID, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(user.FieldStatus, field.TypeInt32, value)
+	}
+	if value, ok := _u.mutation.AddedStatus(); ok {
+		_spec.AddField(user.FieldStatus, field.TypeInt32, value)
+	}
+	if value, ok := _u.mutation.LastLoginAt(); ok {
+		_spec.SetField(user.FieldLastLoginAt, field.TypeTime, value)
+	}
+	if _u.mutation.LastLoginAtCleared() {
+		_spec.ClearField(user.FieldLastLoginAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.LastLoginIP(); ok {
+		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
+	}
+	if _u.mutation.LastLoginIPCleared() {
+		_spec.ClearField(user.FieldLastLoginIP, field.TypeString)
+	}
+	if value, ok := _u.mutation.LastLoginUserAgent(); ok {
+		_spec.SetField(user.FieldLastLoginUserAgent, field.TypeString, value)
+	}
+	if _u.mutation.LastLoginUserAgentCleared() {
+		_spec.ClearField(user.FieldLastLoginUserAgent, field.TypeString)
+	}
+	if value, ok := _u.mutation.FailedLoginAttempts(); ok {
+		_spec.SetField(user.FieldFailedLoginAttempts, field.TypeInt32, value)
+	}
+	if value, ok := _u.mutation.AddedFailedLoginAttempts(); ok {
+		_spec.AddField(user.FieldFailedLoginAttempts, field.TypeInt32, value)
 	}
 	if _u.mutation.DeviceTokensCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -636,6 +897,114 @@ func (_u *UserUpdateOne) SetUpdatedAt(v time.Time) *UserUpdateOne {
 	return _u
 }
 
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableUpdatedAt(v *time.Time) *UserUpdateOne {
+	if v != nil {
+		_u.SetUpdatedAt(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (_u *UserUpdateOne) ClearUpdatedAt() *UserUpdateOne {
+	_u.mutation.ClearUpdatedAt()
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *UserUpdateOne) SetDeletedAt(v time.Time) *UserUpdateOne {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableDeletedAt(v *time.Time) *UserUpdateOne {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *UserUpdateOne) ClearDeletedAt() *UserUpdateOne {
+	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_u *UserUpdateOne) SetCreatedBy(v uuid.UUID) *UserUpdateOne {
+	_u.mutation.SetCreatedBy(v)
+	return _u
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableCreatedBy(v *uuid.UUID) *UserUpdateOne {
+	if v != nil {
+		_u.SetCreatedBy(*v)
+	}
+	return _u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (_u *UserUpdateOne) ClearCreatedBy() *UserUpdateOne {
+	_u.mutation.ClearCreatedBy()
+	return _u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *UserUpdateOne) SetUpdatedBy(v uuid.UUID) *UserUpdateOne {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableUpdatedBy(v *uuid.UUID) *UserUpdateOne {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (_u *UserUpdateOne) ClearUpdatedBy() *UserUpdateOne {
+	_u.mutation.ClearUpdatedBy()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *UserUpdateOne) SetDeletedBy(v uuid.UUID) *UserUpdateOne {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableDeletedBy(v *uuid.UUID) *UserUpdateOne {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *UserUpdateOne) ClearDeletedBy() *UserUpdateOne {
+	_u.mutation.ClearDeletedBy()
+	return _u
+}
+
+// SetDeleted sets the "deleted" field.
+func (_u *UserUpdateOne) SetDeleted(v bool) *UserUpdateOne {
+	_u.mutation.SetDeleted(v)
+	return _u
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableDeleted(v *bool) *UserUpdateOne {
+	if v != nil {
+		_u.SetDeleted(*v)
+	}
+	return _u
+}
+
 // SetEmail sets the "email" field.
 func (_u *UserUpdateOne) SetEmail(v string) *UserUpdateOne {
 	_u.mutation.SetEmail(v)
@@ -721,6 +1090,108 @@ func (_u *UserUpdateOne) SetNillableFirebaseUID(v *string) *UserUpdateOne {
 	if v != nil {
 		_u.SetFirebaseUID(*v)
 	}
+	return _u
+}
+
+// SetStatus sets the "status" field.
+func (_u *UserUpdateOne) SetStatus(v int32) *UserUpdateOne {
+	_u.mutation.ResetStatus()
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableStatus(v *int32) *UserUpdateOne {
+	if v != nil {
+		_u.SetStatus(*v)
+	}
+	return _u
+}
+
+// AddStatus adds value to the "status" field.
+func (_u *UserUpdateOne) AddStatus(v int32) *UserUpdateOne {
+	_u.mutation.AddStatus(v)
+	return _u
+}
+
+// SetLastLoginAt sets the "last_login_at" field.
+func (_u *UserUpdateOne) SetLastLoginAt(v time.Time) *UserUpdateOne {
+	_u.mutation.SetLastLoginAt(v)
+	return _u
+}
+
+// SetNillableLastLoginAt sets the "last_login_at" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableLastLoginAt(v *time.Time) *UserUpdateOne {
+	if v != nil {
+		_u.SetLastLoginAt(*v)
+	}
+	return _u
+}
+
+// ClearLastLoginAt clears the value of the "last_login_at" field.
+func (_u *UserUpdateOne) ClearLastLoginAt() *UserUpdateOne {
+	_u.mutation.ClearLastLoginAt()
+	return _u
+}
+
+// SetLastLoginIP sets the "last_login_ip" field.
+func (_u *UserUpdateOne) SetLastLoginIP(v string) *UserUpdateOne {
+	_u.mutation.SetLastLoginIP(v)
+	return _u
+}
+
+// SetNillableLastLoginIP sets the "last_login_ip" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableLastLoginIP(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetLastLoginIP(*v)
+	}
+	return _u
+}
+
+// ClearLastLoginIP clears the value of the "last_login_ip" field.
+func (_u *UserUpdateOne) ClearLastLoginIP() *UserUpdateOne {
+	_u.mutation.ClearLastLoginIP()
+	return _u
+}
+
+// SetLastLoginUserAgent sets the "last_login_user_agent" field.
+func (_u *UserUpdateOne) SetLastLoginUserAgent(v string) *UserUpdateOne {
+	_u.mutation.SetLastLoginUserAgent(v)
+	return _u
+}
+
+// SetNillableLastLoginUserAgent sets the "last_login_user_agent" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableLastLoginUserAgent(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetLastLoginUserAgent(*v)
+	}
+	return _u
+}
+
+// ClearLastLoginUserAgent clears the value of the "last_login_user_agent" field.
+func (_u *UserUpdateOne) ClearLastLoginUserAgent() *UserUpdateOne {
+	_u.mutation.ClearLastLoginUserAgent()
+	return _u
+}
+
+// SetFailedLoginAttempts sets the "failed_login_attempts" field.
+func (_u *UserUpdateOne) SetFailedLoginAttempts(v int32) *UserUpdateOne {
+	_u.mutation.ResetFailedLoginAttempts()
+	_u.mutation.SetFailedLoginAttempts(v)
+	return _u
+}
+
+// SetNillableFailedLoginAttempts sets the "failed_login_attempts" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableFailedLoginAttempts(v *int32) *UserUpdateOne {
+	if v != nil {
+		_u.SetFailedLoginAttempts(*v)
+	}
+	return _u
+}
+
+// AddFailedLoginAttempts adds value to the "failed_login_attempts" field.
+func (_u *UserUpdateOne) AddFailedLoginAttempts(v int32) *UserUpdateOne {
+	_u.mutation.AddFailedLoginAttempts(v)
 	return _u
 }
 
@@ -924,7 +1395,6 @@ func (_u *UserUpdateOne) Select(field string, fields ...string) *UserUpdateOne {
 
 // Save executes the query and returns the updated User entity.
 func (_u *UserUpdateOne) Save(ctx context.Context) (*User, error) {
-	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -947,14 +1417,6 @@ func (_u *UserUpdateOne) Exec(ctx context.Context) error {
 func (_u *UserUpdateOne) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
-	}
-}
-
-// defaults sets the default values of the builder before save.
-func (_u *UserUpdateOne) defaults() {
-	if _, ok := _u.mutation.UpdatedAt(); !ok {
-		v := user.UpdateDefaultUpdatedAt()
-		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -987,6 +1449,36 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 	}
+	if _u.mutation.UpdatedAtCleared() {
+		_spec.ClearField(user.FieldUpdatedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(user.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(user.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreatedBy(); ok {
+		_spec.SetField(user.FieldCreatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.CreatedByCleared() {
+		_spec.ClearField(user.FieldCreatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(user.FieldUpdatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.UpdatedByCleared() {
+		_spec.ClearField(user.FieldUpdatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(user.FieldDeletedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(user.FieldDeletedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.Deleted(); ok {
+		_spec.SetField(user.FieldDeleted, field.TypeBool, value)
+	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
@@ -1010,6 +1502,36 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if value, ok := _u.mutation.FirebaseUID(); ok {
 		_spec.SetField(user.FieldFirebaseUID, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(user.FieldStatus, field.TypeInt32, value)
+	}
+	if value, ok := _u.mutation.AddedStatus(); ok {
+		_spec.AddField(user.FieldStatus, field.TypeInt32, value)
+	}
+	if value, ok := _u.mutation.LastLoginAt(); ok {
+		_spec.SetField(user.FieldLastLoginAt, field.TypeTime, value)
+	}
+	if _u.mutation.LastLoginAtCleared() {
+		_spec.ClearField(user.FieldLastLoginAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.LastLoginIP(); ok {
+		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
+	}
+	if _u.mutation.LastLoginIPCleared() {
+		_spec.ClearField(user.FieldLastLoginIP, field.TypeString)
+	}
+	if value, ok := _u.mutation.LastLoginUserAgent(); ok {
+		_spec.SetField(user.FieldLastLoginUserAgent, field.TypeString, value)
+	}
+	if _u.mutation.LastLoginUserAgentCleared() {
+		_spec.ClearField(user.FieldLastLoginUserAgent, field.TypeString)
+	}
+	if value, ok := _u.mutation.FailedLoginAttempts(); ok {
+		_spec.SetField(user.FieldFailedLoginAttempts, field.TypeInt32, value)
+	}
+	if value, ok := _u.mutation.AddedFailedLoginAttempts(); ok {
+		_spec.AddField(user.FieldFailedLoginAttempts, field.TypeInt32, value)
 	}
 	if _u.mutation.DeviceTokensCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -36,6 +36,114 @@ func (_u *DeviceTokenUpdate) SetUpdatedAt(v time.Time) *DeviceTokenUpdate {
 	return _u
 }
 
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_u *DeviceTokenUpdate) SetNillableUpdatedAt(v *time.Time) *DeviceTokenUpdate {
+	if v != nil {
+		_u.SetUpdatedAt(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (_u *DeviceTokenUpdate) ClearUpdatedAt() *DeviceTokenUpdate {
+	_u.mutation.ClearUpdatedAt()
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *DeviceTokenUpdate) SetDeletedAt(v time.Time) *DeviceTokenUpdate {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *DeviceTokenUpdate) SetNillableDeletedAt(v *time.Time) *DeviceTokenUpdate {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *DeviceTokenUpdate) ClearDeletedAt() *DeviceTokenUpdate {
+	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_u *DeviceTokenUpdate) SetCreatedBy(v uuid.UUID) *DeviceTokenUpdate {
+	_u.mutation.SetCreatedBy(v)
+	return _u
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_u *DeviceTokenUpdate) SetNillableCreatedBy(v *uuid.UUID) *DeviceTokenUpdate {
+	if v != nil {
+		_u.SetCreatedBy(*v)
+	}
+	return _u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (_u *DeviceTokenUpdate) ClearCreatedBy() *DeviceTokenUpdate {
+	_u.mutation.ClearCreatedBy()
+	return _u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *DeviceTokenUpdate) SetUpdatedBy(v uuid.UUID) *DeviceTokenUpdate {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *DeviceTokenUpdate) SetNillableUpdatedBy(v *uuid.UUID) *DeviceTokenUpdate {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (_u *DeviceTokenUpdate) ClearUpdatedBy() *DeviceTokenUpdate {
+	_u.mutation.ClearUpdatedBy()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *DeviceTokenUpdate) SetDeletedBy(v uuid.UUID) *DeviceTokenUpdate {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *DeviceTokenUpdate) SetNillableDeletedBy(v *uuid.UUID) *DeviceTokenUpdate {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *DeviceTokenUpdate) ClearDeletedBy() *DeviceTokenUpdate {
+	_u.mutation.ClearDeletedBy()
+	return _u
+}
+
+// SetDeleted sets the "deleted" field.
+func (_u *DeviceTokenUpdate) SetDeleted(v bool) *DeviceTokenUpdate {
+	_u.mutation.SetDeleted(v)
+	return _u
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_u *DeviceTokenUpdate) SetNillableDeleted(v *bool) *DeviceTokenUpdate {
+	if v != nil {
+		_u.SetDeleted(*v)
+	}
+	return _u
+}
+
 // SetUserID sets the "user_id" field.
 func (_u *DeviceTokenUpdate) SetUserID(v uuid.UUID) *DeviceTokenUpdate {
 	_u.mutation.SetUserID(v)
@@ -124,7 +232,6 @@ func (_u *DeviceTokenUpdate) ClearUser() *DeviceTokenUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *DeviceTokenUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -150,14 +257,6 @@ func (_u *DeviceTokenUpdate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (_u *DeviceTokenUpdate) defaults() {
-	if _, ok := _u.mutation.UpdatedAt(); !ok {
-		v := devicetoken.UpdateDefaultUpdatedAt()
-		_u.mutation.SetUpdatedAt(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (_u *DeviceTokenUpdate) check() error {
 	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
@@ -180,6 +279,36 @@ func (_u *DeviceTokenUpdate) sqlSave(ctx context.Context) (_node int, err error)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(devicetoken.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if _u.mutation.UpdatedAtCleared() {
+		_spec.ClearField(devicetoken.FieldUpdatedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(devicetoken.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(devicetoken.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreatedBy(); ok {
+		_spec.SetField(devicetoken.FieldCreatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.CreatedByCleared() {
+		_spec.ClearField(devicetoken.FieldCreatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(devicetoken.FieldUpdatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.UpdatedByCleared() {
+		_spec.ClearField(devicetoken.FieldUpdatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(devicetoken.FieldDeletedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(devicetoken.FieldDeletedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.Deleted(); ok {
+		_spec.SetField(devicetoken.FieldDeleted, field.TypeBool, value)
 	}
 	if value, ok := _u.mutation.Token(); ok {
 		_spec.SetField(devicetoken.FieldToken, field.TypeString, value)
@@ -245,6 +374,114 @@ type DeviceTokenUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *DeviceTokenUpdateOne) SetUpdatedAt(v time.Time) *DeviceTokenUpdateOne {
 	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_u *DeviceTokenUpdateOne) SetNillableUpdatedAt(v *time.Time) *DeviceTokenUpdateOne {
+	if v != nil {
+		_u.SetUpdatedAt(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (_u *DeviceTokenUpdateOne) ClearUpdatedAt() *DeviceTokenUpdateOne {
+	_u.mutation.ClearUpdatedAt()
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *DeviceTokenUpdateOne) SetDeletedAt(v time.Time) *DeviceTokenUpdateOne {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *DeviceTokenUpdateOne) SetNillableDeletedAt(v *time.Time) *DeviceTokenUpdateOne {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *DeviceTokenUpdateOne) ClearDeletedAt() *DeviceTokenUpdateOne {
+	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_u *DeviceTokenUpdateOne) SetCreatedBy(v uuid.UUID) *DeviceTokenUpdateOne {
+	_u.mutation.SetCreatedBy(v)
+	return _u
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_u *DeviceTokenUpdateOne) SetNillableCreatedBy(v *uuid.UUID) *DeviceTokenUpdateOne {
+	if v != nil {
+		_u.SetCreatedBy(*v)
+	}
+	return _u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (_u *DeviceTokenUpdateOne) ClearCreatedBy() *DeviceTokenUpdateOne {
+	_u.mutation.ClearCreatedBy()
+	return _u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *DeviceTokenUpdateOne) SetUpdatedBy(v uuid.UUID) *DeviceTokenUpdateOne {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *DeviceTokenUpdateOne) SetNillableUpdatedBy(v *uuid.UUID) *DeviceTokenUpdateOne {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (_u *DeviceTokenUpdateOne) ClearUpdatedBy() *DeviceTokenUpdateOne {
+	_u.mutation.ClearUpdatedBy()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *DeviceTokenUpdateOne) SetDeletedBy(v uuid.UUID) *DeviceTokenUpdateOne {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *DeviceTokenUpdateOne) SetNillableDeletedBy(v *uuid.UUID) *DeviceTokenUpdateOne {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *DeviceTokenUpdateOne) ClearDeletedBy() *DeviceTokenUpdateOne {
+	_u.mutation.ClearDeletedBy()
+	return _u
+}
+
+// SetDeleted sets the "deleted" field.
+func (_u *DeviceTokenUpdateOne) SetDeleted(v bool) *DeviceTokenUpdateOne {
+	_u.mutation.SetDeleted(v)
+	return _u
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_u *DeviceTokenUpdateOne) SetNillableDeleted(v *bool) *DeviceTokenUpdateOne {
+	if v != nil {
+		_u.SetDeleted(*v)
+	}
 	return _u
 }
 
@@ -349,7 +586,6 @@ func (_u *DeviceTokenUpdateOne) Select(field string, fields ...string) *DeviceTo
 
 // Save executes the query and returns the updated DeviceToken entity.
 func (_u *DeviceTokenUpdateOne) Save(ctx context.Context) (*DeviceToken, error) {
-	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -372,14 +608,6 @@ func (_u *DeviceTokenUpdateOne) Exec(ctx context.Context) error {
 func (_u *DeviceTokenUpdateOne) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
-	}
-}
-
-// defaults sets the default values of the builder before save.
-func (_u *DeviceTokenUpdateOne) defaults() {
-	if _, ok := _u.mutation.UpdatedAt(); !ok {
-		v := devicetoken.UpdateDefaultUpdatedAt()
-		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -422,6 +650,36 @@ func (_u *DeviceTokenUpdateOne) sqlSave(ctx context.Context) (_node *DeviceToken
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(devicetoken.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if _u.mutation.UpdatedAtCleared() {
+		_spec.ClearField(devicetoken.FieldUpdatedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(devicetoken.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(devicetoken.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreatedBy(); ok {
+		_spec.SetField(devicetoken.FieldCreatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.CreatedByCleared() {
+		_spec.ClearField(devicetoken.FieldCreatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(devicetoken.FieldUpdatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.UpdatedByCleared() {
+		_spec.ClearField(devicetoken.FieldUpdatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(devicetoken.FieldDeletedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(devicetoken.FieldDeletedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.Deleted(); ok {
+		_spec.SetField(devicetoken.FieldDeleted, field.TypeBool, value)
 	}
 	if value, ok := _u.mutation.Token(); ok {
 		_spec.SetField(devicetoken.FieldToken, field.TypeString, value)

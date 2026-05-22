@@ -22,10 +22,15 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New),
 		field.String("email").Unique(),
-		field.String("first_name").Optional(),
-		field.String("last_name").Optional(),
-		field.String("display_name").Optional(),
+		field.String("first_name").Optional().Nillable(),
+		field.String("last_name").Optional().Nillable(),
+		field.String("display_name").Optional().Nillable(),
 		field.String("firebase_uid").Unique(),
+		field.Int32("status").Default(1), // e.g., 1: active, 2: inactive
+		field.Time("last_login_at").Optional().Nillable(),
+		field.String("last_login_ip").Optional().Nillable(),
+		field.String("last_login_user_agent").Optional().Nillable(),
+		field.Int32("failed_login_attempts").Default(0),
 	}
 }
 

@@ -102,6 +102,7 @@ func RegisterTopicTechJob(props TopicTechJobProps) {
 		props.Logger.Info("Successfully sent notification to topic tech")
 	})
 	if err != nil {
+		props.Logger.Error("Failed to register send notification to topic tech job", zap.Error(err))
 		return
 	}
 }

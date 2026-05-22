@@ -12,6 +12,8 @@ const CtxTimeOut = time.Duration(10000) * time.Second
 const CtxFirebaseUIDKey = "ctx_firebase_uid"
 const CtxSysUIDKey = "ctx_system_uid"
 const CtxPrincipalKey = "ctx_principal"
+const CtxUserIPAddressKey = "ctx_user_ip_address"
+const CtxUserAgentKey = "ctx_user_agent"
 
 const AuthHeaderPrefixBearer = "Bearer "
 const DefaultPassword = "123qwe!@#"

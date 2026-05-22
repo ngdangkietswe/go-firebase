@@ -45,6 +45,13 @@ func ApiSuccessResponse(ctx *fiber.Ctx, data interface{}) error {
 	)
 }
 
+func ApiSuccessEmptyResponse(ctx *fiber.Ctx) error {
+	return ctx.Status(fiber.StatusOK).JSON(&ApiResponse{
+		Status:  200,
+		Message: "Success",
+	})
+}
+
 func ApiErrorResponse(ctx *fiber.Ctx, status int, err error) error {
 	return ctx.Status(status).JSON(
 		&ApiResponse{

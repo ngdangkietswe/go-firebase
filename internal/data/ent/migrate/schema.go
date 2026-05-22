@@ -13,7 +13,12 @@ var (
 	DeviceTokenColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "created_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "updated_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted", Type: field.TypeBool, Default: false},
 		{Name: "token", Type: field.TypeString, Unique: true},
 		{Name: "platform", Type: field.TypeString, Default: "android"},
 		{Name: "last_seen", Type: field.TypeTime},
@@ -28,7 +33,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "device_token_users_device_tokens",
-				Columns:    []*schema.Column{DeviceTokenColumns[7]},
+				Columns:    []*schema.Column{DeviceTokenColumns[12]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -38,7 +43,12 @@ var (
 	NotificationColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "created_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "updated_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted", Type: field.TypeBool, Default: false},
 		{Name: "title", Type: field.TypeString},
 		{Name: "body", Type: field.TypeString},
 		{Name: "data", Type: field.TypeJSON, Nullable: true},
@@ -55,13 +65,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "notification_notification_topic_notifications",
-				Columns:    []*schema.Column{NotificationColumns[8]},
+				Columns:    []*schema.Column{NotificationColumns[13]},
 				RefColumns: []*schema.Column{NotificationTopicColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "notification_users_notifications",
-				Columns:    []*schema.Column{NotificationColumns[9]},
+				Columns:    []*schema.Column{NotificationColumns[14]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -71,7 +81,12 @@ var (
 	NotificationTopicColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "created_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "updated_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted", Type: field.TypeBool, Default: false},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "description", Type: field.TypeString, Nullable: true},
 	}
@@ -85,7 +100,12 @@ var (
 	PermissionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "created_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "updated_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted", Type: field.TypeBool, Default: false},
 		{Name: "action", Type: field.TypeString},
 		{Name: "resource", Type: field.TypeString},
 		{Name: "description", Type: field.TypeString, Nullable: true},
@@ -99,7 +119,7 @@ var (
 			{
 				Name:    "permission_action_resource",
 				Unique:  true,
-				Columns: []*schema.Column{PermissionsColumns[3], PermissionsColumns[4]},
+				Columns: []*schema.Column{PermissionsColumns[8], PermissionsColumns[9]},
 			},
 		},
 	}
@@ -107,7 +127,12 @@ var (
 	RolesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "created_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "updated_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted", Type: field.TypeBool, Default: false},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "description", Type: field.TypeString, Nullable: true},
 	}
@@ -154,12 +179,22 @@ var (
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "created_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "updated_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted_by", Type: field.TypeUUID, Nullable: true},
+		{Name: "deleted", Type: field.TypeBool, Default: false},
 		{Name: "email", Type: field.TypeString, Unique: true},
 		{Name: "first_name", Type: field.TypeString, Nullable: true},
 		{Name: "last_name", Type: field.TypeString, Nullable: true},
 		{Name: "display_name", Type: field.TypeString, Nullable: true},
 		{Name: "firebase_uid", Type: field.TypeString, Unique: true},
+		{Name: "status", Type: field.TypeInt32, Default: 1},
+		{Name: "last_login_at", Type: field.TypeTime, Nullable: true},
+		{Name: "last_login_ip", Type: field.TypeString, Nullable: true},
+		{Name: "last_login_user_agent", Type: field.TypeString, Nullable: true},
+		{Name: "failed_login_attempts", Type: field.TypeInt32, Default: 0},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

@@ -25,11 +25,9 @@ var SkipEndpoint = []string{
 	"/api/v1/auth/login",
 	"/api/v1/auth/verify-token",
 	"/api/v1/auth/refresh-token",
+	"/api/v1/auth/forgot-password",
+	"/api/v1/auth/reset-password",
 	"/swagger",
-}
-
-var SkipEndpointAndMethod = map[string]string{
-	//fiber.MethodPost: "/api/v1/users",
 }
 
 func (m *AuthMiddleware) Skip(ctx *fiber.Ctx) bool {
@@ -39,17 +37,14 @@ func (m *AuthMiddleware) Skip(ctx *fiber.Ctx) bool {
 		}
 	}
 
-	//for method, endpoint := range SkipEndpointAndMethod {
-	//	if ctx.Method() == method && strings.Contains(ctx.Path(), endpoint) {
-	//		return true
-	//	}
-	//}
-
 	return false
 }
 
 func (m *AuthMiddleware) AsMiddleware() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
+		ctx.Locals(constant.CtxUserIPAddressKey, util.GetIPAddress(ctx))
+		ctx.Locals(constant.CtxUserAgentKey, util.GetUserAgent(ctx))
+
 		if m.Skip(ctx) {
 			return ctx.Next()
 		}

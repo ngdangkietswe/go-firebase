@@ -32,12 +32,10 @@ func init() {
 	devicetokenDescCreatedAt := devicetokenMixinFields0[0].Descriptor()
 	// devicetoken.DefaultCreatedAt holds the default value on creation for the created_at field.
 	devicetoken.DefaultCreatedAt = devicetokenDescCreatedAt.Default.(func() time.Time)
-	// devicetokenDescUpdatedAt is the schema descriptor for updated_at field.
-	devicetokenDescUpdatedAt := devicetokenMixinFields0[1].Descriptor()
-	// devicetoken.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	devicetoken.DefaultUpdatedAt = devicetokenDescUpdatedAt.Default.(func() time.Time)
-	// devicetoken.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	devicetoken.UpdateDefaultUpdatedAt = devicetokenDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// devicetokenDescDeleted is the schema descriptor for deleted field.
+	devicetokenDescDeleted := devicetokenMixinFields0[6].Descriptor()
+	// devicetoken.DefaultDeleted holds the default value on creation for the deleted field.
+	devicetoken.DefaultDeleted = devicetokenDescDeleted.Default.(bool)
 	// devicetokenDescPlatform is the schema descriptor for platform field.
 	devicetokenDescPlatform := devicetokenFields[3].Descriptor()
 	// devicetoken.DefaultPlatform holds the default value on creation for the platform field.
@@ -63,12 +61,10 @@ func init() {
 	notificationDescCreatedAt := notificationMixinFields0[0].Descriptor()
 	// notification.DefaultCreatedAt holds the default value on creation for the created_at field.
 	notification.DefaultCreatedAt = notificationDescCreatedAt.Default.(func() time.Time)
-	// notificationDescUpdatedAt is the schema descriptor for updated_at field.
-	notificationDescUpdatedAt := notificationMixinFields0[1].Descriptor()
-	// notification.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	notification.DefaultUpdatedAt = notificationDescUpdatedAt.Default.(func() time.Time)
-	// notification.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	notification.UpdateDefaultUpdatedAt = notificationDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// notificationDescDeleted is the schema descriptor for deleted field.
+	notificationDescDeleted := notificationMixinFields0[6].Descriptor()
+	// notification.DefaultDeleted holds the default value on creation for the deleted field.
+	notification.DefaultDeleted = notificationDescDeleted.Default.(bool)
 	// notificationDescSentAt is the schema descriptor for sent_at field.
 	notificationDescSentAt := notificationFields[6].Descriptor()
 	// notification.DefaultSentAt holds the default value on creation for the sent_at field.
@@ -90,12 +86,10 @@ func init() {
 	notificationtopicDescCreatedAt := notificationtopicMixinFields0[0].Descriptor()
 	// notificationtopic.DefaultCreatedAt holds the default value on creation for the created_at field.
 	notificationtopic.DefaultCreatedAt = notificationtopicDescCreatedAt.Default.(func() time.Time)
-	// notificationtopicDescUpdatedAt is the schema descriptor for updated_at field.
-	notificationtopicDescUpdatedAt := notificationtopicMixinFields0[1].Descriptor()
-	// notificationtopic.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	notificationtopic.DefaultUpdatedAt = notificationtopicDescUpdatedAt.Default.(func() time.Time)
-	// notificationtopic.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	notificationtopic.UpdateDefaultUpdatedAt = notificationtopicDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// notificationtopicDescDeleted is the schema descriptor for deleted field.
+	notificationtopicDescDeleted := notificationtopicMixinFields0[6].Descriptor()
+	// notificationtopic.DefaultDeleted holds the default value on creation for the deleted field.
+	notificationtopic.DefaultDeleted = notificationtopicDescDeleted.Default.(bool)
 	// notificationtopicDescID is the schema descriptor for id field.
 	notificationtopicDescID := notificationtopicFields[0].Descriptor()
 	// notificationtopic.DefaultID holds the default value on creation for the id field.
@@ -109,12 +103,10 @@ func init() {
 	permissionDescCreatedAt := permissionMixinFields0[0].Descriptor()
 	// permission.DefaultCreatedAt holds the default value on creation for the created_at field.
 	permission.DefaultCreatedAt = permissionDescCreatedAt.Default.(func() time.Time)
-	// permissionDescUpdatedAt is the schema descriptor for updated_at field.
-	permissionDescUpdatedAt := permissionMixinFields0[1].Descriptor()
-	// permission.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	permission.DefaultUpdatedAt = permissionDescUpdatedAt.Default.(func() time.Time)
-	// permission.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	permission.UpdateDefaultUpdatedAt = permissionDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// permissionDescDeleted is the schema descriptor for deleted field.
+	permissionDescDeleted := permissionMixinFields0[6].Descriptor()
+	// permission.DefaultDeleted holds the default value on creation for the deleted field.
+	permission.DefaultDeleted = permissionDescDeleted.Default.(bool)
 	// permissionDescID is the schema descriptor for id field.
 	permissionDescID := permissionFields[0].Descriptor()
 	// permission.DefaultID holds the default value on creation for the id field.
@@ -128,12 +120,10 @@ func init() {
 	roleDescCreatedAt := roleMixinFields0[0].Descriptor()
 	// role.DefaultCreatedAt holds the default value on creation for the created_at field.
 	role.DefaultCreatedAt = roleDescCreatedAt.Default.(func() time.Time)
-	// roleDescUpdatedAt is the schema descriptor for updated_at field.
-	roleDescUpdatedAt := roleMixinFields0[1].Descriptor()
-	// role.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	role.DefaultUpdatedAt = roleDescUpdatedAt.Default.(func() time.Time)
-	// role.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	role.UpdateDefaultUpdatedAt = roleDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// roleDescDeleted is the schema descriptor for deleted field.
+	roleDescDeleted := roleMixinFields0[6].Descriptor()
+	// role.DefaultDeleted holds the default value on creation for the deleted field.
+	role.DefaultDeleted = roleDescDeleted.Default.(bool)
 	// roleDescID is the schema descriptor for id field.
 	roleDescID := roleFields[0].Descriptor()
 	// role.DefaultID holds the default value on creation for the id field.
@@ -153,12 +143,18 @@ func init() {
 	userDescCreatedAt := userMixinFields0[0].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
-	// userDescUpdatedAt is the schema descriptor for updated_at field.
-	userDescUpdatedAt := userMixinFields0[1].Descriptor()
-	// user.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
-	// user.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	user.UpdateDefaultUpdatedAt = userDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// userDescDeleted is the schema descriptor for deleted field.
+	userDescDeleted := userMixinFields0[6].Descriptor()
+	// user.DefaultDeleted holds the default value on creation for the deleted field.
+	user.DefaultDeleted = userDescDeleted.Default.(bool)
+	// userDescStatus is the schema descriptor for status field.
+	userDescStatus := userFields[6].Descriptor()
+	// user.DefaultStatus holds the default value on creation for the status field.
+	user.DefaultStatus = userDescStatus.Default.(int32)
+	// userDescFailedLoginAttempts is the schema descriptor for failed_login_attempts field.
+	userDescFailedLoginAttempts := userFields[10].Descriptor()
+	// user.DefaultFailedLoginAttempts holds the default value on creation for the failed_login_attempts field.
+	user.DefaultFailedLoginAttempts = userDescFailedLoginAttempts.Default.(int32)
 	// userDescID is the schema descriptor for id field.
 	userDescID := userFields[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.

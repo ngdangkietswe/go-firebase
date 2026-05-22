@@ -44,6 +44,12 @@ func (h *authHelper) BuildPrincipal(claims map[string]interface{}) (*model.Princ
 		return nil, errors.New("system UID not found in claims")
 	}
 
+	if email, ok := claims["email"].(string); ok {
+		principal.Email = email
+	} else {
+		return nil, errors.New("email not found in claims")
+	}
+
 	if err := h.cacheUserRoles(&principal); err != nil {
 		return nil, err
 	}

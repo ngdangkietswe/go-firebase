@@ -37,6 +37,114 @@ func (_u *NotificationTopicUpdate) SetUpdatedAt(v time.Time) *NotificationTopicU
 	return _u
 }
 
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_u *NotificationTopicUpdate) SetNillableUpdatedAt(v *time.Time) *NotificationTopicUpdate {
+	if v != nil {
+		_u.SetUpdatedAt(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (_u *NotificationTopicUpdate) ClearUpdatedAt() *NotificationTopicUpdate {
+	_u.mutation.ClearUpdatedAt()
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *NotificationTopicUpdate) SetDeletedAt(v time.Time) *NotificationTopicUpdate {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *NotificationTopicUpdate) SetNillableDeletedAt(v *time.Time) *NotificationTopicUpdate {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *NotificationTopicUpdate) ClearDeletedAt() *NotificationTopicUpdate {
+	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_u *NotificationTopicUpdate) SetCreatedBy(v uuid.UUID) *NotificationTopicUpdate {
+	_u.mutation.SetCreatedBy(v)
+	return _u
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_u *NotificationTopicUpdate) SetNillableCreatedBy(v *uuid.UUID) *NotificationTopicUpdate {
+	if v != nil {
+		_u.SetCreatedBy(*v)
+	}
+	return _u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (_u *NotificationTopicUpdate) ClearCreatedBy() *NotificationTopicUpdate {
+	_u.mutation.ClearCreatedBy()
+	return _u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *NotificationTopicUpdate) SetUpdatedBy(v uuid.UUID) *NotificationTopicUpdate {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *NotificationTopicUpdate) SetNillableUpdatedBy(v *uuid.UUID) *NotificationTopicUpdate {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (_u *NotificationTopicUpdate) ClearUpdatedBy() *NotificationTopicUpdate {
+	_u.mutation.ClearUpdatedBy()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *NotificationTopicUpdate) SetDeletedBy(v uuid.UUID) *NotificationTopicUpdate {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *NotificationTopicUpdate) SetNillableDeletedBy(v *uuid.UUID) *NotificationTopicUpdate {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *NotificationTopicUpdate) ClearDeletedBy() *NotificationTopicUpdate {
+	_u.mutation.ClearDeletedBy()
+	return _u
+}
+
+// SetDeleted sets the "deleted" field.
+func (_u *NotificationTopicUpdate) SetDeleted(v bool) *NotificationTopicUpdate {
+	_u.mutation.SetDeleted(v)
+	return _u
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_u *NotificationTopicUpdate) SetNillableDeleted(v *bool) *NotificationTopicUpdate {
+	if v != nil {
+		_u.SetDeleted(*v)
+	}
+	return _u
+}
+
 // SetName sets the "name" field.
 func (_u *NotificationTopicUpdate) SetName(v string) *NotificationTopicUpdate {
 	_u.mutation.SetName(v)
@@ -150,7 +258,6 @@ func (_u *NotificationTopicUpdate) RemoveNotifications(v ...*Notification) *Noti
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *NotificationTopicUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -176,14 +283,6 @@ func (_u *NotificationTopicUpdate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (_u *NotificationTopicUpdate) defaults() {
-	if _, ok := _u.mutation.UpdatedAt(); !ok {
-		v := notificationtopic.UpdateDefaultUpdatedAt()
-		_u.mutation.SetUpdatedAt(v)
-	}
-}
-
 func (_u *NotificationTopicUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	_spec := sqlgraph.NewUpdateSpec(notificationtopic.Table, notificationtopic.Columns, sqlgraph.NewFieldSpec(notificationtopic.FieldID, field.TypeUUID))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
@@ -195,6 +294,36 @@ func (_u *NotificationTopicUpdate) sqlSave(ctx context.Context) (_node int, err 
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(notificationtopic.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if _u.mutation.UpdatedAtCleared() {
+		_spec.ClearField(notificationtopic.FieldUpdatedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(notificationtopic.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(notificationtopic.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreatedBy(); ok {
+		_spec.SetField(notificationtopic.FieldCreatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.CreatedByCleared() {
+		_spec.ClearField(notificationtopic.FieldCreatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(notificationtopic.FieldUpdatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.UpdatedByCleared() {
+		_spec.ClearField(notificationtopic.FieldUpdatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(notificationtopic.FieldDeletedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(notificationtopic.FieldDeletedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.Deleted(); ok {
+		_spec.SetField(notificationtopic.FieldDeleted, field.TypeBool, value)
 	}
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(notificationtopic.FieldName, field.TypeString, value)
@@ -318,6 +447,114 @@ type NotificationTopicUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *NotificationTopicUpdateOne) SetUpdatedAt(v time.Time) *NotificationTopicUpdateOne {
 	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_u *NotificationTopicUpdateOne) SetNillableUpdatedAt(v *time.Time) *NotificationTopicUpdateOne {
+	if v != nil {
+		_u.SetUpdatedAt(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (_u *NotificationTopicUpdateOne) ClearUpdatedAt() *NotificationTopicUpdateOne {
+	_u.mutation.ClearUpdatedAt()
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *NotificationTopicUpdateOne) SetDeletedAt(v time.Time) *NotificationTopicUpdateOne {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *NotificationTopicUpdateOne) SetNillableDeletedAt(v *time.Time) *NotificationTopicUpdateOne {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *NotificationTopicUpdateOne) ClearDeletedAt() *NotificationTopicUpdateOne {
+	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_u *NotificationTopicUpdateOne) SetCreatedBy(v uuid.UUID) *NotificationTopicUpdateOne {
+	_u.mutation.SetCreatedBy(v)
+	return _u
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_u *NotificationTopicUpdateOne) SetNillableCreatedBy(v *uuid.UUID) *NotificationTopicUpdateOne {
+	if v != nil {
+		_u.SetCreatedBy(*v)
+	}
+	return _u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (_u *NotificationTopicUpdateOne) ClearCreatedBy() *NotificationTopicUpdateOne {
+	_u.mutation.ClearCreatedBy()
+	return _u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *NotificationTopicUpdateOne) SetUpdatedBy(v uuid.UUID) *NotificationTopicUpdateOne {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *NotificationTopicUpdateOne) SetNillableUpdatedBy(v *uuid.UUID) *NotificationTopicUpdateOne {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (_u *NotificationTopicUpdateOne) ClearUpdatedBy() *NotificationTopicUpdateOne {
+	_u.mutation.ClearUpdatedBy()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *NotificationTopicUpdateOne) SetDeletedBy(v uuid.UUID) *NotificationTopicUpdateOne {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *NotificationTopicUpdateOne) SetNillableDeletedBy(v *uuid.UUID) *NotificationTopicUpdateOne {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *NotificationTopicUpdateOne) ClearDeletedBy() *NotificationTopicUpdateOne {
+	_u.mutation.ClearDeletedBy()
+	return _u
+}
+
+// SetDeleted sets the "deleted" field.
+func (_u *NotificationTopicUpdateOne) SetDeleted(v bool) *NotificationTopicUpdateOne {
+	_u.mutation.SetDeleted(v)
+	return _u
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_u *NotificationTopicUpdateOne) SetNillableDeleted(v *bool) *NotificationTopicUpdateOne {
+	if v != nil {
+		_u.SetDeleted(*v)
+	}
 	return _u
 }
 
@@ -447,7 +684,6 @@ func (_u *NotificationTopicUpdateOne) Select(field string, fields ...string) *No
 
 // Save executes the query and returns the updated NotificationTopic entity.
 func (_u *NotificationTopicUpdateOne) Save(ctx context.Context) (*NotificationTopic, error) {
-	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -470,14 +706,6 @@ func (_u *NotificationTopicUpdateOne) Exec(ctx context.Context) error {
 func (_u *NotificationTopicUpdateOne) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
-	}
-}
-
-// defaults sets the default values of the builder before save.
-func (_u *NotificationTopicUpdateOne) defaults() {
-	if _, ok := _u.mutation.UpdatedAt(); !ok {
-		v := notificationtopic.UpdateDefaultUpdatedAt()
-		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -509,6 +737,36 @@ func (_u *NotificationTopicUpdateOne) sqlSave(ctx context.Context) (_node *Notif
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(notificationtopic.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if _u.mutation.UpdatedAtCleared() {
+		_spec.ClearField(notificationtopic.FieldUpdatedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(notificationtopic.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(notificationtopic.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreatedBy(); ok {
+		_spec.SetField(notificationtopic.FieldCreatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.CreatedByCleared() {
+		_spec.ClearField(notificationtopic.FieldCreatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(notificationtopic.FieldUpdatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.UpdatedByCleared() {
+		_spec.ClearField(notificationtopic.FieldUpdatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(notificationtopic.FieldDeletedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(notificationtopic.FieldDeletedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.Deleted(); ok {
+		_spec.SetField(notificationtopic.FieldDeleted, field.TypeBool, value)
 	}
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(notificationtopic.FieldName, field.TypeString, value)

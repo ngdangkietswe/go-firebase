@@ -54,6 +54,76 @@ func (_c *PermissionCreate) SetNillableUpdatedAt(v *time.Time) *PermissionCreate
 	return _c
 }
 
+// SetDeletedAt sets the "deleted_at" field.
+func (_c *PermissionCreate) SetDeletedAt(v time.Time) *PermissionCreate {
+	_c.mutation.SetDeletedAt(v)
+	return _c
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableDeletedAt(v *time.Time) *PermissionCreate {
+	if v != nil {
+		_c.SetDeletedAt(*v)
+	}
+	return _c
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_c *PermissionCreate) SetCreatedBy(v uuid.UUID) *PermissionCreate {
+	_c.mutation.SetCreatedBy(v)
+	return _c
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableCreatedBy(v *uuid.UUID) *PermissionCreate {
+	if v != nil {
+		_c.SetCreatedBy(*v)
+	}
+	return _c
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_c *PermissionCreate) SetUpdatedBy(v uuid.UUID) *PermissionCreate {
+	_c.mutation.SetUpdatedBy(v)
+	return _c
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableUpdatedBy(v *uuid.UUID) *PermissionCreate {
+	if v != nil {
+		_c.SetUpdatedBy(*v)
+	}
+	return _c
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_c *PermissionCreate) SetDeletedBy(v uuid.UUID) *PermissionCreate {
+	_c.mutation.SetDeletedBy(v)
+	return _c
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableDeletedBy(v *uuid.UUID) *PermissionCreate {
+	if v != nil {
+		_c.SetDeletedBy(*v)
+	}
+	return _c
+}
+
+// SetDeleted sets the "deleted" field.
+func (_c *PermissionCreate) SetDeleted(v bool) *PermissionCreate {
+	_c.mutation.SetDeleted(v)
+	return _c
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableDeleted(v *bool) *PermissionCreate {
+	if v != nil {
+		_c.SetDeleted(*v)
+	}
+	return _c
+}
+
 // SetAction sets the "action" field.
 func (_c *PermissionCreate) SetAction(v string) *PermissionCreate {
 	_c.mutation.SetAction(v)
@@ -163,9 +233,9 @@ func (_c *PermissionCreate) defaults() {
 		v := permission.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
 	}
-	if _, ok := _c.mutation.UpdatedAt(); !ok {
-		v := permission.DefaultUpdatedAt()
-		_c.mutation.SetUpdatedAt(v)
+	if _, ok := _c.mutation.Deleted(); !ok {
+		v := permission.DefaultDeleted
+		_c.mutation.SetDeleted(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := permission.DefaultID()
@@ -178,8 +248,8 @@ func (_c *PermissionCreate) check() error {
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Permission.created_at"`)}
 	}
-	if _, ok := _c.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Permission.updated_at"`)}
+	if _, ok := _c.mutation.Deleted(); !ok {
+		return &ValidationError{Name: "deleted", err: errors.New(`ent: missing required field "Permission.deleted"`)}
 	}
 	if _, ok := _c.mutation.Action(); !ok {
 		return &ValidationError{Name: "action", err: errors.New(`ent: missing required field "Permission.action"`)}
@@ -229,7 +299,27 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(permission.FieldUpdatedAt, field.TypeTime, value)
-		_node.UpdatedAt = value
+		_node.UpdatedAt = &value
+	}
+	if value, ok := _c.mutation.DeletedAt(); ok {
+		_spec.SetField(permission.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = &value
+	}
+	if value, ok := _c.mutation.CreatedBy(); ok {
+		_spec.SetField(permission.FieldCreatedBy, field.TypeUUID, value)
+		_node.CreatedBy = &value
+	}
+	if value, ok := _c.mutation.UpdatedBy(); ok {
+		_spec.SetField(permission.FieldUpdatedBy, field.TypeUUID, value)
+		_node.UpdatedBy = &value
+	}
+	if value, ok := _c.mutation.DeletedBy(); ok {
+		_spec.SetField(permission.FieldDeletedBy, field.TypeUUID, value)
+		_node.DeletedBy = &value
+	}
+	if value, ok := _c.mutation.Deleted(); ok {
+		_spec.SetField(permission.FieldDeleted, field.TypeBool, value)
+		_node.Deleted = value
 	}
 	if value, ok := _c.mutation.Action(); ok {
 		_spec.SetField(permission.FieldAction, field.TypeString, value)
@@ -339,6 +429,96 @@ func (u *PermissionUpsert) UpdateUpdatedAt() *PermissionUpsert {
 	return u
 }
 
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *PermissionUpsert) ClearUpdatedAt() *PermissionUpsert {
+	u.SetNull(permission.FieldUpdatedAt)
+	return u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *PermissionUpsert) SetDeletedAt(v time.Time) *PermissionUpsert {
+	u.Set(permission.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *PermissionUpsert) UpdateDeletedAt() *PermissionUpsert {
+	u.SetExcluded(permission.FieldDeletedAt)
+	return u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *PermissionUpsert) ClearDeletedAt() *PermissionUpsert {
+	u.SetNull(permission.FieldDeletedAt)
+	return u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *PermissionUpsert) SetCreatedBy(v uuid.UUID) *PermissionUpsert {
+	u.Set(permission.FieldCreatedBy, v)
+	return u
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *PermissionUpsert) UpdateCreatedBy() *PermissionUpsert {
+	u.SetExcluded(permission.FieldCreatedBy)
+	return u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *PermissionUpsert) ClearCreatedBy() *PermissionUpsert {
+	u.SetNull(permission.FieldCreatedBy)
+	return u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *PermissionUpsert) SetUpdatedBy(v uuid.UUID) *PermissionUpsert {
+	u.Set(permission.FieldUpdatedBy, v)
+	return u
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *PermissionUpsert) UpdateUpdatedBy() *PermissionUpsert {
+	u.SetExcluded(permission.FieldUpdatedBy)
+	return u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *PermissionUpsert) ClearUpdatedBy() *PermissionUpsert {
+	u.SetNull(permission.FieldUpdatedBy)
+	return u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *PermissionUpsert) SetDeletedBy(v uuid.UUID) *PermissionUpsert {
+	u.Set(permission.FieldDeletedBy, v)
+	return u
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *PermissionUpsert) UpdateDeletedBy() *PermissionUpsert {
+	u.SetExcluded(permission.FieldDeletedBy)
+	return u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *PermissionUpsert) ClearDeletedBy() *PermissionUpsert {
+	u.SetNull(permission.FieldDeletedBy)
+	return u
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *PermissionUpsert) SetDeleted(v bool) *PermissionUpsert {
+	u.Set(permission.FieldDeleted, v)
+	return u
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *PermissionUpsert) UpdateDeleted() *PermissionUpsert {
+	u.SetExcluded(permission.FieldDeleted)
+	return u
+}
+
 // SetAction sets the "action" field.
 func (u *PermissionUpsert) SetAction(v string) *PermissionUpsert {
 	u.Set(permission.FieldAction, v)
@@ -443,6 +623,111 @@ func (u *PermissionUpsertOne) SetUpdatedAt(v time.Time) *PermissionUpsertOne {
 func (u *PermissionUpsertOne) UpdateUpdatedAt() *PermissionUpsertOne {
 	return u.Update(func(s *PermissionUpsert) {
 		s.UpdateUpdatedAt()
+	})
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *PermissionUpsertOne) ClearUpdatedAt() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *PermissionUpsertOne) SetDeletedAt(v time.Time) *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *PermissionUpsertOne) UpdateDeletedAt() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *PermissionUpsertOne) ClearDeletedAt() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *PermissionUpsertOne) SetCreatedBy(v uuid.UUID) *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetCreatedBy(v)
+	})
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *PermissionUpsertOne) UpdateCreatedBy() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateCreatedBy()
+	})
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *PermissionUpsertOne) ClearCreatedBy() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *PermissionUpsertOne) SetUpdatedBy(v uuid.UUID) *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetUpdatedBy(v)
+	})
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *PermissionUpsertOne) UpdateUpdatedBy() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateUpdatedBy()
+	})
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *PermissionUpsertOne) ClearUpdatedBy() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearUpdatedBy()
+	})
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *PermissionUpsertOne) SetDeletedBy(v uuid.UUID) *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetDeletedBy(v)
+	})
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *PermissionUpsertOne) UpdateDeletedBy() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateDeletedBy()
+	})
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *PermissionUpsertOne) ClearDeletedBy() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearDeletedBy()
+	})
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *PermissionUpsertOne) SetDeleted(v bool) *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetDeleted(v)
+	})
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *PermissionUpsertOne) UpdateDeleted() *PermissionUpsertOne {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateDeleted()
 	})
 }
 
@@ -724,6 +1009,111 @@ func (u *PermissionUpsertBulk) SetUpdatedAt(v time.Time) *PermissionUpsertBulk {
 func (u *PermissionUpsertBulk) UpdateUpdatedAt() *PermissionUpsertBulk {
 	return u.Update(func(s *PermissionUpsert) {
 		s.UpdateUpdatedAt()
+	})
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *PermissionUpsertBulk) ClearUpdatedAt() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *PermissionUpsertBulk) SetDeletedAt(v time.Time) *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *PermissionUpsertBulk) UpdateDeletedAt() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *PermissionUpsertBulk) ClearDeletedAt() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *PermissionUpsertBulk) SetCreatedBy(v uuid.UUID) *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetCreatedBy(v)
+	})
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *PermissionUpsertBulk) UpdateCreatedBy() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateCreatedBy()
+	})
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *PermissionUpsertBulk) ClearCreatedBy() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *PermissionUpsertBulk) SetUpdatedBy(v uuid.UUID) *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetUpdatedBy(v)
+	})
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *PermissionUpsertBulk) UpdateUpdatedBy() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateUpdatedBy()
+	})
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *PermissionUpsertBulk) ClearUpdatedBy() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearUpdatedBy()
+	})
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *PermissionUpsertBulk) SetDeletedBy(v uuid.UUID) *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetDeletedBy(v)
+	})
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *PermissionUpsertBulk) UpdateDeletedBy() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateDeletedBy()
+	})
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *PermissionUpsertBulk) ClearDeletedBy() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.ClearDeletedBy()
+	})
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *PermissionUpsertBulk) SetDeleted(v bool) *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.SetDeleted(v)
+	})
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *PermissionUpsertBulk) UpdateDeleted() *PermissionUpsertBulk {
+	return u.Update(func(s *PermissionUpsert) {
+		s.UpdateDeleted()
 	})
 }
 

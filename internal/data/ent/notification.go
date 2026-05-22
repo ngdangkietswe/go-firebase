@@ -24,7 +24,17 @@ type Notification struct {
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	// CreatedBy holds the value of the "created_by" field.
+	CreatedBy *uuid.UUID `json:"created_by,omitempty"`
+	// UpdatedBy holds the value of the "updated_by" field.
+	UpdatedBy *uuid.UUID `json:"updated_by,omitempty"`
+	// DeletedBy holds the value of the "deleted_by" field.
+	DeletedBy *uuid.UUID `json:"deleted_by,omitempty"`
+	// Deleted holds the value of the "deleted" field.
+	Deleted bool `json:"deleted,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// NotificationTopicID holds the value of the "notification_topic_id" field.
@@ -83,13 +93,15 @@ func (*Notification) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case notification.FieldCreatedBy, notification.FieldUpdatedBy, notification.FieldDeletedBy:
+			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		case notification.FieldData:
 			values[i] = new([]byte)
-		case notification.FieldIsRead:
+		case notification.FieldDeleted, notification.FieldIsRead:
 			values[i] = new(sql.NullBool)
 		case notification.FieldTitle, notification.FieldBody:
 			values[i] = new(sql.NullString)
-		case notification.FieldCreatedAt, notification.FieldUpdatedAt, notification.FieldSentAt:
+		case notification.FieldCreatedAt, notification.FieldUpdatedAt, notification.FieldDeletedAt, notification.FieldSentAt:
 			values[i] = new(sql.NullTime)
 		case notification.FieldID, notification.FieldUserID, notification.FieldNotificationTopicID:
 			values[i] = new(uuid.UUID)
@@ -124,7 +136,42 @@ func (_m *Notification) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				_m.UpdatedAt = value.Time
+				_m.UpdatedAt = new(time.Time)
+				*_m.UpdatedAt = value.Time
+			}
+		case notification.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				_m.DeletedAt = new(time.Time)
+				*_m.DeletedAt = value.Time
+			}
+		case notification.FieldCreatedBy:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field created_by", values[i])
+			} else if value.Valid {
+				_m.CreatedBy = new(uuid.UUID)
+				*_m.CreatedBy = *value.S.(*uuid.UUID)
+			}
+		case notification.FieldUpdatedBy:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
+			} else if value.Valid {
+				_m.UpdatedBy = new(uuid.UUID)
+				*_m.UpdatedBy = *value.S.(*uuid.UUID)
+			}
+		case notification.FieldDeletedBy:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
+			} else if value.Valid {
+				_m.DeletedBy = new(uuid.UUID)
+				*_m.DeletedBy = *value.S.(*uuid.UUID)
+			}
+		case notification.FieldDeleted:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted", values[i])
+			} else if value.Valid {
+				_m.Deleted = value.Bool
 			}
 		case notification.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -219,8 +266,33 @@ func (_m *Notification) String() string {
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("updated_at=")
-	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	if v := _m.UpdatedAt; v != nil {
+		builder.WriteString("updated_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := _m.DeletedAt; v != nil {
+		builder.WriteString("deleted_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := _m.CreatedBy; v != nil {
+		builder.WriteString("created_by=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.UpdatedBy; v != nil {
+		builder.WriteString("updated_by=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.DeletedBy; v != nil {
+		builder.WriteString("deleted_by=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	builder.WriteString("deleted=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Deleted))
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", _m.UserID))

@@ -18,6 +18,8 @@ var FiberKeys = []string{
 	constant.CtxFirebaseUIDKey,
 	constant.CtxSysUIDKey,
 	constant.CtxPrincipalKey,
+	constant.CtxUserIPAddressKey,
+	constant.CtxUserAgentKey,
 }
 
 func FiberCtxToContext(ctx *fiber.Ctx) context.Context {

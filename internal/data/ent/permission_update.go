@@ -37,6 +37,114 @@ func (_u *PermissionUpdate) SetUpdatedAt(v time.Time) *PermissionUpdate {
 	return _u
 }
 
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableUpdatedAt(v *time.Time) *PermissionUpdate {
+	if v != nil {
+		_u.SetUpdatedAt(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (_u *PermissionUpdate) ClearUpdatedAt() *PermissionUpdate {
+	_u.mutation.ClearUpdatedAt()
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *PermissionUpdate) SetDeletedAt(v time.Time) *PermissionUpdate {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableDeletedAt(v *time.Time) *PermissionUpdate {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *PermissionUpdate) ClearDeletedAt() *PermissionUpdate {
+	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_u *PermissionUpdate) SetCreatedBy(v uuid.UUID) *PermissionUpdate {
+	_u.mutation.SetCreatedBy(v)
+	return _u
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableCreatedBy(v *uuid.UUID) *PermissionUpdate {
+	if v != nil {
+		_u.SetCreatedBy(*v)
+	}
+	return _u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (_u *PermissionUpdate) ClearCreatedBy() *PermissionUpdate {
+	_u.mutation.ClearCreatedBy()
+	return _u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *PermissionUpdate) SetUpdatedBy(v uuid.UUID) *PermissionUpdate {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableUpdatedBy(v *uuid.UUID) *PermissionUpdate {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (_u *PermissionUpdate) ClearUpdatedBy() *PermissionUpdate {
+	_u.mutation.ClearUpdatedBy()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *PermissionUpdate) SetDeletedBy(v uuid.UUID) *PermissionUpdate {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableDeletedBy(v *uuid.UUID) *PermissionUpdate {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *PermissionUpdate) ClearDeletedBy() *PermissionUpdate {
+	_u.mutation.ClearDeletedBy()
+	return _u
+}
+
+// SetDeleted sets the "deleted" field.
+func (_u *PermissionUpdate) SetDeleted(v bool) *PermissionUpdate {
+	_u.mutation.SetDeleted(v)
+	return _u
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableDeleted(v *bool) *PermissionUpdate {
+	if v != nil {
+		_u.SetDeleted(*v)
+	}
+	return _u
+}
+
 // SetAction sets the "action" field.
 func (_u *PermissionUpdate) SetAction(v string) *PermissionUpdate {
 	_u.mutation.SetAction(v)
@@ -164,7 +272,6 @@ func (_u *PermissionUpdate) RemoveRolePermissions(v ...*RolePermission) *Permiss
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *PermissionUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -190,14 +297,6 @@ func (_u *PermissionUpdate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (_u *PermissionUpdate) defaults() {
-	if _, ok := _u.mutation.UpdatedAt(); !ok {
-		v := permission.UpdateDefaultUpdatedAt()
-		_u.mutation.SetUpdatedAt(v)
-	}
-}
-
 func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	_spec := sqlgraph.NewUpdateSpec(permission.Table, permission.Columns, sqlgraph.NewFieldSpec(permission.FieldID, field.TypeUUID))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
@@ -209,6 +308,36 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(permission.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if _u.mutation.UpdatedAtCleared() {
+		_spec.ClearField(permission.FieldUpdatedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(permission.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(permission.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreatedBy(); ok {
+		_spec.SetField(permission.FieldCreatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.CreatedByCleared() {
+		_spec.ClearField(permission.FieldCreatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(permission.FieldUpdatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.UpdatedByCleared() {
+		_spec.ClearField(permission.FieldUpdatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(permission.FieldDeletedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(permission.FieldDeletedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.Deleted(); ok {
+		_spec.SetField(permission.FieldDeleted, field.TypeBool, value)
 	}
 	if value, ok := _u.mutation.Action(); ok {
 		_spec.SetField(permission.FieldAction, field.TypeString, value)
@@ -335,6 +464,114 @@ type PermissionUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *PermissionUpdateOne) SetUpdatedAt(v time.Time) *PermissionUpdateOne {
 	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableUpdatedAt(v *time.Time) *PermissionUpdateOne {
+	if v != nil {
+		_u.SetUpdatedAt(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (_u *PermissionUpdateOne) ClearUpdatedAt() *PermissionUpdateOne {
+	_u.mutation.ClearUpdatedAt()
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *PermissionUpdateOne) SetDeletedAt(v time.Time) *PermissionUpdateOne {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableDeletedAt(v *time.Time) *PermissionUpdateOne {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *PermissionUpdateOne) ClearDeletedAt() *PermissionUpdateOne {
+	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_u *PermissionUpdateOne) SetCreatedBy(v uuid.UUID) *PermissionUpdateOne {
+	_u.mutation.SetCreatedBy(v)
+	return _u
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableCreatedBy(v *uuid.UUID) *PermissionUpdateOne {
+	if v != nil {
+		_u.SetCreatedBy(*v)
+	}
+	return _u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (_u *PermissionUpdateOne) ClearCreatedBy() *PermissionUpdateOne {
+	_u.mutation.ClearCreatedBy()
+	return _u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *PermissionUpdateOne) SetUpdatedBy(v uuid.UUID) *PermissionUpdateOne {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableUpdatedBy(v *uuid.UUID) *PermissionUpdateOne {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (_u *PermissionUpdateOne) ClearUpdatedBy() *PermissionUpdateOne {
+	_u.mutation.ClearUpdatedBy()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *PermissionUpdateOne) SetDeletedBy(v uuid.UUID) *PermissionUpdateOne {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableDeletedBy(v *uuid.UUID) *PermissionUpdateOne {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *PermissionUpdateOne) ClearDeletedBy() *PermissionUpdateOne {
+	_u.mutation.ClearDeletedBy()
+	return _u
+}
+
+// SetDeleted sets the "deleted" field.
+func (_u *PermissionUpdateOne) SetDeleted(v bool) *PermissionUpdateOne {
+	_u.mutation.SetDeleted(v)
+	return _u
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableDeleted(v *bool) *PermissionUpdateOne {
+	if v != nil {
+		_u.SetDeleted(*v)
+	}
 	return _u
 }
 
@@ -478,7 +715,6 @@ func (_u *PermissionUpdateOne) Select(field string, fields ...string) *Permissio
 
 // Save executes the query and returns the updated Permission entity.
 func (_u *PermissionUpdateOne) Save(ctx context.Context) (*Permission, error) {
-	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -501,14 +737,6 @@ func (_u *PermissionUpdateOne) Exec(ctx context.Context) error {
 func (_u *PermissionUpdateOne) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
-	}
-}
-
-// defaults sets the default values of the builder before save.
-func (_u *PermissionUpdateOne) defaults() {
-	if _, ok := _u.mutation.UpdatedAt(); !ok {
-		v := permission.UpdateDefaultUpdatedAt()
-		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -540,6 +768,36 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(permission.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if _u.mutation.UpdatedAtCleared() {
+		_spec.ClearField(permission.FieldUpdatedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(permission.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(permission.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreatedBy(); ok {
+		_spec.SetField(permission.FieldCreatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.CreatedByCleared() {
+		_spec.ClearField(permission.FieldCreatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(permission.FieldUpdatedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.UpdatedByCleared() {
+		_spec.ClearField(permission.FieldUpdatedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(permission.FieldDeletedBy, field.TypeUUID, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(permission.FieldDeletedBy, field.TypeUUID)
+	}
+	if value, ok := _u.mutation.Deleted(); ok {
+		_spec.SetField(permission.FieldDeleted, field.TypeBool, value)
 	}
 	if value, ok := _u.mutation.Action(); ok {
 		_spec.SetField(permission.FieldAction, field.TypeString, value)

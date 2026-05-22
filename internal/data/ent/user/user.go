@@ -19,6 +19,16 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
+	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
+	FieldDeletedAt = "deleted_at"
+	// FieldCreatedBy holds the string denoting the created_by field in the database.
+	FieldCreatedBy = "created_by"
+	// FieldUpdatedBy holds the string denoting the updated_by field in the database.
+	FieldUpdatedBy = "updated_by"
+	// FieldDeletedBy holds the string denoting the deleted_by field in the database.
+	FieldDeletedBy = "deleted_by"
+	// FieldDeleted holds the string denoting the deleted field in the database.
+	FieldDeleted = "deleted"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
 	// FieldFirstName holds the string denoting the first_name field in the database.
@@ -29,6 +39,16 @@ const (
 	FieldDisplayName = "display_name"
 	// FieldFirebaseUID holds the string denoting the firebase_uid field in the database.
 	FieldFirebaseUID = "firebase_uid"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
+	// FieldLastLoginAt holds the string denoting the last_login_at field in the database.
+	FieldLastLoginAt = "last_login_at"
+	// FieldLastLoginIP holds the string denoting the last_login_ip field in the database.
+	FieldLastLoginIP = "last_login_ip"
+	// FieldLastLoginUserAgent holds the string denoting the last_login_user_agent field in the database.
+	FieldLastLoginUserAgent = "last_login_user_agent"
+	// FieldFailedLoginAttempts holds the string denoting the failed_login_attempts field in the database.
+	FieldFailedLoginAttempts = "failed_login_attempts"
 	// EdgeDeviceTokens holds the string denoting the device_tokens edge name in mutations.
 	EdgeDeviceTokens = "device_tokens"
 	// EdgeNotifications holds the string denoting the notifications edge name in mutations.
@@ -83,11 +103,21 @@ var Columns = []string{
 	FieldID,
 	FieldCreatedAt,
 	FieldUpdatedAt,
+	FieldDeletedAt,
+	FieldCreatedBy,
+	FieldUpdatedBy,
+	FieldDeletedBy,
+	FieldDeleted,
 	FieldEmail,
 	FieldFirstName,
 	FieldLastName,
 	FieldDisplayName,
 	FieldFirebaseUID,
+	FieldStatus,
+	FieldLastLoginAt,
+	FieldLastLoginIP,
+	FieldLastLoginUserAgent,
+	FieldFailedLoginAttempts,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -103,10 +133,12 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
-	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
-	DefaultUpdatedAt func() time.Time
-	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
-	UpdateDefaultUpdatedAt func() time.Time
+	// DefaultDeleted holds the default value on creation for the "deleted" field.
+	DefaultDeleted bool
+	// DefaultStatus holds the default value on creation for the "status" field.
+	DefaultStatus int32
+	// DefaultFailedLoginAttempts holds the default value on creation for the "failed_login_attempts" field.
+	DefaultFailedLoginAttempts int32
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
@@ -127,6 +159,31 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByDeletedAt orders the results by the deleted_at field.
+func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
+}
+
+// ByCreatedBy orders the results by the created_by field.
+func ByCreatedBy(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedBy, opts...).ToFunc()
+}
+
+// ByUpdatedBy orders the results by the updated_by field.
+func ByUpdatedBy(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdatedBy, opts...).ToFunc()
+}
+
+// ByDeletedBy orders the results by the deleted_by field.
+func ByDeletedBy(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeletedBy, opts...).ToFunc()
+}
+
+// ByDeleted orders the results by the deleted field.
+func ByDeleted(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeleted, opts...).ToFunc()
 }
 
 // ByEmail orders the results by the email field.
@@ -152,6 +209,31 @@ func ByDisplayName(opts ...sql.OrderTermOption) OrderOption {
 // ByFirebaseUID orders the results by the firebase_uid field.
 func ByFirebaseUID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldFirebaseUID, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
+// ByLastLoginAt orders the results by the last_login_at field.
+func ByLastLoginAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLastLoginAt, opts...).ToFunc()
+}
+
+// ByLastLoginIP orders the results by the last_login_ip field.
+func ByLastLoginIP(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLastLoginIP, opts...).ToFunc()
+}
+
+// ByLastLoginUserAgent orders the results by the last_login_user_agent field.
+func ByLastLoginUserAgent(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLastLoginUserAgent, opts...).ToFunc()
+}
+
+// ByFailedLoginAttempts orders the results by the failed_login_attempts field.
+func ByFailedLoginAttempts(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFailedLoginAttempts, opts...).ToFunc()
 }
 
 // ByDeviceTokensCount orders the results by device_tokens count.

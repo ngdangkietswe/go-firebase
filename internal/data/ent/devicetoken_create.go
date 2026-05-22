@@ -53,6 +53,76 @@ func (_c *DeviceTokenCreate) SetNillableUpdatedAt(v *time.Time) *DeviceTokenCrea
 	return _c
 }
 
+// SetDeletedAt sets the "deleted_at" field.
+func (_c *DeviceTokenCreate) SetDeletedAt(v time.Time) *DeviceTokenCreate {
+	_c.mutation.SetDeletedAt(v)
+	return _c
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_c *DeviceTokenCreate) SetNillableDeletedAt(v *time.Time) *DeviceTokenCreate {
+	if v != nil {
+		_c.SetDeletedAt(*v)
+	}
+	return _c
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (_c *DeviceTokenCreate) SetCreatedBy(v uuid.UUID) *DeviceTokenCreate {
+	_c.mutation.SetCreatedBy(v)
+	return _c
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_c *DeviceTokenCreate) SetNillableCreatedBy(v *uuid.UUID) *DeviceTokenCreate {
+	if v != nil {
+		_c.SetCreatedBy(*v)
+	}
+	return _c
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (_c *DeviceTokenCreate) SetUpdatedBy(v uuid.UUID) *DeviceTokenCreate {
+	_c.mutation.SetUpdatedBy(v)
+	return _c
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_c *DeviceTokenCreate) SetNillableUpdatedBy(v *uuid.UUID) *DeviceTokenCreate {
+	if v != nil {
+		_c.SetUpdatedBy(*v)
+	}
+	return _c
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_c *DeviceTokenCreate) SetDeletedBy(v uuid.UUID) *DeviceTokenCreate {
+	_c.mutation.SetDeletedBy(v)
+	return _c
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_c *DeviceTokenCreate) SetNillableDeletedBy(v *uuid.UUID) *DeviceTokenCreate {
+	if v != nil {
+		_c.SetDeletedBy(*v)
+	}
+	return _c
+}
+
+// SetDeleted sets the "deleted" field.
+func (_c *DeviceTokenCreate) SetDeleted(v bool) *DeviceTokenCreate {
+	_c.mutation.SetDeleted(v)
+	return _c
+}
+
+// SetNillableDeleted sets the "deleted" field if the given value is not nil.
+func (_c *DeviceTokenCreate) SetNillableDeleted(v *bool) *DeviceTokenCreate {
+	if v != nil {
+		_c.SetDeleted(*v)
+	}
+	return _c
+}
+
 // SetUserID sets the "user_id" field.
 func (_c *DeviceTokenCreate) SetUserID(v uuid.UUID) *DeviceTokenCreate {
 	_c.mutation.SetUserID(v)
@@ -165,9 +235,9 @@ func (_c *DeviceTokenCreate) defaults() {
 		v := devicetoken.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
 	}
-	if _, ok := _c.mutation.UpdatedAt(); !ok {
-		v := devicetoken.DefaultUpdatedAt()
-		_c.mutation.SetUpdatedAt(v)
+	if _, ok := _c.mutation.Deleted(); !ok {
+		v := devicetoken.DefaultDeleted
+		_c.mutation.SetDeleted(v)
 	}
 	if _, ok := _c.mutation.Platform(); !ok {
 		v := devicetoken.DefaultPlatform
@@ -192,8 +262,8 @@ func (_c *DeviceTokenCreate) check() error {
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "DeviceToken.created_at"`)}
 	}
-	if _, ok := _c.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "DeviceToken.updated_at"`)}
+	if _, ok := _c.mutation.Deleted(); !ok {
+		return &ValidationError{Name: "deleted", err: errors.New(`ent: missing required field "DeviceToken.deleted"`)}
 	}
 	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "DeviceToken.user_id"`)}
@@ -255,7 +325,27 @@ func (_c *DeviceTokenCreate) createSpec() (*DeviceToken, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(devicetoken.FieldUpdatedAt, field.TypeTime, value)
-		_node.UpdatedAt = value
+		_node.UpdatedAt = &value
+	}
+	if value, ok := _c.mutation.DeletedAt(); ok {
+		_spec.SetField(devicetoken.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = &value
+	}
+	if value, ok := _c.mutation.CreatedBy(); ok {
+		_spec.SetField(devicetoken.FieldCreatedBy, field.TypeUUID, value)
+		_node.CreatedBy = &value
+	}
+	if value, ok := _c.mutation.UpdatedBy(); ok {
+		_spec.SetField(devicetoken.FieldUpdatedBy, field.TypeUUID, value)
+		_node.UpdatedBy = &value
+	}
+	if value, ok := _c.mutation.DeletedBy(); ok {
+		_spec.SetField(devicetoken.FieldDeletedBy, field.TypeUUID, value)
+		_node.DeletedBy = &value
+	}
+	if value, ok := _c.mutation.Deleted(); ok {
+		_spec.SetField(devicetoken.FieldDeleted, field.TypeBool, value)
+		_node.Deleted = value
 	}
 	if value, ok := _c.mutation.Token(); ok {
 		_spec.SetField(devicetoken.FieldToken, field.TypeString, value)
@@ -351,6 +441,96 @@ func (u *DeviceTokenUpsert) SetUpdatedAt(v time.Time) *DeviceTokenUpsert {
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
 func (u *DeviceTokenUpsert) UpdateUpdatedAt() *DeviceTokenUpsert {
 	u.SetExcluded(devicetoken.FieldUpdatedAt)
+	return u
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *DeviceTokenUpsert) ClearUpdatedAt() *DeviceTokenUpsert {
+	u.SetNull(devicetoken.FieldUpdatedAt)
+	return u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *DeviceTokenUpsert) SetDeletedAt(v time.Time) *DeviceTokenUpsert {
+	u.Set(devicetoken.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *DeviceTokenUpsert) UpdateDeletedAt() *DeviceTokenUpsert {
+	u.SetExcluded(devicetoken.FieldDeletedAt)
+	return u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *DeviceTokenUpsert) ClearDeletedAt() *DeviceTokenUpsert {
+	u.SetNull(devicetoken.FieldDeletedAt)
+	return u
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *DeviceTokenUpsert) SetCreatedBy(v uuid.UUID) *DeviceTokenUpsert {
+	u.Set(devicetoken.FieldCreatedBy, v)
+	return u
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *DeviceTokenUpsert) UpdateCreatedBy() *DeviceTokenUpsert {
+	u.SetExcluded(devicetoken.FieldCreatedBy)
+	return u
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *DeviceTokenUpsert) ClearCreatedBy() *DeviceTokenUpsert {
+	u.SetNull(devicetoken.FieldCreatedBy)
+	return u
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *DeviceTokenUpsert) SetUpdatedBy(v uuid.UUID) *DeviceTokenUpsert {
+	u.Set(devicetoken.FieldUpdatedBy, v)
+	return u
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *DeviceTokenUpsert) UpdateUpdatedBy() *DeviceTokenUpsert {
+	u.SetExcluded(devicetoken.FieldUpdatedBy)
+	return u
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *DeviceTokenUpsert) ClearUpdatedBy() *DeviceTokenUpsert {
+	u.SetNull(devicetoken.FieldUpdatedBy)
+	return u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *DeviceTokenUpsert) SetDeletedBy(v uuid.UUID) *DeviceTokenUpsert {
+	u.Set(devicetoken.FieldDeletedBy, v)
+	return u
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *DeviceTokenUpsert) UpdateDeletedBy() *DeviceTokenUpsert {
+	u.SetExcluded(devicetoken.FieldDeletedBy)
+	return u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *DeviceTokenUpsert) ClearDeletedBy() *DeviceTokenUpsert {
+	u.SetNull(devicetoken.FieldDeletedBy)
+	return u
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *DeviceTokenUpsert) SetDeleted(v bool) *DeviceTokenUpsert {
+	u.Set(devicetoken.FieldDeleted, v)
+	return u
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *DeviceTokenUpsert) UpdateDeleted() *DeviceTokenUpsert {
+	u.SetExcluded(devicetoken.FieldDeleted)
 	return u
 }
 
@@ -476,6 +656,111 @@ func (u *DeviceTokenUpsertOne) SetUpdatedAt(v time.Time) *DeviceTokenUpsertOne {
 func (u *DeviceTokenUpsertOne) UpdateUpdatedAt() *DeviceTokenUpsertOne {
 	return u.Update(func(s *DeviceTokenUpsert) {
 		s.UpdateUpdatedAt()
+	})
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *DeviceTokenUpsertOne) ClearUpdatedAt() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *DeviceTokenUpsertOne) SetDeletedAt(v time.Time) *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *DeviceTokenUpsertOne) UpdateDeletedAt() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *DeviceTokenUpsertOne) ClearDeletedAt() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *DeviceTokenUpsertOne) SetCreatedBy(v uuid.UUID) *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetCreatedBy(v)
+	})
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *DeviceTokenUpsertOne) UpdateCreatedBy() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateCreatedBy()
+	})
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *DeviceTokenUpsertOne) ClearCreatedBy() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *DeviceTokenUpsertOne) SetUpdatedBy(v uuid.UUID) *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetUpdatedBy(v)
+	})
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *DeviceTokenUpsertOne) UpdateUpdatedBy() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateUpdatedBy()
+	})
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *DeviceTokenUpsertOne) ClearUpdatedBy() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearUpdatedBy()
+	})
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *DeviceTokenUpsertOne) SetDeletedBy(v uuid.UUID) *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetDeletedBy(v)
+	})
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *DeviceTokenUpsertOne) UpdateDeletedBy() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateDeletedBy()
+	})
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *DeviceTokenUpsertOne) ClearDeletedBy() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearDeletedBy()
+	})
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *DeviceTokenUpsertOne) SetDeleted(v bool) *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetDeleted(v)
+	})
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *DeviceTokenUpsertOne) UpdateDeleted() *DeviceTokenUpsertOne {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateDeleted()
 	})
 }
 
@@ -778,6 +1063,111 @@ func (u *DeviceTokenUpsertBulk) SetUpdatedAt(v time.Time) *DeviceTokenUpsertBulk
 func (u *DeviceTokenUpsertBulk) UpdateUpdatedAt() *DeviceTokenUpsertBulk {
 	return u.Update(func(s *DeviceTokenUpsert) {
 		s.UpdateUpdatedAt()
+	})
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (u *DeviceTokenUpsertBulk) ClearUpdatedAt() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *DeviceTokenUpsertBulk) SetDeletedAt(v time.Time) *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *DeviceTokenUpsertBulk) UpdateDeletedAt() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *DeviceTokenUpsertBulk) ClearDeletedAt() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (u *DeviceTokenUpsertBulk) SetCreatedBy(v uuid.UUID) *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetCreatedBy(v)
+	})
+}
+
+// UpdateCreatedBy sets the "created_by" field to the value that was provided on create.
+func (u *DeviceTokenUpsertBulk) UpdateCreatedBy() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateCreatedBy()
+	})
+}
+
+// ClearCreatedBy clears the value of the "created_by" field.
+func (u *DeviceTokenUpsertBulk) ClearCreatedBy() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearCreatedBy()
+	})
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (u *DeviceTokenUpsertBulk) SetUpdatedBy(v uuid.UUID) *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetUpdatedBy(v)
+	})
+}
+
+// UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
+func (u *DeviceTokenUpsertBulk) UpdateUpdatedBy() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateUpdatedBy()
+	})
+}
+
+// ClearUpdatedBy clears the value of the "updated_by" field.
+func (u *DeviceTokenUpsertBulk) ClearUpdatedBy() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearUpdatedBy()
+	})
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (u *DeviceTokenUpsertBulk) SetDeletedBy(v uuid.UUID) *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetDeletedBy(v)
+	})
+}
+
+// UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
+func (u *DeviceTokenUpsertBulk) UpdateDeletedBy() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateDeletedBy()
+	})
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (u *DeviceTokenUpsertBulk) ClearDeletedBy() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.ClearDeletedBy()
+	})
+}
+
+// SetDeleted sets the "deleted" field.
+func (u *DeviceTokenUpsertBulk) SetDeleted(v bool) *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.SetDeleted(v)
+	})
+}
+
+// UpdateDeleted sets the "deleted" field to the value that was provided on create.
+func (u *DeviceTokenUpsertBulk) UpdateDeleted() *DeviceTokenUpsertBulk {
+	return u.Update(func(s *DeviceTokenUpsert) {
+		s.UpdateDeleted()
 	})
 }
 

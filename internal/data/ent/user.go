@@ -21,17 +21,37 @@ type User struct {
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	// CreatedBy holds the value of the "created_by" field.
+	CreatedBy *uuid.UUID `json:"created_by,omitempty"`
+	// UpdatedBy holds the value of the "updated_by" field.
+	UpdatedBy *uuid.UUID `json:"updated_by,omitempty"`
+	// DeletedBy holds the value of the "deleted_by" field.
+	DeletedBy *uuid.UUID `json:"deleted_by,omitempty"`
+	// Deleted holds the value of the "deleted" field.
+	Deleted bool `json:"deleted,omitempty"`
 	// Email holds the value of the "email" field.
 	Email string `json:"email,omitempty"`
 	// FirstName holds the value of the "first_name" field.
-	FirstName string `json:"first_name,omitempty"`
+	FirstName *string `json:"first_name,omitempty"`
 	// LastName holds the value of the "last_name" field.
-	LastName string `json:"last_name,omitempty"`
+	LastName *string `json:"last_name,omitempty"`
 	// DisplayName holds the value of the "display_name" field.
-	DisplayName string `json:"display_name,omitempty"`
+	DisplayName *string `json:"display_name,omitempty"`
 	// FirebaseUID holds the value of the "firebase_uid" field.
 	FirebaseUID string `json:"firebase_uid,omitempty"`
+	// Status holds the value of the "status" field.
+	Status int32 `json:"status,omitempty"`
+	// LastLoginAt holds the value of the "last_login_at" field.
+	LastLoginAt *time.Time `json:"last_login_at,omitempty"`
+	// LastLoginIP holds the value of the "last_login_ip" field.
+	LastLoginIP *string `json:"last_login_ip,omitempty"`
+	// LastLoginUserAgent holds the value of the "last_login_user_agent" field.
+	LastLoginUserAgent *string `json:"last_login_user_agent,omitempty"`
+	// FailedLoginAttempts holds the value of the "failed_login_attempts" field.
+	FailedLoginAttempts int32 `json:"failed_login_attempts,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -105,9 +125,15 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldEmail, user.FieldFirstName, user.FieldLastName, user.FieldDisplayName, user.FieldFirebaseUID:
+		case user.FieldCreatedBy, user.FieldUpdatedBy, user.FieldDeletedBy:
+			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
+		case user.FieldDeleted:
+			values[i] = new(sql.NullBool)
+		case user.FieldStatus, user.FieldFailedLoginAttempts:
+			values[i] = new(sql.NullInt64)
+		case user.FieldEmail, user.FieldFirstName, user.FieldLastName, user.FieldDisplayName, user.FieldFirebaseUID, user.FieldLastLoginIP, user.FieldLastLoginUserAgent:
 			values[i] = new(sql.NullString)
-		case user.FieldCreatedAt, user.FieldUpdatedAt:
+		case user.FieldCreatedAt, user.FieldUpdatedAt, user.FieldDeletedAt, user.FieldLastLoginAt:
 			values[i] = new(sql.NullTime)
 		case user.FieldID:
 			values[i] = new(uuid.UUID)
@@ -142,7 +168,42 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				_m.UpdatedAt = value.Time
+				_m.UpdatedAt = new(time.Time)
+				*_m.UpdatedAt = value.Time
+			}
+		case user.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				_m.DeletedAt = new(time.Time)
+				*_m.DeletedAt = value.Time
+			}
+		case user.FieldCreatedBy:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field created_by", values[i])
+			} else if value.Valid {
+				_m.CreatedBy = new(uuid.UUID)
+				*_m.CreatedBy = *value.S.(*uuid.UUID)
+			}
+		case user.FieldUpdatedBy:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
+			} else if value.Valid {
+				_m.UpdatedBy = new(uuid.UUID)
+				*_m.UpdatedBy = *value.S.(*uuid.UUID)
+			}
+		case user.FieldDeletedBy:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
+			} else if value.Valid {
+				_m.DeletedBy = new(uuid.UUID)
+				*_m.DeletedBy = *value.S.(*uuid.UUID)
+			}
+		case user.FieldDeleted:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted", values[i])
+			} else if value.Valid {
+				_m.Deleted = value.Bool
 			}
 		case user.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -154,25 +215,61 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field first_name", values[i])
 			} else if value.Valid {
-				_m.FirstName = value.String
+				_m.FirstName = new(string)
+				*_m.FirstName = value.String
 			}
 		case user.FieldLastName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field last_name", values[i])
 			} else if value.Valid {
-				_m.LastName = value.String
+				_m.LastName = new(string)
+				*_m.LastName = value.String
 			}
 		case user.FieldDisplayName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field display_name", values[i])
 			} else if value.Valid {
-				_m.DisplayName = value.String
+				_m.DisplayName = new(string)
+				*_m.DisplayName = value.String
 			}
 		case user.FieldFirebaseUID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field firebase_uid", values[i])
 			} else if value.Valid {
 				_m.FirebaseUID = value.String
+			}
+		case user.FieldStatus:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				_m.Status = int32(value.Int64)
+			}
+		case user.FieldLastLoginAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field last_login_at", values[i])
+			} else if value.Valid {
+				_m.LastLoginAt = new(time.Time)
+				*_m.LastLoginAt = value.Time
+			}
+		case user.FieldLastLoginIP:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field last_login_ip", values[i])
+			} else if value.Valid {
+				_m.LastLoginIP = new(string)
+				*_m.LastLoginIP = value.String
+			}
+		case user.FieldLastLoginUserAgent:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field last_login_user_agent", values[i])
+			} else if value.Valid {
+				_m.LastLoginUserAgent = new(string)
+				*_m.LastLoginUserAgent = value.String
+			}
+		case user.FieldFailedLoginAttempts:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field failed_login_attempts", values[i])
+			} else if value.Valid {
+				_m.FailedLoginAttempts = int32(value.Int64)
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -238,23 +335,75 @@ func (_m *User) String() string {
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("updated_at=")
-	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	if v := _m.UpdatedAt; v != nil {
+		builder.WriteString("updated_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := _m.DeletedAt; v != nil {
+		builder.WriteString("deleted_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := _m.CreatedBy; v != nil {
+		builder.WriteString("created_by=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.UpdatedBy; v != nil {
+		builder.WriteString("updated_by=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.DeletedBy; v != nil {
+		builder.WriteString("deleted_by=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	builder.WriteString("deleted=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Deleted))
 	builder.WriteString(", ")
 	builder.WriteString("email=")
 	builder.WriteString(_m.Email)
 	builder.WriteString(", ")
-	builder.WriteString("first_name=")
-	builder.WriteString(_m.FirstName)
+	if v := _m.FirstName; v != nil {
+		builder.WriteString("first_name=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("last_name=")
-	builder.WriteString(_m.LastName)
+	if v := _m.LastName; v != nil {
+		builder.WriteString("last_name=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("display_name=")
-	builder.WriteString(_m.DisplayName)
+	if v := _m.DisplayName; v != nil {
+		builder.WriteString("display_name=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	builder.WriteString("firebase_uid=")
 	builder.WriteString(_m.FirebaseUID)
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
+	builder.WriteString(", ")
+	if v := _m.LastLoginAt; v != nil {
+		builder.WriteString("last_login_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := _m.LastLoginIP; v != nil {
+		builder.WriteString("last_login_ip=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.LastLoginUserAgent; v != nil {
+		builder.WriteString("last_login_user_agent=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	builder.WriteString("failed_login_attempts=")
+	builder.WriteString(fmt.Sprintf("%v", _m.FailedLoginAttempts))
 	builder.WriteByte(')')
 	return builder.String()
 }

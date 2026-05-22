@@ -8,6 +8,7 @@ package mapper
 import (
 	"go-firebase/internal/data/ent"
 	"go-firebase/pkg/model"
+	"go-firebase/pkg/util"
 
 	"github.com/samber/lo"
 )
@@ -20,12 +21,12 @@ func (m *userMapper) AsMono(user *ent.User) *model.User {
 		Email:  user.Email,
 	}
 
-	if user.FirstName != "" {
-		builder.FirstName = user.FirstName
+	if util.IsNotEmptyString(user.FirstName) {
+		builder.FirstName = *user.FirstName
 	}
 
-	if user.LastName != "" {
-		builder.LastName = user.LastName
+	if util.IsNotEmptyString(user.LastName) {
+		builder.LastName = *user.LastName
 	}
 
 	return &builder
